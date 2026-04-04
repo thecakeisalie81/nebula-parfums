@@ -17,4 +17,9 @@ public class Rol {
 
     public Rol() {
     }
+
+    public Rol(Integer id_rol, String nombre_rol) {
+        this.id_rol = id_rol;
+        this.nombre_rol = nombre_rol;
+    }
 }

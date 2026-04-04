@@ -13,7 +13,6 @@ public class DireccionEnvio {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id_direccion;
-    private Integer id_usuario;
     private String direccion;
     private String ciudad;
     private String provincia;

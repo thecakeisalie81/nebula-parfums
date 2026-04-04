@@ -1,9 +1,6 @@
 package com.nebulaparfums.nebula_parfums.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -20,8 +17,18 @@ public class Usuario {
     private String password;
     private Boolean estado;
     private LocalDate fecha_creacion;
-    private Integer id_rol;
+    
+    @OneToOne
+    @JoinColumn(name = "id_rol", referencedColumnName = "id_rol")
+    private Rol rol;
 
+    @OneToOne
+    @JoinColumn(name = "carrito", referencedColumnName = "id_carrito")
+    private Carrito carrito;
+
+    @OneToOne
+    @JoinColumn(name = "direccion", referencedColumnName = "id_direccion")
+    private DireccionEnvio direccionEnvio;
     public Usuario() {
     }
 }

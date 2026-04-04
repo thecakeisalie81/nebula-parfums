@@ -1,9 +1,6 @@
 package com.nebulaparfums.nebula_parfums.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -13,12 +10,26 @@ public class OrdenDetalle {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id_orden_detalle;
-    private Integer id_orden;
-    private Integer id_producto;
     private int cantidad;
     private Double precio;
 
+    @OneToOne
+    @JoinColumn(name = "producto", referencedColumnName = "id_producto")
+    private Producto producto;
+
+    @ManyToOne
+    @JoinColumn(name = "id_orden")
+    private Orden orden;
+
 
     public OrdenDetalle() {
+    }
+
+    public OrdenDetalle(Integer id_orden_detalle, int cantidad, Double precio, Producto producto, Orden orden) {
+        this.id_orden_detalle = id_orden_detalle;
+        this.cantidad = cantidad;
+        this.precio = precio;
+        this.producto = producto;
+        this.orden = orden;
     }
 }

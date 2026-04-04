@@ -1,9 +1,6 @@
 package com.nebulaparfums.nebula_parfums.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -15,10 +12,13 @@ public class LogActividad {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id_log;
-    private Integer id_usuario;
     private String accion;
     private LocalDate fecha_actualizacion;
     private String detalle;
+
+    @OneToOne
+    @JoinColumn(name = "usuario", referencedColumnName = "id_usuario")
+    private Integer id_usuario;
 
     public LogActividad() {
     }

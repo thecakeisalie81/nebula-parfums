@@ -1,9 +1,6 @@
 package com.nebulaparfums.nebula_parfums.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -20,10 +17,15 @@ public class Producto {
     private Double precio;
     private int stock_actual;
     private int stock_minimo;
-    private Integer id_categoria;
-    private Integer id_proveedor;
-    private Boolean activo;
     private LocalDate fecha_registro;
+
+    @OneToOne
+    @JoinColumn(name = "categoria", referencedColumnName = "id_categoria")
+    private Integer id_categoria;
+
+    @OneToOne
+    @JoinColumn(name = "proveedor", referencedColumnName = "id_proveedor")
+    private Integer id_proveedor;
 
     public Producto() {
     }

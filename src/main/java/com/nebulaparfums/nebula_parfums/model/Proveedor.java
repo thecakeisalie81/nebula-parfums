@@ -20,4 +20,12 @@ public class Proveedor {
 
     public Proveedor() {
     }
+
+    public Proveedor(Integer id_proveedor, String nombre, String contacto, String telefono, String email) {
+        this.id_proveedor = id_proveedor;
+        this.nombre = nombre;
+        this.contacto = contacto;
+        this.telefono = telefono;
+        this.email = email;
+    }
 }

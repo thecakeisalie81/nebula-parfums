@@ -1,13 +1,11 @@
 package com.nebulaparfums.nebula_parfums.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Entity
 @Getter
@@ -16,11 +14,20 @@ public class Orden {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id_orden;
-    private Integer id_usuario;
-    private Integer id_direccion_envio;
     private String estado;
     private Double total;
     private LocalDate fecha_creacion;
+
+    @OneToOne
+    @JoinColumn(name = "usuario", referencedColumnName = "id_usuario")
+    private Usuario usuario;
+
+    @OneToOne
+    @JoinColumn(name = "direccion", referencedColumnName = "id_direccion")
+    private DireccionEnvio direccion;
+
+    @OneToMany(mappedBy = "orden")
+    private List<OrdenDetalle>  listaOrdenDetalle;
 
 
     public Orden() {
