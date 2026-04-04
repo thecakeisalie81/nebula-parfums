@@ -29,4 +29,16 @@ public class Producto {
 
     public Producto() {
     }
+
+    public Producto(Integer id_producto, String nombre, String descripcion, Double precio, int stock_actual, int stock_minimo, LocalDate fecha_registro, Categoria categoria, Proveedor proveedor) {
+        this.id_producto = id_producto;
+        this.nombre = nombre;
+        this.descripcion = descripcion;
+        this.precio = precio;
+        this.stock_actual = stock_actual;
+        this.stock_minimo = stock_minimo;
+        this.fecha_registro = fecha_registro;
+        this.categoria = categoria;
+        this.proveedor = proveedor;
+    }
 }

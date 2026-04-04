@@ -21,5 +21,9 @@ public class Carrito {
     public Carrito() {
     }
 
-
+    public Carrito(Integer id_carrito, LocalDate fecha_actualizacion, List<CarritoDetalle> listaCarritoDetalles) {
+        this.id_carrito = id_carrito;
+        this.fecha_actualizacion = fecha_actualizacion;
+        this.listaCarritoDetalles = listaCarritoDetalles;
+    }
 }

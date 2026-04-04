@@ -22,7 +22,14 @@ public class CarritoDetalle {
     @JoinColumn(name = "id_producto")
     private Producto producto;
 
-
     public CarritoDetalle() {
+    }
+
+    public CarritoDetalle(Integer id_carrito_detalle, int cantidad, Double precio, Carrito carrito, Producto producto) {
+        this.id_carrito_detalle = id_carrito_detalle;
+        this.cantidad = cantidad;
+        this.precio = precio;
+        this.carrito = carrito;
+        this.producto = producto;
     }
 }

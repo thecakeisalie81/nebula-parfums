@@ -22,4 +22,12 @@ public class LogActividad {
 
     public LogActividad() {
     }
+
+    public LogActividad(Integer id_log, String accion, LocalDate fecha_actualizacion, String detalle, Usuario usuario) {
+        this.id_log = id_log;
+        this.accion = accion;
+        this.fecha_actualizacion = fecha_actualizacion;
+        this.detalle = detalle;
+        this.usuario = usuario;
+    }
 }

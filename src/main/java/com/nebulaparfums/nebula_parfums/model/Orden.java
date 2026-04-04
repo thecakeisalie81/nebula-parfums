@@ -29,7 +29,16 @@ public class Orden {
     @OneToMany(mappedBy = "orden")
     private List<OrdenDetalle>  listaOrdenDetalle;
 
-
     public Orden() {
+    }
+
+    public Orden(Integer id_orden, String estado, Double total, LocalDate fecha_creacion, Usuario usuario, DireccionEnvio direccion, List<OrdenDetalle> listaOrdenDetalle) {
+        this.id_orden = id_orden;
+        this.estado = estado;
+        this.total = total;
+        this.fecha_creacion = fecha_creacion;
+        this.usuario = usuario;
+        this.direccion = direccion;
+        this.listaOrdenDetalle = listaOrdenDetalle;
     }
 }

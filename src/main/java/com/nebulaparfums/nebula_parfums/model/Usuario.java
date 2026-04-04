@@ -31,4 +31,16 @@ public class Usuario {
     private DireccionEnvio direccionEnvio;
     public Usuario() {
     }
+
+    public Usuario(Integer id_usuario, String nombre, String email, String password, Boolean estado, LocalDate fecha_creacion, Rol rol, Carrito carrito, DireccionEnvio direccionEnvio) {
+        this.id_usuario = id_usuario;
+        this.nombre = nombre;
+        this.email = email;
+        this.password = password;
+        this.estado = estado;
+        this.fecha_creacion = fecha_creacion;
+        this.rol = rol;
+        this.carrito = carrito;
+        this.direccionEnvio = direccionEnvio;
+    }
 }

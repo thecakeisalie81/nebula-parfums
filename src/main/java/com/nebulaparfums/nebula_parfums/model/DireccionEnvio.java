@@ -21,4 +21,13 @@ public class DireccionEnvio {
 
     public DireccionEnvio() {
     }
+
+    public DireccionEnvio(Integer id_direccion, String direccion, String ciudad, String provincia, String codigo_postal, String telefono) {
+        this.id_direccion = id_direccion;
+        this.direccion = direccion;
+        this.ciudad = ciudad;
+        this.provincia = provincia;
+        this.codigo_postal = codigo_postal;
+        this.telefono = telefono;
+    }
 }

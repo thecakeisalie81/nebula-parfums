@@ -1,0 +1,33 @@
+package com.nebulaparfums.nebula_parfums.service;
+
+import com.nebulaparfums.nebula_parfums.model.CarritoDetalle;
+import com.nebulaparfums.nebula_parfums.repository.ICarritoDetalleRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+@Service
+public class CarritoDetalleService implements ICarritoDetalleService{
+    @Autowired
+    private ICarritoDetalleRepository  carritoDetalleRepository;
+
+    @Override
+    public CarritoDetalle getCarritoDetalleById(Integer id) {
+        CarritoDetalle carritoDetalle = carritoDetalleRepository.findById(id).orElse(null);
+        return carritoDetalle;
+    }
+
+    @Override
+    public void saveCarritoDetalle(CarritoDetalle carritoDetalle) {
+        carritoDetalleRepository.save(carritoDetalle);
+    }
+
+    @Override
+    public void deleteCarritoDetalleById(Integer id) {
+        carritoDetalleRepository.deleteById(id);
+    }
+
+    @Override
+    public void editCarritoDetalle(CarritoDetalle carritoDetalle) {
+        carritoDetalleRepository.save(carritoDetalle);
+    }
+}

@@ -21,5 +21,10 @@ public class Categoria {
     public Categoria() {
     }
 
-
+    public Categoria(Integer id_categoria, String nombre, String descripcion, List<Producto> productos) {
+        this.id_categoria = id_categoria;
+        this.nombre = nombre;
+        this.descripcion = descripcion;
+        this.productos = productos;
+    }
 }
