@@ -1,11 +1,10 @@
 package com.nebulaparfums.nebula_parfums.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+
+import java.util.List;
 
 @Entity
 @Getter @Setter
@@ -16,12 +15,11 @@ public class Categoria {
     String nombre;
     String descripcion;
 
+    @OneToMany(mappedBy = "categoria")
+    List<Producto> productos;
+
     public Categoria() {
     }
 
-    public Categoria(Integer id_categoria, String nombre, String descripcion) {
-        this.id_categoria = id_categoria;
-        this.nombre = nombre;
-        this.descripcion = descripcion;
-    }
+
 }

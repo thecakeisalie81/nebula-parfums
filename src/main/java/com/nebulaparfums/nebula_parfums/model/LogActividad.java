@@ -18,7 +18,7 @@ public class LogActividad {
 
     @OneToOne
     @JoinColumn(name = "usuario", referencedColumnName = "id_usuario")
-    private Integer id_usuario;
+    private Usuario usuario;
 
     public LogActividad() {
     }

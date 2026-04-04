@@ -19,13 +19,13 @@ public class Producto {
     private int stock_minimo;
     private LocalDate fecha_registro;
 
-    @OneToOne
-    @JoinColumn(name = "categoria", referencedColumnName = "id_categoria")
-    private Integer id_categoria;
+    @ManyToOne
+    @JoinColumn(name = "categoria")
+    private Categoria categoria;
 
-    @OneToOne
-    @JoinColumn(name = "proveedor", referencedColumnName = "id_proveedor")
-    private Integer id_proveedor;
+    @ManyToOne
+    @JoinColumn(name = "proveedor")
+    private Proveedor proveedor;
 
     public Producto() {
     }
