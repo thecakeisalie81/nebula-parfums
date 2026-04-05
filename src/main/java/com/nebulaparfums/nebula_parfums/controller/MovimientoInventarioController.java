@@ -20,7 +20,7 @@ public class MovimientoInventarioController {
         return iMovimientoInventarioService.getMovimientoInventario();
     }
 
-    @PostMapping
+    @PostMapping("/movimiento/crear")
     public String crearMovimientoInventario(@RequestBody MovimientoInventario movimientoInventario) {
         iMovimientoInventarioService.saveMovimientoInventario(movimientoInventario);
         return "Movimiento Inventario creado con sucesso";

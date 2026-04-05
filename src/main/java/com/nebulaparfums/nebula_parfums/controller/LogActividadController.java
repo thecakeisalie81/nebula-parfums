@@ -18,7 +18,7 @@ public class LogActividadController {
         return iLogActividadService.getLogsActividad();
     }
 
-    @PostMapping
+    @PostMapping("/log/crear")
     public String crearLogActividad(@RequestBody LogActividad logActividad) {
         iLogActividadService.saveLogActividad(logActividad);
         return "LogActividad creado con sucesso";
