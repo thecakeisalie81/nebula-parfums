@@ -20,16 +20,6 @@ public class MovimientoInventarioService implements IMovimientoInventarioService
     }
 
     @Override
-    public void deleteMovimientoInventarioById(Integer id) {
-        iMovimientoInventarioRepository.deleteById(id);
-    }
-
-    @Override
-    public void editMovimientoInventario(MovimientoInventario movimientoInventario) {
-        iMovimientoInventarioRepository.save(movimientoInventario);
-    }
-
-    @Override
     public void saveMovimientoInventario(MovimientoInventario movimientoInventario) {
         iMovimientoInventarioRepository.save(movimientoInventario);
     }

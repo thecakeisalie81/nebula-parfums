@@ -18,16 +18,6 @@ public class LogActividadService implements ILogActividadService{
     }
 
     @Override
-    public void deleteLogActividadById(Integer id) {
-        logActividadRepository.deleteById(id);
-    }
-
-    @Override
-    public void editLogActividad(LogActividad logActividad) {
-        logActividadRepository.save(logActividad);
-    }
-
-    @Override
     public List<LogActividad> getLogsActividad() {
         List<LogActividad> logsActividad = logActividadRepository.findAll();
         return logsActividad;
