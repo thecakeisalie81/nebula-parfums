@@ -20,13 +20,13 @@ public class ProductoService implements IProductoService{
 
     @Override
     public Producto getProductoById(Integer id) {
-        Producto producto = iProductoRepository.findById(id).orElse(null);
+        Producto producto = iProductoRepository.findById(id).get();
         return producto;
     }
 
     @Override
     public void editProducto(Producto producto) {
-        iProductoRepository.save(producto);
+        this.saveProducto(producto);
     }
 
     @Override

@@ -13,7 +13,7 @@ public class DireccionEnvioService implements IDireccionEnvioService{
 
     @Override
     public DireccionEnvio getDireccionEnvioById(Integer id) {
-        DireccionEnvio direccionEnvio = direccionEnvioRepository.findById(id).orElse(null);
+        DireccionEnvio direccionEnvio = direccionEnvioRepository.findById(id).get();
         return direccionEnvio;
     }
 
@@ -29,6 +29,6 @@ public class DireccionEnvioService implements IDireccionEnvioService{
 
     @Override
     public void editDireccionEnvio(DireccionEnvio direccionEnvio) {
-        direccionEnvioRepository.save(direccionEnvio);
+        this.saveDireccionEnvio(direccionEnvio);
     }
 }

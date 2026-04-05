@@ -15,7 +15,7 @@ public class UsuarioService implements IUsuarioService{
 
     @Override
     public Usuario getUsuarioById(Integer id) {
-        Usuario usuario = iUsuarioRepository.findById(id).orElse(null);
+        Usuario usuario = iUsuarioRepository.findById(id).get();
         return usuario;
     }
 

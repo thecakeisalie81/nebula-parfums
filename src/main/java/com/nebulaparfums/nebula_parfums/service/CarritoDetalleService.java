@@ -12,7 +12,7 @@ public class CarritoDetalleService implements ICarritoDetalleService{
 
     @Override
     public CarritoDetalle getCarritoDetalleById(Integer id) {
-        CarritoDetalle carritoDetalle = carritoDetalleRepository.findById(id).orElse(null);
+        CarritoDetalle carritoDetalle = carritoDetalleRepository.findById(id).get();
         return carritoDetalle;
     }
 
@@ -28,6 +28,6 @@ public class CarritoDetalleService implements ICarritoDetalleService{
 
     @Override
     public void editCarritoDetalle(CarritoDetalle carritoDetalle) {
-        carritoDetalleRepository.save(carritoDetalle);
+        this.saveCarritoDetalle(carritoDetalle);
     }
 }

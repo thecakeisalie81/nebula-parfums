@@ -22,12 +22,12 @@ public class OrdenDetalleService implements IOrdenDetalleService{
 
     @Override
     public void editOrdenDetalle(OrdenDetalle ordenDetalle) {
-        ordenDetalleRepository.save(ordenDetalle);
+        this.saveOrdenDetalle(ordenDetalle);
     }
 
     @Override
     public OrdenDetalle getOrdenDetalleById(Integer id) {
-        OrdenDetalle ordenDetalle = ordenDetalleRepository.findById(id).orElse(null);
+        OrdenDetalle ordenDetalle = ordenDetalleRepository.findById(id).get();
         return ordenDetalle;
     }
 }

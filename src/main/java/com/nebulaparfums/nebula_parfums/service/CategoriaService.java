@@ -15,7 +15,7 @@ public class CategoriaService implements ICategoriaService{
 
     @Override
     public void editCategoria(Categoria categoria) {
-        categoriaRepository.save(categoria);
+        this.saveCategoria(categoria);
     }
 
     @Override
@@ -30,7 +30,7 @@ public class CategoriaService implements ICategoriaService{
 
     @Override
     public Categoria getCategoriaById(Integer id) {
-        Categoria categoria = categoriaRepository.findById(id).orElse(null);
+        Categoria categoria = categoriaRepository.findById(id).get();
         return categoria;
     }
 

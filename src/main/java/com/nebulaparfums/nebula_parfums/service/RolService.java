@@ -20,7 +20,7 @@ public class RolService implements IRolService{
 
     @Override
     public Rol getRolById(Integer id) {
-        Rol rol = iRolRepository.findById(id).orElse(null);
+        Rol rol = iRolRepository.findById(id).get();
         return rol;
     }
 
@@ -37,6 +37,6 @@ public class RolService implements IRolService{
 
     @Override
     public void editRol(Rol rol) {
-        iRolRepository.save(rol);
+        this.saveRol(rol);
     }
 }

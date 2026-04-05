@@ -21,7 +21,7 @@ public class ProveedorService implements IProveedorService{
 
     @Override
     public Proveedor getProveedorById(Integer id) {
-        Proveedor proveedor = iProveedorRepository.findById(id).orElse(null);
+        Proveedor proveedor = iProveedorRepository.findById(id).get();
         return proveedor;
     }
 
@@ -37,6 +37,6 @@ public class ProveedorService implements IProveedorService{
 
     @Override
     public void editProveedor(Proveedor proveedor) {
-        iProveedorRepository.save(proveedor);
+        this.saveProveedor(proveedor);
     }
 }

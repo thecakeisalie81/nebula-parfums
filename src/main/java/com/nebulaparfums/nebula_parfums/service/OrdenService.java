@@ -21,7 +21,7 @@ public class OrdenService implements IOrdenService{
 
     @Override
     public Orden getOrdenById(Integer ordenId) {
-        Orden orden = ordenRepository.findById(ordenId).orElse(null);
+        Orden orden = ordenRepository.findById(ordenId).get();
         return orden;
     }
 
@@ -37,6 +37,6 @@ public class OrdenService implements IOrdenService{
 
     @Override
     public void editOrden(Orden orden) {
-        ordenRepository.save(orden);
+        this.saveOrden(orden);
     }
 }
