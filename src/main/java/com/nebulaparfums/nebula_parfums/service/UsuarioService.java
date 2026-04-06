@@ -1,5 +1,6 @@
 package com.nebulaparfums.nebula_parfums.service;
 
+import com.nebulaparfums.nebula_parfums.exception.ResourceNotFoundException;
 import com.nebulaparfums.nebula_parfums.model.Usuario;
 import com.nebulaparfums.nebula_parfums.repository.IUsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,8 +16,7 @@ public class UsuarioService implements IUsuarioService{
 
     @Override
     public Usuario getUsuarioById(Integer id) {
-        Usuario usuario = iUsuarioRepository.findById(id).get();
-        return usuario;
+        return iUsuarioRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("No se encontro el usuario"));
     }
 
     @Override
@@ -32,7 +32,11 @@ public class UsuarioService implements IUsuarioService{
 
     @Override
     public void deleteUsuarioById(Integer id) {
-        iUsuarioRepository.deleteById(id);
+        if (iUsuarioRepository.existsById(id)) {
+            iUsuarioRepository.deleteById(id);
+        }else {
+            throw new ResourceNotFoundException("No se encontro el usuario");
+        }
     }
 
     @Override

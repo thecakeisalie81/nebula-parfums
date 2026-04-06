@@ -1,5 +1,6 @@
 package com.nebulaparfums.nebula_parfums.service;
 
+import com.nebulaparfums.nebula_parfums.exception.ResourceNotFoundException;
 import com.nebulaparfums.nebula_parfums.model.Carrito;
 import com.nebulaparfums.nebula_parfums.repository.ICarritoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,13 +14,18 @@ public class CarritoService implements ICarritoService {
 
     @Override
     public Carrito getCarritoById(Integer id) {
-        Carrito carrito = carritoRepository.findById(id).get();
+        Carrito carrito = carritoRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("No se encontro el carrito"));;
         return carrito;
     }
 
     @Override
     public void deleteCarritoById(Integer id) {
-        carritoRepository.deleteById(id);
+        if (carritoRepository.existsById(id)) {
+            carritoRepository.deleteById(id);
+        }
+        else {
+            throw new ResourceNotFoundException("No se encontro el Carrito");
+        }
     }
 
     @Override

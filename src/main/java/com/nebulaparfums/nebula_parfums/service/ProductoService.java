@@ -1,5 +1,7 @@
 package com.nebulaparfums.nebula_parfums.service;
 
+import com.nebulaparfums.nebula_parfums.exception.QuantityBelowZeroException;
+import com.nebulaparfums.nebula_parfums.exception.ResourceNotFoundException;
 import com.nebulaparfums.nebula_parfums.model.Producto;
 import com.nebulaparfums.nebula_parfums.repository.IProductoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,18 +22,26 @@ public class ProductoService implements IProductoService{
 
     @Override
     public Producto getProductoById(Integer id) {
-        Producto producto = iProductoRepository.findById(id).get();
-        return producto;
+        return iProductoRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("No se encontro el producto"));
     }
 
     @Override
     public void editProducto(Producto producto) {
+        if (producto.getStock_actual() < 0){
+            throw new QuantityBelowZeroException("No hay suficientes unidades   ");
+        }
+
         this.saveProducto(producto);
     }
 
     @Override
     public void deleteProducto(Integer id) {
-        iProductoRepository.deleteById(id);
+        if (iProductoRepository.existsById(id)){
+            iProductoRepository.deleteById(id);
+        }else {
+            throw new ResourceNotFoundException("No se encontro el producto");
+        }
+
     }
 
     @Override

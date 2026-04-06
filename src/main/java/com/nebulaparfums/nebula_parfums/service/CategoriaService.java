@@ -1,5 +1,6 @@
 package com.nebulaparfums.nebula_parfums.service;
 
+import com.nebulaparfums.nebula_parfums.exception.ResourceNotFoundException;
 import com.nebulaparfums.nebula_parfums.model.Categoria;
 import com.nebulaparfums.nebula_parfums.repository.ICategoriaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,12 +26,16 @@ public class CategoriaService implements ICategoriaService{
 
     @Override
     public void deleteCategoriaById(Integer id) {
-        categoriaRepository.deleteById(id);
+        if (categoriaRepository.existsById(id)) {
+            categoriaRepository.deleteById(id);
+        }else {
+            throw new ResourceNotFoundException("No se encontro la categoria");
+        }
     }
 
     @Override
     public Categoria getCategoriaById(Integer id) {
-        Categoria categoria = categoriaRepository.findById(id).get();
+        Categoria categoria = categoriaRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("No se encontro la categoria"));;
         return categoria;
     }
 

@@ -1,5 +1,6 @@
 package com.nebulaparfums.nebula_parfums.service;
 
+import com.nebulaparfums.nebula_parfums.exception.ResourceNotFoundException;
 import com.nebulaparfums.nebula_parfums.model.DireccionEnvio;
 import com.nebulaparfums.nebula_parfums.repository.IDireccionEnvioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +14,7 @@ public class DireccionEnvioService implements IDireccionEnvioService{
 
     @Override
     public DireccionEnvio getDireccionEnvioById(Integer id) {
-        DireccionEnvio direccionEnvio = direccionEnvioRepository.findById(id).get();
+        DireccionEnvio direccionEnvio = direccionEnvioRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("No se encontro la direccion de envio"));;
         return direccionEnvio;
     }
 
@@ -24,7 +25,11 @@ public class DireccionEnvioService implements IDireccionEnvioService{
 
     @Override
     public void deleteDireccionEnvioById(Integer id) {
-        direccionEnvioRepository.deleteById(id);
+        if (direccionEnvioRepository.existsById(id)) {
+            direccionEnvioRepository.deleteById(id);
+        }else {
+            throw new ResourceNotFoundException("No se encontro la direccion de envio");
+        }
     }
 
     @Override

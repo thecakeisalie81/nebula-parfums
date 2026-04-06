@@ -1,5 +1,6 @@
 package com.nebulaparfums.nebula_parfums.service;
 
+import com.nebulaparfums.nebula_parfums.exception.ResourceNotFoundException;
 import com.nebulaparfums.nebula_parfums.model.OrdenDetalle;
 import com.nebulaparfums.nebula_parfums.repository.IOrdenDetalleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +18,11 @@ public class OrdenDetalleService implements IOrdenDetalleService{
 
     @Override
     public void deleteOrdenDetalleById(Integer id) {
-        ordenDetalleRepository.deleteById(id);
+        if (ordenDetalleRepository.existsById(id)) {
+            ordenDetalleRepository.deleteById(id);
+        }else {
+            throw new ResourceNotFoundException("No se encontro el producto en la orden");
+        }
     }
 
     @Override
@@ -27,7 +32,7 @@ public class OrdenDetalleService implements IOrdenDetalleService{
 
     @Override
     public OrdenDetalle getOrdenDetalleById(Integer id) {
-        OrdenDetalle ordenDetalle = ordenDetalleRepository.findById(id).get();
+        OrdenDetalle ordenDetalle = ordenDetalleRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("No se encontro el producto en la orden"));;
         return ordenDetalle;
     }
 }

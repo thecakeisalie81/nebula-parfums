@@ -1,5 +1,6 @@
 package com.nebulaparfums.nebula_parfums.service;
 
+import com.nebulaparfums.nebula_parfums.exception.ResourceNotFoundException;
 import com.nebulaparfums.nebula_parfums.model.Rol;
 import com.nebulaparfums.nebula_parfums.repository.IRolRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +21,7 @@ public class RolService implements IRolService{
 
     @Override
     public Rol getRolById(Integer id) {
-        Rol rol = iRolRepository.findById(id).get();
+        Rol rol = iRolRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("No se encontro el rol"));
         return rol;
     }
 
@@ -32,7 +33,11 @@ public class RolService implements IRolService{
 
     @Override
     public void deleteRol(Integer id) {
-        iRolRepository.deleteById(id);
+        if (iRolRepository.existsById(id)) {
+            iRolRepository.deleteById(id);
+        }else {
+            throw new ResourceNotFoundException("No se encontro el rol");
+        }
     }
 
     @Override
