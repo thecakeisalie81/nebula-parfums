@@ -15,16 +15,13 @@ public class Categoria {
     String nombre;
     String descripcion;
 
-    @OneToMany(mappedBy = "categoria")
-    List<Producto> productos;
 
     public Categoria() {
     }
 
-    public Categoria(Integer id_categoria, String nombre, String descripcion, List<Producto> productos) {
+    public Categoria(Integer id_categoria, String nombre, String descripcion) {
         this.id_categoria = id_categoria;
         this.nombre = nombre;
         this.descripcion = descripcion;
-        this.productos = productos;
     }
 }

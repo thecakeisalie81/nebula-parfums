@@ -17,6 +17,16 @@ public class ProductoController {
         return iProductoService.getProductos();
     }
 
+    @GetMapping("/producto/resultados")
+    public List<Producto> resultadoBusqueda(@RequestParam("nombre") String nombre) {
+        return iProductoService.getProductosBusqueda(nombre);
+    }
+
+    @GetMapping("/producto/categoria")
+    public List<Producto> productosPorCategoria(@RequestParam("categoria") Integer categoria) {
+        return iProductoService.getProductosCategoria(categoria);
+    }
+
     @GetMapping("/producto/buscar")
     public Producto buscarProducto(@RequestParam("id") Integer id) {
         return iProductoService.getProductoById(id);

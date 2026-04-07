@@ -21,6 +21,18 @@ public class ProductoService implements IProductoService{
     }
 
     @Override
+    public List<Producto> getProductosBusqueda(String nombre) {
+        List<Producto> resultados = iProductoRepository.findByNombre(nombre);
+        return resultados;
+    }
+
+    @Override
+    public List<Producto> getProductosCategoria(Integer categoria) {
+        List<Producto> resultados = iProductoRepository.findByCategoriaId_categoria(categoria);
+        return resultados;
+    }
+
+    @Override
     public Producto getProductoById(Integer id) {
         return iProductoRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("No se encontro el producto"));
     }
