@@ -1,5 +1,6 @@
 package com.nebulaparfums.nebula_parfums.model;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -16,14 +17,20 @@ public class Carrito {
     private LocalDate fecha_actualizacion;
 
     @OneToMany(mappedBy = "carrito")
+    @JsonManagedReference
     private List<CarritoDetalle> listaCarritoDetalles;
+
+    @OneToOne
+    @JoinColumn(name = "usuario_id")
+    private Usuario usuario;
 
     public Carrito() {
     }
 
-    public Carrito(Integer id_carrito, LocalDate fecha_actualizacion, List<CarritoDetalle> listaCarritoDetalles) {
+    public Carrito(Integer id_carrito, List<CarritoDetalle> listaCarritoDetalles, Usuario usuario) {
         this.id_carrito = id_carrito;
-        this.fecha_actualizacion = fecha_actualizacion;
+        this.fecha_actualizacion = LocalDate.now();
         this.listaCarritoDetalles = listaCarritoDetalles;
+        this.usuario = usuario;
     }
 }

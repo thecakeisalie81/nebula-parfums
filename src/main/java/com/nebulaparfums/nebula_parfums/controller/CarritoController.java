@@ -10,24 +10,24 @@ public class CarritoController {
     @Autowired
     private ICarritoService iCarritoService;
 
-    @GetMapping("/carrito/buscar")
+    @GetMapping("carrito/buscar")
     public Carrito getCarrito(@RequestParam("id") Integer id) {
         return iCarritoService.getCarritoById(id);
     }
 
-    @PostMapping("/carrito/crear")
+    @PostMapping("carrito/crear")
     public String createCarrito(@RequestBody Carrito carrito) {
         iCarritoService.saveCarrito(carrito);
         return "Carrito creado";
     }
 
-    @DeleteMapping("/carrito/borrar")
+    @DeleteMapping("carrito/borrar")
     public String deleteCarrito(@RequestParam("id") Integer id) {
         iCarritoService.deleteCarritoById(id);
         return "Carrito borrado";
     }
 
-    @PutMapping("/carrito/editar")
+    @PutMapping("carrito/editar")
     public String updateCarrito(@RequestBody Carrito carrito) {
         iCarritoService.editCarrito(carrito);
         return "Carrito editado";

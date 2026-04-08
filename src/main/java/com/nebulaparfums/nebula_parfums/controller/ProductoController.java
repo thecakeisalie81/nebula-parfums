@@ -3,6 +3,7 @@ package com.nebulaparfums.nebula_parfums.controller;
 import com.nebulaparfums.nebula_parfums.model.Producto;
 import com.nebulaparfums.nebula_parfums.service.interfaces.IProductoService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -32,18 +33,21 @@ public class ProductoController {
         return iProductoService.getProductoById(id);
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN','EMPLEADO')")
     @PutMapping("/producto/editar")
     public String editarProducto(@RequestBody Producto producto) {
         iProductoService.editProducto(producto);
         return "Producto editado con sucesso";
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN','EMPLEADO')")
     @DeleteMapping("/producto/borrar")
     public String borrarProducto(@RequestParam("id") Integer id) {
         iProductoService.deleteProducto(id);
         return "Producto eliminado con sucesso";
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN','EMPLEADO')")
     @PostMapping("/producto/crear")
     public String crearProducto(@RequestBody Producto producto) {
         iProductoService.saveProducto(producto);

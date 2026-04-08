@@ -48,6 +48,19 @@ public class AuthService {
         usuario.setNombre(registerRequest.getNombre());
         usuario.setEmail(registerRequest.getEmail());
         usuario.setPassword(passwordEncoder.encode(registerRequest.getPassword()));
+        usuario.setRol(rolController.buscarRol(3));
+        usuario.setEstado(true);
+
+        usuarioController.crearUsuario(usuario);
+
+        return new AuthResponse().builder().token(jwtService.getToken(usuario)).build();
+    }
+
+    public AuthResponse registrarEmpleado(RegisterRequest registerRequest) {
+        Usuario usuario = new Usuario();
+        usuario.setNombre(registerRequest.getNombre());
+        usuario.setEmail(registerRequest.getEmail());
+        usuario.setPassword(passwordEncoder.encode(registerRequest.getPassword()));
         usuario.setRol(rolController.buscarRol(2));
         usuario.setEstado(true);
 

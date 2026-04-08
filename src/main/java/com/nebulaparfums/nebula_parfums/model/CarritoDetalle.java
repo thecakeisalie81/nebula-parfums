@@ -1,5 +1,6 @@
 package com.nebulaparfums.nebula_parfums.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -15,6 +16,7 @@ public class CarritoDetalle {
     private Double precio;
 
     @ManyToOne
+    @JsonBackReference
     @JoinColumn(name = "id_carrito")
     private Carrito carrito;
 
