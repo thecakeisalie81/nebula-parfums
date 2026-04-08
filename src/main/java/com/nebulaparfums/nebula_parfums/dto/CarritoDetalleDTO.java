@@ -12,4 +12,5 @@ public class CarritoDetalleDTO {
     private Double precio;
     private Integer id_carrito;
     private Integer id_producto;
+    private Integer id_carrito_detalle;
 }

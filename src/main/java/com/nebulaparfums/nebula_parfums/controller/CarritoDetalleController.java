@@ -46,14 +46,14 @@ public class CarritoDetalleController {
 
 
     @PutMapping("/carritodetalle/editar")
-    public String editCarritoDetalle(@RequestBody CarritoDetalle carritoDetalle) {
-        iCarritoDetalleService.editCarritoDetalle(carritoDetalle);
+    public String editCarritoDetalle(@RequestBody CarritoDetalleDTO request) {
+        iCarritoDetalleService.editCarritoDetalle(request);
         return "Carrito detalle editado con sucesso";
     }
 
     @DeleteMapping("/carritodetalle/borrar")
-    public String borrarCarritoDetalle(@RequestBody  CarritoDetalle carritoDetalle) {
-        iCarritoDetalleService.editCarritoDetalle(carritoDetalle);
+    public String borrarCarritoDetalle(@RequestBody  Integer id) {
+        iCarritoDetalleService.deleteCarritoDetalleById(id);
         return "Carrito detalle borrado con sucesso";
     }
 }
