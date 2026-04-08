@@ -1,4 +1,4 @@
-package com.nebulaparfums.nebula_parfums.service;
+package com.nebulaparfums.nebula_parfums.service.interfaces;
 
 import com.nebulaparfums.nebula_parfums.model.Usuario;
 
@@ -10,4 +10,5 @@ public interface IUsuarioService {
     public void saveUsuario(Usuario usuario);
     public void deleteUsuarioById(Integer id);
     public void editUsuario(Usuario usuario);
+    public Usuario getUsuarioByEmail(String email);
 }

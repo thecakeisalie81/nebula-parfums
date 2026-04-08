@@ -1,7 +1,7 @@
 package com.nebulaparfums.nebula_parfums.controller;
 
 import com.nebulaparfums.nebula_parfums.model.DireccionEnvio;
-import com.nebulaparfums.nebula_parfums.service.IDireccionEnvioService;
+import com.nebulaparfums.nebula_parfums.service.interfaces.IDireccionEnvioService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 

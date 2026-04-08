@@ -3,13 +3,14 @@ package com.nebulaparfums.nebula_parfums.service;
 import com.nebulaparfums.nebula_parfums.exception.ResourceNotFoundException;
 import com.nebulaparfums.nebula_parfums.model.Proveedor;
 import com.nebulaparfums.nebula_parfums.repository.IProveedorRepository;
+import com.nebulaparfums.nebula_parfums.service.interfaces.IProveedorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
-public class ProveedorService implements IProveedorService{
+public class ProveedorService implements IProveedorService {
     @Autowired
     private IProveedorRepository iProveedorRepository;
 

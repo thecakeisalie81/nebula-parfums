@@ -2,13 +2,14 @@ package com.nebulaparfums.nebula_parfums.service;
 
 import com.nebulaparfums.nebula_parfums.model.LogActividad;
 import com.nebulaparfums.nebula_parfums.repository.ILogActividadRepository;
+import com.nebulaparfums.nebula_parfums.service.interfaces.ILogActividadService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
-public class LogActividadService implements ILogActividadService{
+public class LogActividadService implements ILogActividadService {
     @Autowired
     private ILogActividadRepository logActividadRepository;
 

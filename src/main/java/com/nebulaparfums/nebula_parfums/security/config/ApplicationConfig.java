@@ -1,6 +1,7 @@
 package com.nebulaparfums.nebula_parfums.security.config;
 
 import com.nebulaparfums.nebula_parfums.repository.IUsuarioRepository;
+import com.nebulaparfums.nebula_parfums.service.interfaces.IUsuarioService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -21,7 +22,7 @@ import javax.naming.AuthenticationException;
 public class ApplicationConfig {
 
     @Autowired
-    private IUsuarioRepository usuarioRepository;
+    private IUsuarioService usuarioService;
 
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws AuthenticationException {
@@ -42,8 +43,7 @@ public class ApplicationConfig {
 
     @Bean
     public UserDetailsService userDetailsService() {
-        return email -> usuarioRepository.findByEmail(email)
-                .orElseThrow(() -> new UsernameNotFoundException("El correo electronico no esta registrado"));
+        return email -> usuarioService.getUsuarioByEmail(email);
     }
 
 }

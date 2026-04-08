@@ -1,9 +1,7 @@
-package com.nebulaparfums.nebula_parfums.service;
+package com.nebulaparfums.nebula_parfums.service.interfaces;
 
 
 import com.nebulaparfums.nebula_parfums.model.CarritoDetalle;
-
-import java.util.List;
 
 public interface ICarritoDetalleService {
     public CarritoDetalle getCarritoDetalleById(Integer id);

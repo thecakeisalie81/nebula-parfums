@@ -4,13 +4,14 @@ import com.nebulaparfums.nebula_parfums.exception.QuantityBelowZeroException;
 import com.nebulaparfums.nebula_parfums.exception.ResourceNotFoundException;
 import com.nebulaparfums.nebula_parfums.model.Producto;
 import com.nebulaparfums.nebula_parfums.repository.IProductoRepository;
+import com.nebulaparfums.nebula_parfums.service.interfaces.IProductoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
-public class ProductoService implements IProductoService{
+public class ProductoService implements IProductoService {
     @Autowired
     private IProductoRepository iProductoRepository;
 

@@ -1,6 +1,7 @@
 package com.nebulaparfums.nebula_parfums.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
@@ -18,6 +19,7 @@ public class Usuario implements UserDetails {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id_usuario;
     private String nombre;
+    @Email(message = "El correo debe tener una estructura valida")
     private String email;
     private String password;
     private Boolean estado;

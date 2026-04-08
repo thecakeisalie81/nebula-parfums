@@ -3,11 +3,12 @@ package com.nebulaparfums.nebula_parfums.service;
 import com.nebulaparfums.nebula_parfums.exception.ResourceNotFoundException;
 import com.nebulaparfums.nebula_parfums.model.CarritoDetalle;
 import com.nebulaparfums.nebula_parfums.repository.ICarritoDetalleRepository;
+import com.nebulaparfums.nebula_parfums.service.interfaces.ICarritoDetalleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class CarritoDetalleService implements ICarritoDetalleService{
+public class CarritoDetalleService implements ICarritoDetalleService {
     @Autowired
     private ICarritoDetalleRepository  carritoDetalleRepository;
 

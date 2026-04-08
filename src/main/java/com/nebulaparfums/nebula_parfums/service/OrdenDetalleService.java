@@ -3,11 +3,12 @@ package com.nebulaparfums.nebula_parfums.service;
 import com.nebulaparfums.nebula_parfums.exception.ResourceNotFoundException;
 import com.nebulaparfums.nebula_parfums.model.OrdenDetalle;
 import com.nebulaparfums.nebula_parfums.repository.IOrdenDetalleRepository;
+import com.nebulaparfums.nebula_parfums.service.interfaces.IOrdenDetalleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class OrdenDetalleService implements IOrdenDetalleService{
+public class OrdenDetalleService implements IOrdenDetalleService {
     @Autowired
     private IOrdenDetalleRepository ordenDetalleRepository;
 

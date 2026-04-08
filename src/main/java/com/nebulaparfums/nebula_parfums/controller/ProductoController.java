@@ -1,7 +1,7 @@
 package com.nebulaparfums.nebula_parfums.controller;
 
 import com.nebulaparfums.nebula_parfums.model.Producto;
-import com.nebulaparfums.nebula_parfums.service.IProductoService;
+import com.nebulaparfums.nebula_parfums.service.interfaces.IProductoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 

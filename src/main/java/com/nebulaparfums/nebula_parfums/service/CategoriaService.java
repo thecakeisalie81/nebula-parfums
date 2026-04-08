@@ -3,13 +3,14 @@ package com.nebulaparfums.nebula_parfums.service;
 import com.nebulaparfums.nebula_parfums.exception.ResourceNotFoundException;
 import com.nebulaparfums.nebula_parfums.model.Categoria;
 import com.nebulaparfums.nebula_parfums.repository.ICategoriaRepository;
+import com.nebulaparfums.nebula_parfums.service.interfaces.ICategoriaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
-public class CategoriaService implements ICategoriaService{
+public class CategoriaService implements ICategoriaService {
 
     @Autowired
     private ICategoriaRepository categoriaRepository;

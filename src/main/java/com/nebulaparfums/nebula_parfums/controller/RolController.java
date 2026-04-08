@@ -1,7 +1,7 @@
 package com.nebulaparfums.nebula_parfums.controller;
 
 import com.nebulaparfums.nebula_parfums.model.Rol;
-import com.nebulaparfums.nebula_parfums.service.IRolService;
+import com.nebulaparfums.nebula_parfums.service.interfaces.IRolService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 

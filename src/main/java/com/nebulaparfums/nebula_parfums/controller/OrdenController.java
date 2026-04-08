@@ -1,7 +1,7 @@
 package com.nebulaparfums.nebula_parfums.controller;
 
 import com.nebulaparfums.nebula_parfums.model.Orden;
-import com.nebulaparfums.nebula_parfums.service.IOrdenService;
+import com.nebulaparfums.nebula_parfums.service.interfaces.IOrdenService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 

@@ -1,8 +1,7 @@
 package com.nebulaparfums.nebula_parfums.controller;
 
 import com.nebulaparfums.nebula_parfums.model.LogActividad;
-import com.nebulaparfums.nebula_parfums.service.ILogActividadService;
-import com.nebulaparfums.nebula_parfums.service.LogActividadService;
+import com.nebulaparfums.nebula_parfums.service.interfaces.ILogActividadService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 

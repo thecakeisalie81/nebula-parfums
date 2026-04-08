@@ -3,11 +3,12 @@ package com.nebulaparfums.nebula_parfums.service;
 import com.nebulaparfums.nebula_parfums.exception.ResourceNotFoundException;
 import com.nebulaparfums.nebula_parfums.model.DireccionEnvio;
 import com.nebulaparfums.nebula_parfums.repository.IDireccionEnvioRepository;
+import com.nebulaparfums.nebula_parfums.service.interfaces.IDireccionEnvioService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class DireccionEnvioService implements IDireccionEnvioService{
+public class DireccionEnvioService implements IDireccionEnvioService {
 
     @Autowired
     private IDireccionEnvioRepository direccionEnvioRepository;

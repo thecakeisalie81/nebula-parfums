@@ -3,13 +3,14 @@ package com.nebulaparfums.nebula_parfums.service;
 import com.nebulaparfums.nebula_parfums.exception.ResourceNotFoundException;
 import com.nebulaparfums.nebula_parfums.model.Rol;
 import com.nebulaparfums.nebula_parfums.repository.IRolRepository;
+import com.nebulaparfums.nebula_parfums.service.interfaces.IRolService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
-public class RolService implements IRolService{
+public class RolService implements IRolService {
     @Autowired
     private IRolRepository iRolRepository;
 
