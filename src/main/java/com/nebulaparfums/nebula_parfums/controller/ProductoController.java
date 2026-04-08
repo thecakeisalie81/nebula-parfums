@@ -1,6 +1,8 @@
 package com.nebulaparfums.nebula_parfums.controller;
 
+import com.nebulaparfums.nebula_parfums.dto.MovimientoDTO;
 import com.nebulaparfums.nebula_parfums.model.Producto;
+import com.nebulaparfums.nebula_parfums.service.interfaces.IMovimientoInventarioService;
 import com.nebulaparfums.nebula_parfums.service.interfaces.IProductoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -12,6 +14,9 @@ import java.util.List;
 public class ProductoController {
     @Autowired
     private IProductoService iProductoService;
+
+    @Autowired
+    private IMovimientoInventarioService iMovimientoInventarioService;
 
     @GetMapping("/producto/traer")
     public List<Producto> traerProductos() {
@@ -51,6 +56,13 @@ public class ProductoController {
     @PostMapping("/producto/crear")
     public String crearProducto(@RequestBody Producto producto) {
         iProductoService.saveProducto(producto);
+
+        MovimientoDTO movimientoDTO = new MovimientoDTO();
+        movimientoDTO.setId_producto(producto.getId_producto());
+        movimientoDTO.setCantidad(producto.getStock_actual());
+
+        iMovimientoInventarioService.registrarRegistroProducto(movimientoDTO);
+
         return "Producto Creado con sucesso";
     }
 }

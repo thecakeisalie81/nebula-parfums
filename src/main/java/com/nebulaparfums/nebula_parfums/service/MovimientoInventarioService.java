@@ -1,5 +1,6 @@
 package com.nebulaparfums.nebula_parfums.service;
 
+import com.nebulaparfums.nebula_parfums.dto.MovimientoDTO;
 import com.nebulaparfums.nebula_parfums.exception.QuantityBelowZeroException;
 import com.nebulaparfums.nebula_parfums.model.LogActividad;
 import com.nebulaparfums.nebula_parfums.model.MovimientoInventario;
@@ -118,4 +119,35 @@ public class MovimientoInventarioService implements IMovimientoInventarioService
 
         return "Se registro el movimiento correctamente";
     }
+
+    @Override
+    @Transactional
+    public String registrarRegistroProducto(MovimientoDTO movimientoDTO) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String username = auth.getName();
+        Usuario usuario = iUsuarioService.getUsuarioByEmail(username);
+
+        Producto producto = iProductoService.getProductoById(movimientoDTO.getId_producto());
+
+        MovimientoInventario movimientoInventario = new MovimientoInventario();
+        movimientoInventario.setProducto(producto);
+        movimientoInventario.setCantidad(producto.getStock_actual());
+        movimientoInventario.setTipo_movimiento("REGISTRO");
+        movimientoInventario.setFecha_movimiento(LocalDateTime.now());
+        movimientoInventario.setUsuario(usuario);
+
+        saveMovimientoInventario(movimientoInventario);
+
+        LogActividad logActividad = new LogActividad();
+        logActividad.setUsuario(usuario);
+        logActividad.setAccion("Registro de producto");
+        logActividad.setDetalle("Usuario " + usuario.getNombre() + " realizo un registro de producto "+ producto.getNombre());
+        logActividad.setFecha_actualizacion(LocalDateTime.now());
+
+        iLogActividadService.saveLogActividad(logActividad);
+
+        return  "Se registro el movimiento correctamente";
+    }
+
+
 }
