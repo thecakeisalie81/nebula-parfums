@@ -1,5 +1,6 @@
 package com.nebulaparfums.nebula_parfums.controller;
 
+import com.nebulaparfums.nebula_parfums.dto.OrdenDTO;
 import com.nebulaparfums.nebula_parfums.model.Orden;
 import com.nebulaparfums.nebula_parfums.service.interfaces.IOrdenService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,8 +30,8 @@ public class OrdenController {
     }
 
     @PostMapping("/orden/crear")
-    public String crearOrden(@RequestBody Orden orden){
-        iOrdenService.saveOrden(orden);
+    public String crearOrden(@RequestBody OrdenDTO orden){
+        iOrdenService.crearOrden(orden);
         return "Orden creado con sucesso";
     }
 

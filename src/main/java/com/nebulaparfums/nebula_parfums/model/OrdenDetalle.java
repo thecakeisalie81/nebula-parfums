@@ -1,5 +1,6 @@
 package com.nebulaparfums.nebula_parfums.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -18,6 +19,7 @@ public class OrdenDetalle {
     private Producto producto;
 
     @ManyToOne
+    @JsonBackReference
     @JoinColumn(name = "id_orden")
     private Orden orden;
 

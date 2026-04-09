@@ -1,5 +1,6 @@
 package com.nebulaparfums.nebula_parfums.controller;
 
+import com.nebulaparfums.nebula_parfums.dto.OrdendetalleDTO;
 import com.nebulaparfums.nebula_parfums.model.OrdenDetalle;
 import com.nebulaparfums.nebula_parfums.service.interfaces.IOrdenDetalleService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,8 +17,8 @@ public class OrdenDetalleController {
     }
 
     @PostMapping("/ordendetalle/crear")
-    public String crearOrdenDetalle(@RequestBody OrdenDetalle ordenDetalle) {
-        iOrdenDetalleService.saveOrdenDetalle(ordenDetalle);
+    public String crearOrdenDetalle(@RequestBody OrdendetalleDTO ordendetalleDTO) {
+        iOrdenDetalleService.createOrdenDetalle(ordendetalleDTO);
         return "Orden detalle creado con sucesso";
     }
 
@@ -27,7 +28,7 @@ public class OrdenDetalleController {
         return "Orden detalle editado con sucesso";
     }
 
-    @DeleteMapping("/ordenDetalle/borrar")
+    @DeleteMapping("/ordendetalle/borrar")
     public String borrarOrdenDetalle(@RequestParam Integer id) {
         iOrdenDetalleService.deleteOrdenDetalleById(id);
         return "Orden detalle borrado con sucesso";
