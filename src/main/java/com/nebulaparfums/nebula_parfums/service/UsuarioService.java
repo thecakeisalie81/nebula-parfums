@@ -5,6 +5,7 @@ import com.nebulaparfums.nebula_parfums.model.Usuario;
 import com.nebulaparfums.nebula_parfums.repository.IUsuarioRepository;
 import com.nebulaparfums.nebula_parfums.service.interfaces.IUsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -36,7 +37,7 @@ public class UsuarioService implements IUsuarioService {
         if (iUsuarioRepository.existsById(id)) {
             iUsuarioRepository.deleteById(id);
         }else {
-            throw new ResourceNotFoundException("No se encontro el usuario");
+            throw new UsernameNotFoundException("No se encontro el usuario");
         }
     }
 

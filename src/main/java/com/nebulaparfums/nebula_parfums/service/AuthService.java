@@ -5,15 +5,23 @@ import com.nebulaparfums.nebula_parfums.auth.LoginRequest;
 import com.nebulaparfums.nebula_parfums.auth.RegisterRequest;
 import com.nebulaparfums.nebula_parfums.controller.RolController;
 import com.nebulaparfums.nebula_parfums.controller.UsuarioController;
+import com.nebulaparfums.nebula_parfums.exception.InvalidPasswordException;
+import com.nebulaparfums.nebula_parfums.model.LogActividad;
 import com.nebulaparfums.nebula_parfums.model.Usuario;
 import com.nebulaparfums.nebula_parfums.repository.IUsuarioRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDateTime;
 
 @Service
 @RequiredArgsConstructor
@@ -36,12 +44,30 @@ public class AuthService {
     @Autowired
     private IUsuarioRepository usuarioRepository;
 
+    @Autowired
+    private LogActividadService logActividadService;
+
+
+
+
     public AuthResponse login(LoginRequest loginRequest) {
-        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword()));
-        UserDetails user = usuarioRepository.findByEmail(loginRequest.getEmail()).orElseThrow();
-        String token = jwtService.getToken(user);
-        return AuthResponse.builder().token(token).build();
+        try {
+            authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(
+                            loginRequest.getEmail(), loginRequest.getPassword()
+                    )
+            );
+
+            UserDetails user = usuarioRepository.findByEmail(loginRequest.getEmail())
+                    .orElseThrow();
+            String token = jwtService.getToken(user);
+            return AuthResponse.builder().token(token).build();
+
+        } catch (BadCredentialsException e) {
+            throw new InvalidPasswordException(loginRequest.getEmail());
+        }
     }
+
 
     public AuthResponse register(RegisterRequest registerRequest) {
         Usuario usuario = new Usuario();
@@ -57,6 +83,10 @@ public class AuthService {
     }
 
     public AuthResponse registrarEmpleado(RegisterRequest registerRequest) {
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Usuario usuarioLogeado = (Usuario) authentication.getPrincipal();
+
         Usuario usuario = new Usuario();
         usuario.setNombre(registerRequest.getNombre());
         usuario.setEmail(registerRequest.getEmail());
@@ -66,8 +96,14 @@ public class AuthService {
 
         usuarioController.crearUsuario(usuario);
 
+        LogActividad logActividad = new LogActividad();
+        logActividad.setUsuario(usuario);
+        logActividad.setAccion("Registro de empleado");
+        logActividad.setDetalle("Usuario administrador " + usuarioLogeado.getNombre() + " registro un nuevo empleado");
+        logActividad.setFecha_actualizacion(LocalDateTime.now());
+
+        logActividadService.saveLogActividad(logActividad);
+
         return new AuthResponse().builder().token(jwtService.getToken(usuario)).build();
     }
-
-
 }

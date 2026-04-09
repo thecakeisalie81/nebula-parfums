@@ -1,5 +1,10 @@
 package com.nebulaparfums.nebula_parfums.exception;
 
+import com.nebulaparfums.nebula_parfums.model.LogActividad;
+import com.nebulaparfums.nebula_parfums.model.Usuario;
+import com.nebulaparfums.nebula_parfums.service.interfaces.ILogActividadService;
+import com.nebulaparfums.nebula_parfums.service.interfaces.IUsuarioService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -11,8 +16,15 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
+import java.time.LocalDateTime;
+
 @ControllerAdvice
 public class RestExceptions {
+
+    @Autowired
+    IUsuarioService usuarioService;
+    @Autowired
+    ILogActividadService logActividadService;
 
     @ExceptionHandler
     public ResponseEntity<CustomMessageException> handleException(ResourceNotFoundException e) {
@@ -69,20 +81,33 @@ public class RestExceptions {
     }
 
     @ExceptionHandler
-    public ResponseEntity<CustomMessageException> handleException(BadCredentialsException e) {
-        CustomMessageException exception = new CustomMessageException();
-        exception.setStatus(HttpStatus.NOT_FOUND.value());
-        exception.setTimestamp(System.currentTimeMillis());
-        exception.setMessage("La contraseña no es correcta, intentelo de nuevo");
-        return new ResponseEntity<>(exception, HttpStatus.NOT_FOUND);
-    }
-
-    @ExceptionHandler
     public ResponseEntity<CustomMessageException> handleException(AccessDeniedException e) {
         CustomMessageException exception = new CustomMessageException();
         exception.setStatus(HttpStatus.UNAUTHORIZED.value());
         exception.setTimestamp(System.currentTimeMillis());
         exception.setMessage("No tiene permisos para acceder a esta funcionalidad");
+        return new ResponseEntity<>(exception, HttpStatus.UNAUTHORIZED);
+    }
+
+    @ExceptionHandler
+    public ResponseEntity<CustomMessageException> handleException(InvalidPasswordException e) {
+
+        LogActividad logActividad = new LogActividad();
+
+        Usuario usuario = usuarioService.getUsuarioByEmail(e.getMessage());
+
+        if (usuario.getRol().getId_rol() == 1 || usuario.getRol().getId_rol() == 2) {
+            logActividad.setUsuario(usuario);
+            logActividad.setAccion("Login fallido");
+            logActividad.setDetalle("Usuario " + usuario.getNombre() + " realizo un intento login");
+            logActividad.setFecha_actualizacion(LocalDateTime.now());
+            logActividadService.saveLogActividad(logActividad);
+        }
+
+        CustomMessageException exception = new CustomMessageException();
+        exception.setStatus(HttpStatus.UNAUTHORIZED.value());
+        exception.setTimestamp(System.currentTimeMillis());
+        exception.setMessage("La contrasena fallo");
         return new ResponseEntity<>(exception, HttpStatus.UNAUTHORIZED);
     }
 }
