@@ -1,0 +1,227 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Usuarios</title>
+    <link rel="stylesheet" href="styles.css" />
+    <link />
+    <link
+            href="https://fonts.googleapis.com/icon?family=Material+Icons"
+            rel="stylesheet"
+    />
+    <link
+            rel="stylesheet"
+            href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined"
+    />
+</head>
+<body>
+<div class="container">
+    <aside>
+        <div class="top">
+            <div class="logo">
+                <img class="img-logo" src="logo.png" alt="" />
+                <h2>
+                    <span class="danger" style="font-size: 0.8rem">parfums</span>
+                </h2>
+            </div>
+            <div class="close" id="close-btn">
+                <span class="material-symbols-outlined">close</span>
+            </div>
+        </div>
+
+        <div class="sidebar">
+            <a href="index.html">
+                <span class="material-symbols-outlined"> dashboard </span>
+                <h3>Dashboard</h3>
+            </a>
+
+            <a href="productos.html">
+                <span class="material-symbols-outlined"> inventory </span>
+                <h3>Productos</h3>
+            </a>
+
+            <a href="movimientos.html">
+                <span class="material-symbols-outlined"> mobiledata_arrows </span>
+                <h3>Movimientos</h3>
+            </a>
+
+            <a href="categorias.html">
+                <span class="material-symbols-outlined"> category </span>
+                <h3>Categorias</h3>
+            </a>
+
+            <a href="pedidos.html">
+                <span class="material-symbols-outlined"> shopping_bag_speed </span>
+                <h3>Pedidos</h3>
+            </a>
+
+            <a href="proveedores.html">
+                <span class="material-symbols-outlined"> local_shipping </span>
+                <h3>Proveedores</h3>
+            </a>
+
+            <a href="analisis.html">
+                <span class="material-symbols-outlined"> analytics </span>
+                <h3>Analisis</h3>
+            </a>
+
+            <a href="usuarios.html" class="active">
+                <span class="material-symbols-outlined"> group </span>
+                <h3>Usuarios</h3>
+            </a>
+
+            <a href="auditoria.html">
+                <span class="material-symbols-outlined"> fact_check </span>
+                <h3>Auditoria</h3>
+            </a>
+
+            <a href="reportes.html">
+                <span class="material-symbols-outlined"> description </span>
+                <h3>Reportes</h3>
+            </a>
+
+            <a href="#">
+                <span class="material-symbols-outlined"> logout </span>
+                <h3>Logout</h3>
+            </a>
+        </div>
+    </aside>
+
+    <!------------end of aside-------------->
+
+    <main>
+        <h1>Gestión de Usuarios</h1>
+
+        <!-- Cards resumen -->
+        <div class="insights">
+            <div class="sales">
+                <span class="material-symbols-outlined">group</span>
+                <div class="middle">
+                    <div class="left">
+                        <h3>Total de Usuarios</h3>
+                        <h1>8</h1>
+                    </div>
+                </div>
+                <small class="text-muted">Todos los registrados</small>
+            </div>
+
+            <div class="income">
+                <span class="material-symbols-outlined">verified</span>
+                <div class="middle">
+                    <div class="left">
+                        <h3>Usuarios Activos</h3>
+                        <h1>6</h1>
+                    </div>
+                </div>
+                <small class="text-muted">Actualmente activos</small>
+            </div>
+
+            <div class="expenses">
+                <span class="material-symbols-outlined">admin_panel_settings</span>
+                <div class="middle">
+                    <div class="left">
+                        <h3>Administradores</h3>
+                        <h1>1</h1>
+                    </div>
+                </div>
+                <small class="text-muted">Cuentas de administrador</small>
+            </div>
+
+            <div class="orders">
+                <span class="material-symbols-outlined">supervisor_account</span>
+                <div class="middle">
+                    <div class="left">
+                        <h3>Gerentes</h3>
+                        <h1>3</h1>
+                    </div>
+                </div>
+                <small class="text-muted">Cuentas de gerente</small>
+            </div>
+        </div>
+
+        <!-- Tabla de usuarios -->
+        <div class="recent-orders">
+            <h2>Usuarios (8)</h2>
+            <div class="controls">
+                <input type="text" class="search-bar" placeholder="Buscar usuario..." />
+                <button>+ Nuevo Usuario</button>
+            </div>
+            <table>
+                <thead>
+                <tr>
+                    <th>Nombre</th>
+                    <th>Email</th>
+                    <th>Rol</th>
+                    <th>Departamento</th>
+                    <th>Estado</th>
+                    <th>Último Acceso</th>
+                    <th>Creado</th>
+                    <th>Acciones</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>John Smith</td>
+                    <td>john.smith@company.com</td>
+                    <td>Admin</td>
+                    <td>IT</td>
+                    <td class="success">Activo</td>
+                    <td>2024-03-13</td>
+                    <td>2023-01-15</td>
+                    <td>
+                        <span class="material-symbols-outlined primary">edit</span>
+                        <span class="material-symbols-outlined danger">delete</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Sarah Johnson</td>
+                    <td>sarah.johnson@company.com</td>
+                    <td>Gerente</td>
+                    <td>Operations</td>
+                    <td class="success">Activo</td>
+                    <td>2024-03-12</td>
+                    <td>2023-02-20</td>
+                    <td>
+                        <span class="material-symbols-outlined primary">edit</span>
+                        <span class="material-symbols-outlined danger">delete</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Robert Martinez</td>
+                    <td>robert.martinez@company.com</td>
+                    <td>Empleado</td>
+                    <td>Operations</td>
+                    <td class="danger">Suspendido</td>
+                    <td>2024-01-20</td>
+                    <td>2023-04-15</td>
+                    <td>
+                        <span class="material-symbols-outlined primary">edit</span>
+                        <span class="material-symbols-outlined danger">delete</span>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </main>
+    <!---------------end of main----------------------->
+
+    <div class="right">
+        <div class="top">
+            <button id="menu-btn">
+                <span class="material-symbols-outlined"> menu </span>
+            </button>
+            <div class="theme-toggler">
+                <span class="material-symbols-outlined active"> light_mode </span>
+                <span class="material-symbols-outlined"> dark_mode </span>
+            </div>
+        </div>
+    </div>
+</div>
+        <!-----end of top-->
+
+
+
+        <script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,274 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="styles.css" />
+    <link />
+    <link
+            href="https://fonts.googleapis.com/icon?family=Material+Icons"
+            rel="stylesheet"
+    />
+    <link
+            rel="stylesheet"
+            href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined"
+    />
+</head>
+<body>
+<div class="container">
+    <aside>
+        <div class="top">
+            <div class="logo">
+                <img class="img-logo" src="logo.png" alt="" />
+                <h2>
+                    <span class="danger" style="font-size: 0.8rem">parfums</span>
+                </h2>
+            </div>
+            <div class="close" id="close-btn">
+                <span class="material-symbols-outlined">close</span>
+            </div>
+        </div>
+
+        <div class="sidebar">
+            <a href="index.html" >
+                <span class="material-symbols-outlined"> dashboard </span>
+                <h3>Dashboard</h3>
+            </a>
+
+            <a href="productos.html">
+                <span class="material-symbols-outlined"> inventory </span>
+                <h3>Productos</h3>
+            </a>
+
+            <a href="movimientos.html">
+                <span class="material-symbols-outlined"> mobiledata_arrows </span>
+                <h3>Movimientos</h3>
+            </a>
+
+            <a href="categorias.html">
+                <span class="material-symbols-outlined"> category </span>
+                <h3>Categorias</h3>
+            </a>
+
+            <a href="pedidos.html">
+                <span class="material-symbols-outlined"> shopping_bag_speed </span>
+                <h3>Pedidos</h3>
+            </a>
+
+            <a href="proveedores.html">
+                <span class="material-symbols-outlined"> local_shipping </span>
+                <h3>Proveedores</h3>
+            </a>
+
+            <a href="analisis.html" class="active">
+                <span class="material-symbols-outlined"> analytics </span>
+                <h3>Analisis</h3>
+            </a>
+
+            <a href="usuarios.html">
+                <span class="material-symbols-outlined"> group </span>
+                <h3>Usuarios</h3>
+            </a>
+
+            <a href="auditoria.html">
+                <span class="material-symbols-outlined"> fact_check </span>
+                <h3>Auditoria</h3>
+            </a>
+
+            <a href="reportes.html">
+                <span class="material-symbols-outlined"> description </span>
+                <h3>Reportes</h3>
+            </a>
+
+            <a href="#">
+                <span class="material-symbols-outlined"> logout </span>
+                <h3>Logout</h3>
+            </a>
+        </div>
+    </aside>
+
+    <!------------end of aside-------------->
+
+    <main>
+        <h1>Dashboard</h1>
+
+        <div class="date">
+            <input type="date" />
+        </div>
+
+        <div>
+            <div class="insights">
+                <div class="sales">
+                    <span class="material-symbols-outlined"> shelves </span>
+                    <div class="middle">
+                        <div class="left">
+                            <h3>Total de productos</h3>
+                            <h1>50</h1>
+                        </div>
+                        <div class="progress"></div>
+                    </div>
+                    <small class="text-muted">Last 24 Hours</small>
+                </div>
+
+                <div class="expenses">
+                    <span class="material-symbols-outlined"> warning </span>
+                    <div class="middle">
+                        <div class="left">
+                            <h3>Stock bajo</h3>
+                            <h1>50</h1>
+                        </div>
+                        <div class="progress"></div>
+                    </div>
+                    <small class="text-muted">Last 24 Hours</small>
+                </div>
+
+                <div class="income">
+                    <span class="material-symbols-outlined"> paid </span>
+                    <div class="middle">
+                        <div class="left">
+                            <h3>Dinero en ventas este mes</h3>
+                            <h1>50</h1>
+                        </div>
+                        <div class="progress"></div>
+                    </div>
+                    <small class="text-muted">Last 24 Hours</small>
+                </div>
+
+
+            </div>
+
+            <!-------------end of sales-------------------->
+
+            <div class="recent-orders">
+                <h2>Ordenes recientes</h2>
+                <table>
+                    <thead>
+                    <tr>
+                        <th>Fecha</th>
+                        <th>Numero de productos</th>
+                        <th>Total</th>
+                        <th>Estado</th>
+                        <th></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td>9/04/2026</td>
+                        <td>6</td>
+                        <td>55000</td>
+                        <td class="warning">PENDIENTE</td>
+                        <td class="primary">Detalles</td>
+                    </tr>
+
+                    <tr>
+                        <td>9/04/2026</td>
+                        <td>6</td>
+                        <td>55000</td>
+                        <td class="warning">PENDIENTE</td>
+                        <td class="primary">Detalles</td>
+                    </tr>
+
+                    <tr>
+                        <td>9/04/2026</td>
+                        <td>6</td>
+                        <td>55000</td>
+                        <td class="warning">PENDIENTE</td>
+                        <td class="primary">Detalles</td>
+                    </tr>
+                    </tbody>
+                </table>
+                <a href="#">Mostrar todas</a>
+            </div>
+        </div>
+    </main>
+    <!---------------end of main----------------------->
+
+    <div class="right">
+        <div class="top">
+            <button id="menu-btn">
+                <span class="material-symbols-outlined"> menu </span>
+            </button>
+            <div class="theme-toggler">
+                <span class="material-symbols-outlined active"> light_mode </span>
+                <span class="material-symbols-outlined"> dark_mode </span>
+            </div>
+        </div>
+        <!-----end of top-->
+
+        <div class="recent-updates">
+            <h2>Movimientos recientes</h2>
+            <div class="updates">
+                <div class="update">
+                    <div class="message">
+                        <p><b>Empleado</b> Realizo un movimiento en el producto</p>
+                        <small class="text-muted">A X fecha</small>
+                    </div>
+                </div>
+
+                <div class="update">
+                    <div class="message">
+                        <p><b>Empleado</b> Realizo un movimiento en el producto</p>
+                        <small class="text-muted">A X fecha</small>
+                    </div>
+                </div>
+
+                <div class="update">
+                    <div class="message">
+                        <p><b>Empleado</b> Realizo un movimiento en el producto</p>
+                        <small class="text-muted">A X fecha</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-----------end of ultimos movimientos--------------->
+
+        <div class="sales-analytics">
+            <h2>Productos con stock bajo</h2>
+            <div class="item online">
+                <div class="icon">
+                    <span class="material-symbols-outlined"> warning </span>
+                </div>
+                <div class="right">
+                    <div class="info">
+                        <h3>Producto X</h3>
+                        <small class="text-muted">Solo quedan</small>
+                    </div>
+                    <h5 class="danger">X unidades</h5>
+                </div>
+            </div>
+
+            <div class="item online">
+                <div class="icon">
+                    <span class="material-symbols-outlined"> warning </span>
+                </div>
+                <div class="right">
+                    <div class="info">
+                        <h3>Producto X</h3>
+                        <small class="text-muted">Solo quedan</small>
+                    </div>
+                    <h5 class="danger">X unidades</h5>
+                </div>
+            </div>
+
+            <div class="item online">
+                <div class="icon">
+                    <span class="material-symbols-outlined"> warning </span>
+                </div>
+                <div class="right">
+                    <div class="info">
+                        <h3>Producto X</h3>
+                        <small class="text-muted">Solo quedan</small>
+                    </div>
+                    <h5 class="danger">X unidades</h5>
+                </div>
+            </div>
+            <a href="#">Mostrar todas</a>
+        </div>
+    </div>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>

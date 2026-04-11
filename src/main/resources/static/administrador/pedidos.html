@@ -1,0 +1,249 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Pedidos</title>
+    <link rel="stylesheet" href="styles.css" />
+    <link />
+    <link
+            href="https://fonts.googleapis.com/icon?family=Material+Icons"
+            rel="stylesheet"
+    />
+    <link
+            rel="stylesheet"
+            href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined"
+    />
+</head>
+<body>
+<div class="container">
+    <aside>
+        <div class="top">
+            <div class="logo">
+                <img class="img-logo" src="logo.png" alt="" />
+                <h2>
+                    <span class="danger" style="font-size: 0.8rem">parfums</span>
+                </h2>
+            </div>
+            <div class="close" id="close-btn">
+                <span class="material-symbols-outlined">close</span>
+            </div>
+        </div>
+
+        <div class="sidebar">
+            <a href="index.html">
+                <span class="material-symbols-outlined"> dashboard </span>
+                <h3>Dashboard</h3>
+            </a>
+
+            <a href="productos.html">
+                <span class="material-symbols-outlined"> inventory </span>
+                <h3>Productos</h3>
+            </a>
+
+            <a href="movimientos.html">
+                <span class="material-symbols-outlined"> mobiledata_arrows </span>
+                <h3>Movimientos</h3>
+            </a>
+
+            <a href="categorias.html">
+                <span class="material-symbols-outlined"> category </span>
+                <h3>Categorias</h3>
+            </a>
+
+            <a href="pedidos.html" class="active">
+                <span class="material-symbols-outlined"> shopping_bag_speed </span>
+                <h3>Pedidos</h3>
+            </a>
+
+            <a href="proveedores.html">
+                <span class="material-symbols-outlined"> local_shipping </span>
+                <h3>Proveedores</h3>
+            </a>
+
+            <a href="analisis.html">
+                <span class="material-symbols-outlined"> analytics </span>
+                <h3>Analisis</h3>
+            </a>
+
+            <a href="usuarios.html">
+                <span class="material-symbols-outlined"> group </span>
+                <h3>Usuarios</h3>
+            </a>
+
+            <a href="auditoria.html">
+                <span class="material-symbols-outlined"> fact_check </span>
+                <h3>Auditoria</h3>
+            </a>
+
+            <a href="reportes.html">
+                <span class="material-symbols-outlined"> description </span>
+                <h3>Reportes</h3>
+            </a>
+
+            <a href="#">
+                <span class="material-symbols-outlined"> logout </span>
+                <h3>Logout</h3>
+            </a>
+        </div>
+    </aside>
+
+    <!------------end of aside-------------->
+
+    <main>
+        <h1>Gestión de Pedidos</h1>
+
+        <!-- Resumen -->
+        <div class="insights">
+            <div class="sales">
+                <span class="material-symbols-outlined">shopping_bag</span>
+                <div class="middle">
+                    <div class="left">
+                        <h3>Total Pedidos</h3>
+                        <h1>8</h1>
+                    </div>
+                </div>
+                <small class="text-muted">1 pendiente</small>
+            </div>
+
+            <div class="income">
+                <span class="material-symbols-outlined">local_shipping</span>
+                <div class="middle">
+                    <div class="left">
+                        <h3>En Proceso</h3>
+                        <h1>1</h1>
+                    </div>
+                </div>
+                <small class="text-muted">Procesando ahora</small>
+            </div>
+
+            <div class="orders">
+                <span class="material-symbols-outlined">done_all</span>
+                <div class="middle">
+                    <div class="left">
+                        <h3>Enviados</h3>
+                        <h1>2</h1>
+                    </div>
+                </div>
+                <small class="text-muted">En tránsito</small>
+            </div>
+
+            <div class="orders">
+                <span class="material-symbols-outlined">payments</span>
+                <div class="middle">
+                    <div class="left">
+                        <h3>Ingresos Totales</h3>
+                        <h1>$1931</h1>
+                    </div>
+                </div>
+                <small class="text-muted">3 entregados</small>
+            </div>
+        </div>
+
+        <!-- Lista de pedidos -->
+        <h2>Lista de Pedidos</h2>
+        <div class="recent-orders">
+            <table>
+                <thead>
+                <tr>
+                    <th>Nº Pedido</th>
+                    <th>Cliente</th>
+                    <th>Fecha</th>
+                    <th>Productos</th>
+                    <th>Total</th>
+                    <th>Estado</th>
+                    <th>Acciones</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>ORD-2026-001</td>
+                    <td>Ana García López</td>
+                    <td>13/3/2026</td>
+                    <td>2 productos</td>
+                    <td>$321</td>
+                    <td>Entregado</td>
+                    <td>
+                        <a href="#" class="view-order"
+                        ><span class="material-symbols-outlined"> edit </span></a
+                        >
+                    </td>
+                </tr>
+                <tr>
+                    <td>ORD-2026-002</td>
+                    <td>Carlos Martínez Ruiz</td>
+                    <td>12/3/2026</td>
+                    <td>2 productos</td>
+                    <td>$255</td>
+                    <td>Enviado</td>
+                    <td>
+                        <a href="#" class="view-order"
+                        ><span class="material-symbols-outlined"> edit </span></a
+                        >
+                    </td>
+                </tr>
+                <!-- más filas -->
+                </tbody>
+            </table>
+        </div>
+    </main>
+
+    <!-- Modal -->
+    <div id="orderModal" class="modal">
+        <div class="modal-content">
+            <span id="closeOrderModal" class="close">&times;</span>
+            <h2>Detalle del Pedido</h2>
+            <form>
+                <label>Nº Pedido:</label>
+                <input type="text" id="pedidoId" readonly />
+
+                <label>Cliente:</label>
+                <input type="text" id="pedidoCliente" readonly />
+
+                <label>Fecha:</label>
+                <input type="text" id="pedidoFecha" readonly />
+
+                <label>Productos:</label>
+                <input type="text" id="pedidoProductos" readonly />
+
+                <label>Total:</label>
+                <input type="text" id="pedidoTotal" readonly />
+
+                <label>Estado:</label>
+                <select id="pedidoEstado">
+                    <option value="Pendiente">Pendiente</option>
+                    <option value="Procesando">Procesando</option>
+                    <option value="Enviado">Enviado</option>
+                    <option value="Entregado">Entregado</option>
+                    <option value="Cancelado">Cancelado</option>
+                </select>
+
+                <button type="submit" class="btn-success">Guardar</button>
+            </form>
+        </div>
+    </div>
+
+    <!---------------end of main----------------------->
+
+    <div class="right">
+        <div class="top">
+            <button id="menu-btn">
+                <span class="material-symbols-outlined"> menu </span>
+            </button>
+            <div class="theme-toggler">
+                <span class="material-symbols-outlined active"> light_mode </span>
+                <span class="material-symbols-outlined"> dark_mode </span>
+            </div>
+        </div>
+    </div>
+</div>
+        <!-----end of top-->
+
+        <!-----------end of ultimos movimientos--------------->
+
+
+
+        <script src="script.js"></script>
+        <script src="script_pedidos.js"></script>
+</body>
+</html>

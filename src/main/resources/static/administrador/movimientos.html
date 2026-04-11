@@ -1,0 +1,235 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="styles.css" />
+    <link />
+    <link
+            href="https://fonts.googleapis.com/icon?family=Material+Icons"
+            rel="stylesheet"
+    />
+    <link
+            rel="stylesheet"
+            href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined"
+    />
+</head>
+<body>
+<div class="container">
+    <aside>
+        <div class="top">
+            <div class="logo">
+                <img class="img-logo" src="logo.png" alt="" />
+                <h2>
+                    <span class="danger" style="font-size: 0.8rem">parfums</span>
+                </h2>
+            </div>
+            <div class="close" id="close-btn">
+                <span class="material-symbols-outlined">close</span>
+            </div>
+        </div>
+
+        <div class="sidebar">
+            <a href="index.html">
+                <span class="material-symbols-outlined"> dashboard </span>
+                <h3>Dashboard</h3>
+            </a>
+
+            <a href="productos.html">
+                <span class="material-symbols-outlined"> inventory </span>
+                <h3>Productos</h3>
+            </a>
+
+            <a href="movimientos.html" class="active">
+                <span class="material-symbols-outlined"> mobiledata_arrows </span>
+                <h3>Movimientos</h3>
+            </a>
+
+            <a href="categorias.html">
+                <span class="material-symbols-outlined"> category </span>
+                <h3>Categorias</h3>
+            </a>
+
+            <a href="pedidos.html">
+                <span class="material-symbols-outlined"> shopping_bag_speed </span>
+                <h3>Pedidos</h3>
+            </a>
+
+            <a href="proveedores.html">
+                <span class="material-symbols-outlined"> local_shipping </span>
+                <h3>Proveedores</h3>
+            </a>
+
+            <a href="analisis.html">
+                <span class="material-symbols-outlined"> analytics </span>
+                <h3>Analisis</h3>
+            </a>
+
+            <a href="usuarios.html">
+                <span class="material-symbols-outlined"> group </span>
+                <h3>Usuarios</h3>
+            </a>
+
+            <a href="auditoria.html">
+                <span class="material-symbols-outlined"> fact_check </span>
+                <h3>Auditoria</h3>
+            </a>
+
+            <a href="reportes.html">
+                <span class="material-symbols-outlined"> description </span>
+                <h3>Reportes</h3>
+            </a>
+
+            <a href="#">
+                <span class="material-symbols-outlined"> logout </span>
+                <h3>Logout</h3>
+            </a>
+        </div>
+    </aside>
+
+    <!------------end of aside-------------->
+
+    <main>
+        <h1>Movimientos de Inventario</h1>
+
+        <!-- Controles de búsqueda y filtros -->
+        <div class="controls">
+            <input
+                    type="text"
+                    placeholder="Buscar por producto..."
+                    class="search-bar"
+            />
+
+            <select id="tipoMovimiento" class="filter-select">
+                <option value="">Todos los tipos</option>
+                <option value="Venta">Venta</option>
+                <option value="Entrada">Entrada</option>
+                <option value="Salida">Salida</option>
+                <option value="Devolución">Devolución</option>
+                <option value="Ajuste">Ajuste</option>
+            </select>
+
+            <input type="date" id="fechaInicio" />
+            <input type="date" id="fechaFin" />
+        </div>
+
+        <!-- Tabla de movimientos -->
+        <div class="recent-orders">
+            <h2>Historial de Movimientos</h2>
+            <table>
+                <thead>
+                <tr>
+                    <th>Fecha/Hora</th>
+                    <th>Tipo</th>
+                    <th>Producto</th>
+                    <th>Cantidad</th>
+                    <th>Stock Anterior</th>
+                    <th>Stock Nuevo</th>
+                    <th>Motivo</th>
+                    <th>Referencia</th>
+                    <th>Usuario</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>2026-03-14 10:30</td>
+                    <td>Venta</td>
+                    <td>Sauvage - Dior</td>
+                    <td>-2</td>
+                    <td>45</td>
+                    <td>43</td>
+                    <td>Venta en tienda física</td>
+                    <td>VENTA-001</td>
+                    <td>Carlos Martínez</td>
+                </tr>
+                <tr>
+                    <td>2026-03-14 09:15</td>
+                    <td>Entrada</td>
+                    <td>Chanel No. 5 - Chanel</td>
+                    <td>+50</td>
+                    <td>15</td>
+                    <td>65</td>
+                    <td>Reposición de stock - Proveedor</td>
+                    <td>PO-2026-015</td>
+                    <td>Sistema</td>
+                </tr>
+                <!-- Más filas aquí -->
+                </tbody>
+            </table>
+        </div>
+    </main>
+
+    <!---------------end of main----------------------->
+
+    <div class="right">
+        <div class="top">
+            <button id="menu-btn">
+                <span class="material-symbols-outlined"> menu </span>
+            </button>
+            <div class="theme-toggler">
+                <span class="material-symbols-outlined active"> light_mode </span>
+                <span class="material-symbols-outlined"> dark_mode </span>
+            </div>
+        </div>
+        <!-----end of top-->
+
+        <div class="recent-updates">
+            <h2>Entradas recientes</h2>
+            <div class="updates">
+                <div class="update">
+                    <div class="message">
+                        <p><b>Empleado</b> Realizo un movimiento en el producto</p>
+                        <small class="text-muted">A X fecha</small>
+                    </div>
+                </div>
+
+                <div class="update">
+                    <div class="message">
+                        <p><b>Empleado</b> Realizo un movimiento en el producto</p>
+                        <small class="text-muted">A X fecha</small>
+                    </div>
+                </div>
+
+                <div class="update">
+                    <div class="message">
+                        <p><b>Empleado</b> Realizo un movimiento en el producto</p>
+                        <small class="text-muted">A X fecha</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-----------end of ultimos movimientos--------------->
+
+        <div class="recent-updates">
+            <h2>Salidas recientes</h2>
+            <div class="updates">
+                <div class="update">
+                    <div class="message">
+                        <p><b>Empleado</b> Realizo un movimiento en el producto</p>
+                        <small class="text-muted">A X fecha</small>
+                    </div>
+                </div>
+
+                <div class="update">
+                    <div class="message">
+                        <p><b>Empleado</b> Realizo un movimiento en el producto</p>
+                        <small class="text-muted">A X fecha</small>
+                    </div>
+                </div>
+
+                <div class="update">
+                    <div class="message">
+                        <p><b>Empleado</b> Realizo un movimiento en el producto</p>
+                        <small class="text-muted">A X fecha</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+        <script src="script.js"></script>
+</body>
+</html>

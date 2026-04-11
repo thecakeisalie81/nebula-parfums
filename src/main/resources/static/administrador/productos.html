@@ -1,0 +1,410 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Inventario</title>
+    <link rel="stylesheet" href="styles.css" />
+    <link />
+    <link
+            href="https://fonts.googleapis.com/icon?family=Material+Icons"
+            rel="stylesheet"
+    />
+    <link
+            rel="stylesheet"
+            href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined"
+    />
+</head>
+<body>
+<div class="container">
+    <aside>
+        <div class="top">
+            <div class="logo">
+                <img class="img-logo" src="logo.png" alt="" />
+                <h2>
+                    <span class="danger" style="font-size: 0.8rem">parfums</span>
+                </h2>
+            </div>
+            <div class="close" id="close-btn">
+                <span class="material-symbols-outlined">close</span>
+            </div>
+        </div>
+
+        <div class="sidebar">
+            <a href="index.html">
+                <span class="material-symbols-outlined"> dashboard </span>
+                <h3>Dashboard</h3>
+            </a>
+
+            <a href="productos.html" class="active">
+                <span class="material-symbols-outlined"> inventory </span>
+                <h3>Productos</h3>
+            </a>
+
+            <a href="movimientos.html">
+                <span class="material-symbols-outlined"> mobiledata_arrows </span>
+                <h3>Movimientos</h3>
+            </a>
+
+            <a href="categorias.html">
+                <span class="material-symbols-outlined"> category </span>
+                <h3>Categorias</h3>
+            </a>
+
+            <a href="pedidos.html">
+                <span class="material-symbols-outlined"> shopping_bag_speed </span>
+                <h3>Pedidos</h3>
+            </a>
+
+            <a href="proveedores.html">
+                <span class="material-symbols-outlined"> local_shipping </span>
+                <h3>Proveedores</h3>
+            </a>
+
+            <a href="analisis.html">
+                <span class="material-symbols-outlined"> analytics </span>
+                <h3>Analisis</h3>
+            </a>
+
+            <a href="usuarios.html">
+                <span class="material-symbols-outlined"> group </span>
+                <h3>Usuarios</h3>
+            </a>
+
+            <a href="auditoria.html">
+                <span class="material-symbols-outlined"> fact_check </span>
+                <h3>Auditoria</h3>
+            </a>
+
+            <a href="reportes.html">
+                <span class="material-symbols-outlined"> description </span>
+                <h3>Reportes</h3>
+            </a>
+
+            <a href="#">
+                <span class="material-symbols-outlined"> logout </span>
+                <h3>Logout</h3>
+            </a>
+        </div>
+    </aside>
+
+    <!------------end of aside-------------->
+
+    <main>
+        <h1>Inventario de Perfumes</h1>
+
+        <div class="date">
+            <input type="date" />
+        </div>
+
+        <!-- Cuadros de información -->
+        <div class="insights">
+            <div class="sales">
+                <span class="material-symbols-outlined"> inventory </span>
+                <div class="middle">
+                    <div class="left">
+                        <h3>Total de productos</h3>
+                        <h1>110</h1>
+                    </div>
+                    <div class="progress"></div>
+                </div>
+                <small class="text-muted">Numero total de productos</small>
+            </div>
+
+            <div class="orders">
+                <span class="material-symbols-outlined"> warning </span>
+                <div class="middle">
+                    <div class="left">
+                        <h3>Stock bajo</h3>
+                        <h1>8</h1>
+                    </div>
+                    <div class="progress"></div>
+                </div>
+                <small class="text-muted">Bajo numero de unidades</small>
+            </div>
+
+            <div class="income">
+                <span class="material-symbols-outlined"> check_circle </span>
+                <div class="middle">
+                    <div class="left">
+                        <h3>En stock</h3>
+                        <h1>95</h1>
+                    </div>
+                    <div class="progress"></div>
+                </div>
+                <small class="text-muted">Productos con unidades suficientes</small>
+            </div>
+
+            <div class="expenses">
+                <span class="material-symbols-outlined"> cancel </span>
+                <div class="middle">
+                    <div class="left">
+                        <h3>Agotados</h3>
+                        <h1>7</h1>
+                    </div>
+                    <div class="progress"></div>
+                </div>
+                <small class="text-muted">Requieren reposicion inmediata</small>
+            </div>
+        </div>
+
+        <!-- Controles: botón y buscador -->
+
+        <div class="controls">
+            <button class="primary" id="openModal">+ Agregar Producto</button>
+        </div>
+        <!-- Tabla de productos -->
+        <div class="recent-orders">
+            <h2>Productos</h2>
+            <div class="controls">
+                <input
+                        type="text"
+                        placeholder="Buscar productos, marca o SKU..."
+                        class="search-bar"
+                />
+            </div>
+            <table>
+                <thead>
+                <tr>
+                    <th>Imagen</th>
+                    <th>Producto</th>
+                    <th>Marca</th>
+                    <th>SKU</th>
+                    <th>Categoría</th>
+                    <th>Cantidad</th>
+                    <th>Precio</th>
+                    <th>Estado</th>
+                    <th>Acciones</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td><img src="noir.png" alt="Noir de Noir" /></td>
+                    <td>Noir de Noir</td>
+                    <td>Tom Ford</td>
+                    <td>TF-NR001</td>
+                    <td>Unisex</td>
+                    <td>45</td>
+                    <td>$89.99</td>
+                    <td class="success">En Stock</td>
+                    <td class="primary"><a href="">Editar</a></td>
+                </tr>
+                <tr>
+                    <td><img src="jadore.png" alt="J'adore" /></td>
+                    <td>J'adore</td>
+                    <td>Dior</td>
+                    <td>DR-JAD002</td>
+                    <td>Mujer</td>
+                    <td>8</td>
+                    <td>$125.50</td>
+                    <td class="warning">Stock Bajo</td>
+                    <td class="primary"><a href="">Editar</a></td>
+                </tr>
+                <tr>
+                    <td><img src="chanel.png" alt="Chanel No. 5" /></td>
+                    <td>Chanel No. 5</td>
+                    <td>Chanel</td>
+                    <td>CH-N5004</td>
+                    <td>Mujer</td>
+                    <td>0</td>
+                    <td>$145.00</td>
+                    <td class="danger">Agotado</td>
+                    <td class="primary"><a href="">Editar</a></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </main>
+
+    <!---------------end of main----------------------->
+
+    <div class="right">
+        <div class="top">
+            <button id="menu-btn">
+                <span class="material-symbols-outlined"> menu </span>
+            </button>
+            <div class="theme-toggler">
+                <span class="material-symbols-outlined active"> light_mode </span>
+                <span class="material-symbols-outlined"> dark_mode </span>
+            </div>
+        </div>
+        <!-----end of top-->
+
+        <div class="recent-updates">
+            <h2>Movimientos recientes</h2>
+            <div class="updates">
+                <div class="update">
+                    <div class="message">
+                        <p><b>Empleado</b> Realizo un movimiento en el producto</p>
+                        <small class="text-muted">A X fecha</small>
+                    </div>
+                </div>
+
+                <div class="update">
+                    <div class="message">
+                        <p><b>Empleado</b> Realizo un movimiento en el producto</p>
+                        <small class="text-muted">A X fecha</small>
+                    </div>
+                </div>
+
+                <div class="update">
+                    <div class="message">
+                        <p><b>Empleado</b> Realizo un movimiento en el producto</p>
+                        <small class="text-muted">A X fecha</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-----------end of ultimos movimientos--------------->
+
+        <div class="sales-analytics">
+            <h2>Productos con stock bajo</h2>
+            <div class="item online">
+                <div class="icon">
+                    <span class="material-symbols-outlined"> warning </span>
+                </div>
+                <div class="right">
+                    <div class="info">
+                        <h3>Producto X</h3>
+                        <small class="text-muted">Solo quedan</small>
+                    </div>
+                    <h5 class="danger">X unidades</h5>
+                </div>
+            </div>
+
+            <div class="item online">
+                <div class="icon">
+                    <span class="material-symbols-outlined"> warning </span>
+                </div>
+                <div class="right">
+                    <div class="info">
+                        <h3>Producto X</h3>
+                        <small class="text-muted">Solo quedan</small>
+                    </div>
+                    <h5 class="danger">X unidades</h5>
+                </div>
+            </div>
+
+            <div class="item online">
+                <div class="icon">
+                    <span class="material-symbols-outlined"> warning </span>
+                </div>
+                <div class="right">
+                    <div class="info">
+                        <h3>Producto X</h3>
+                        <small class="text-muted">Solo quedan</small>
+                    </div>
+                    <h5 class="danger">X unidades</h5>
+                </div>
+            </div>
+            <a href="#">Mostrar todas</a>
+        </div>
+    </div>
+</div>
+
+<!-- Modal -->
+<div id="productModal" class="modal">
+    <div class="modal-content">
+        <span class="close" id="closeModal">&times;</span>
+        <h2>Agregar Nuevo Producto</h2>
+        <form id="productForm">
+            <label for="nombre">Nombre:</label>
+            <input type="text" id="nombre" name="nombre" required />
+
+            <label for="descripcion">Descripción:</label>
+            <textarea id="descripcion" name="descripcion" rows="3"></textarea>
+
+            <label for="precio">Precio Unitario:</label>
+            <input type="number" id="precio" name="precio" step="0.01" required />
+
+            <label for="stock">Stock Actual:</label>
+            <input type="number" id="stock" name="stock" required />
+
+            <label for="stockMinimo">Stock Mínimo:</label>
+            <input type="number" id="stockMinimo" name="stockMinimo" required />
+
+            <label for="categoria">Categoría:</label>
+            <select id="categoria" name="categoria" required>
+                <option value="">Seleccione una categoría</option>
+                <option value="Mujer">Mujer</option>
+                <option value="Hombre">Hombre</option>
+                <option value="Unisex">Unisex</option>
+            </select>
+
+            <label for="proveedor">Proveedor:</label>
+            <select id="proveedor" name="proveedor" required>
+                <option value="">Seleccione un proveedor</option>
+                <option value="Dior">Dior</option>
+                <option value="Chanel">Chanel</option>
+                <option value="Armani">Armani</option>
+                <option value="Tom Ford">Tom Ford</option>
+            </select>
+
+            <button type="submit" class="btn-success">Guardar</button>
+        </form>
+    </div>
+</div>
+
+<!-- Modal Editar Producto -->
+<div id="editProductModal" class="modal">
+    <div class="modal-content">
+        <span class="close" id="closeEditModal">&times;</span>
+        <h2>Editar Producto</h2>
+        <form id="editProductForm">
+            <label for="idProducto">ID Producto:</label>
+            <input type="text" id="idProducto" name="idProducto" readonly />
+
+            <label for="nombreEdit">Nombre:</label>
+            <input type="text" id="nombreEdit" name="nombreEdit" required />
+
+            <label for="descripcionEdit">Descripción:</label>
+            <textarea
+                    id="descripcionEdit"
+                    name="descripcionEdit"
+                    rows="3"
+            ></textarea>
+
+            <label for="precioEdit">Precio Unitario:</label>
+            <input
+                    type="number"
+                    id="precioEdit"
+                    name="precioEdit"
+                    step="0.01"
+                    required
+            />
+
+            <label for="stockEdit">Stock Actual:</label>
+            <input type="number" id="stockEdit" name="stockEdit" required />
+
+            <label for="stockMinimoEdit">Stock Mínimo:</label>
+            <input
+                    type="number"
+                    id="stockMinimoEdit"
+                    name="stockMinimoEdit"
+                    required
+            />
+
+            <label for="categoriaEdit">Categoría:</label>
+            <select id="categoriaEdit" name="categoriaEdit" required>
+                <option value="Mujer">Mujer</option>
+                <option value="Hombre">Hombre</option>
+                <option value="Unisex">Unisex</option>
+            </select>
+
+            <label for="proveedorEdit">Proveedor:</label>
+            <select id="proveedorEdit" name="proveedorEdit" required>
+                <option value="Dior">Dior</option>
+                <option value="Chanel">Chanel</option>
+                <option value="Armani">Armani</option>
+                <option value="Tom Ford">Tom Ford</option>
+            </select>
+
+            <button type="submit" class="btn-success">Guardar Cambios</button>
+        </form>
+    </div>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>

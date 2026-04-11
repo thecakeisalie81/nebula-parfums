@@ -1,0 +1,306 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Auditoria</title>
+    <link rel="stylesheet" href="styles.css" />
+    <link />
+    <link
+            href="https://fonts.googleapis.com/icon?family=Material+Icons"
+            rel="stylesheet"
+    />
+    <link
+            rel="stylesheet"
+            href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined"
+    />
+</head>
+<body>
+<div class="container">
+    <aside>
+        <div class="top">
+            <div class="logo">
+                <img class="img-logo" src="logo.png" alt="" />
+                <h2>
+                    <span class="danger" style="font-size: 0.8rem">parfums</span>
+                </h2>
+            </div>
+            <div class="close" id="close-btn">
+                <span class="material-symbols-outlined">close</span>
+            </div>
+        </div>
+
+        <div class="sidebar">
+            <a href="index.html" >
+                <span class="material-symbols-outlined"> dashboard </span>
+                <h3>Dashboard</h3>
+            </a>
+
+            <a href="productos.html">
+                <span class="material-symbols-outlined"> inventory </span>
+                <h3>Productos</h3>
+            </a>
+
+            <a href="movimientos.html">
+                <span class="material-symbols-outlined"> mobiledata_arrows </span>
+                <h3>Movimientos</h3>
+            </a>
+
+            <a href="categorias.html">
+                <span class="material-symbols-outlined"> category </span>
+                <h3>Categorias</h3>
+            </a>
+
+            <a href="pedidos.html">
+                <span class="material-symbols-outlined"> shopping_bag_speed </span>
+                <h3>Pedidos</h3>
+            </a>
+
+            <a href="proveedores.html">
+                <span class="material-symbols-outlined"> local_shipping </span>
+                <h3>Proveedores</h3>
+            </a>
+
+            <a href="analisis.html">
+                <span class="material-symbols-outlined"> analytics </span>
+                <h3>Analisis</h3>
+            </a>
+
+            <a href="usuarios.html">
+                <span class="material-symbols-outlined"> group </span>
+                <h3>Usuarios</h3>
+            </a>
+
+            <a href="auditoria.html" class="active">
+                <span class="material-symbols-outlined"> fact_check </span>
+                <h3>Auditoria</h3>
+            </a>
+
+            <a href="reportes.html">
+                <span class="material-symbols-outlined"> description </span>
+                <h3>Reportes</h3>
+            </a>
+
+            <a href="#">
+                <span class="material-symbols-outlined"> logout </span>
+                <h3>Logout</h3>
+            </a>
+        </div>
+    </aside>
+
+    <!------------end of aside-------------->
+
+    <main>
+        <h1>Auditoría del Sistema</h1>
+
+        <!-- Cards resumen -->
+        <div class="insights">
+            <div class="sales">
+                <span class="material-symbols-outlined">list_alt</span>
+                <div class="middle">
+                    <div class="left">
+                        <h3>Total de Eventos</h3>
+                        <h1>15</h1>
+                    </div>
+                </div>
+                <small class="text-muted">Registrados en el sistema</small>
+            </div>
+
+            <div class="income">
+                <span class="material-symbols-outlined">today</span>
+                <div class="middle">
+                    <div class="left">
+                        <h3>Hoy</h3>
+                        <h1>8</h1>
+                    </div>
+                </div>
+                <small class="text-muted">Eventos de hoy</small>
+            </div>
+
+            <div class="expenses">
+                <span class="material-symbols-outlined">error</span>
+                <div class="middle">
+                    <div class="left">
+                        <h3>Errores</h3>
+                        <h1>2</h1>
+                    </div>
+                </div>
+                <small class="text-muted">Requieren atención</small>
+            </div>
+
+            <div class="orders">
+                <span class="material-symbols-outlined">warning</span>
+                <div class="middle">
+                    <div class="left">
+                        <h3>Advertencias</h3>
+                        <h1>3</h1>
+                    </div>
+                </div>
+                <small class="text-muted">Para revisar</small>
+            </div>
+        </div>
+
+        <!-- Tabla de auditoría -->
+        <div class="recent-orders">
+            <h2>Eventos de Auditoría</h2>
+            <div class="controls">
+                <input type="text" class="search-bar" placeholder="Buscar evento..." />
+
+                <!-- Select para filtrar por acción -->
+                <select class="filter-select">
+                    <option value="">Acción</option>
+                    <option value="Creación">Creación</option>
+                    <option value="Actualización">Actualización</option>
+                    <option value="Eliminación">Eliminación</option>
+                    <option value="Error">Error</option>
+                    <option value="Advertencia">Advertencia</option>
+                    <option value="Inicio de sesión">Inicio de sesión</option>
+                </select>
+
+                <!-- Filtros de fecha -->
+                <input type="date" id="fechaInicio" />
+                <input type="date" id="fechaFin" />
+
+                <button>Exportar Log</button>
+            </div>
+            <table>
+                <thead>
+                <tr>
+                    <th>Fecha/Hora</th>
+                    <th>Usuario</th>
+                    <th>Acción</th>
+                    <th>Entidad</th>
+                    <th>Descripción</th>
+                    <th>Detalles</th>
+                    <th>IP</th>
+                    <th>Nivel</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>2026-03-14 10:45:23</td>
+                    <td>admin@nebulaparfums.com</td>
+                    <td>Creación</td>
+                    <td>Producto</td>
+                    <td>Producto creado: Sauvage - Dior</td>
+                    <td>Nuevo producto agregado al inventario</td>
+                    <td>192.168.1.100</td>
+                    <td class="success">Éxito</td>
+                </tr>
+                <tr>
+                    <td>2026-03-14 09:30:65</td>
+                    <td>system</td>
+                    <td>Error</td>
+                    <td>Sistema</td>
+                    <td>Error en sincronización de inventario</td>
+                    <td>Timeout al conectar con proveedor</td>
+                    <td>sistema</td>
+                    <td class="danger">Error</td>
+                </tr>
+                <tr>
+                    <td>2026-03-13 17:45:12</td>
+                    <td>system</td>
+                    <td>Advertencia</td>
+                    <td>Sistema</td>
+                    <td>Alerta de stock bajo</td>
+                    <td>5 productos con stock inferior</td>
+                    <td>sistema</td>
+                    <td class="warning">Advertencia</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </main>
+
+    <div class="right">
+        <div class="top">
+            <button id="menu-btn">
+                <span class="material-symbols-outlined"> menu </span>
+            </button>
+            <div class="theme-toggler">
+                <span class="material-symbols-outlined active"> light_mode </span>
+                <span class="material-symbols-outlined"> dark_mode </span>
+            </div>
+        </div>
+        <!-----end of top-->
+
+
+        <div class="sales-analytics">
+            <h2>Fallos de login recientes</h2>
+            <div class="item online">
+                <div class="icon">
+                    <span class="material-symbols-outlined"> warning </span>
+                </div>
+                <div class="right">
+                    <div class="info">
+                        <h3>Producto X</h3>
+                        <small class="text-muted">Solo quedan</small>
+                    </div>
+                    <h5 class="danger">X unidades</h5>
+                </div>
+            </div>
+
+            <div class="item online">
+                <div class="icon">
+                    <span class="material-symbols-outlined"> warning </span>
+                </div>
+                <div class="right">
+                    <div class="info">
+                        <h3>Producto X</h3>
+                        <small class="text-muted">Solo quedan</small>
+                    </div>
+                    <h5 class="danger">X unidades</h5>
+                </div>
+            </div>
+
+            <div class="item online">
+                <div class="icon">
+                    <span class="material-symbols-outlined"> warning </span>
+                </div>
+                <div class="right">
+                    <div class="info">
+                        <h3>Producto X</h3>
+                        <small class="text-muted">Solo quedan</small>
+                    </div>
+                    <h5 class="danger">X unidades</h5>
+                </div>
+            </div>
+            <a href="#">Mostrar todas</a>
+        </div>
+
+        <div class="recent-updates">
+            <h2>Ultimos eventos</h2>
+            <div class="updates">
+                <div class="update">
+                    <div class="message">
+                        <p><b>Empleado</b> Realizo un movimiento en el producto</p>
+                        <small class="text-muted">A X fecha</small>
+                    </div>
+                </div>
+
+                <div class="update">
+                    <div class="message">
+                        <p><b>Empleado</b> Realizo un movimiento en el producto</p>
+                        <small class="text-muted">A X fecha</small>
+                    </div>
+                </div>
+
+                <div class="update">
+                    <div class="message">
+                        <p><b>Empleado</b> Realizo un movimiento en el producto</p>
+                        <small class="text-muted">A X fecha</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-----------end of ultimos movimientos--------------->
+
+
+    </div>
+</div>
+
+
+    <script src="script.js"></script>
+</body>
+</html>

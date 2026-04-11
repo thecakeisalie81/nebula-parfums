@@ -31,12 +31,28 @@ public class SecurityConfig {
         return http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(authRequest ->
-                                        authRequest
-                                                .requestMatchers("/auth/**").permitAll()
-                                                .requestMatchers("/admin/**").hasRole("ADMIN")
-                                                .requestMatchers("/empleado/**").hasAnyRole("ADMIN","EMPLEADO")
+                        authRequest
+                                // 🔓 rutas públicas
+                                .requestMatchers(
+                                        "/",
+                                        "/index.html",
+                                        "/login.html",
+                                        "/css/**",
+                                        "/js/**",
+                                        "/administrador/**",
+                                        "/images/**"
+                                ).permitAll()
+
+                                // 🔓 auth
+                                .requestMatchers("/auth/**").permitAll()
+
+                                // 🔐 roles
+                                .requestMatchers("/admin/**").hasRole("ADMIN")
+                                .requestMatchers("/empleado/**").hasAnyRole("ADMIN","EMPLEADO")
+
+                                // 🔒 todo lo demás protegido
                                 .anyRequest().authenticated()
-                        )
+                )
                 .sessionManagement(sessionManager ->
                         sessionManager
                                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS))

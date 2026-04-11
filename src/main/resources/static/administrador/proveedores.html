@@ -1,0 +1,260 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Proveedores</title>
+    <link rel="stylesheet" href="styles.css" />
+    <link />
+    <link
+            href="https://fonts.googleapis.com/icon?family=Material+Icons"
+            rel="stylesheet"
+    />
+    <link
+            rel="stylesheet"
+            href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined"
+    />
+</head>
+<body>
+<div class="container">
+    <aside>
+        <div class="top">
+            <div class="logo">
+                <img class="img-logo" src="logo.png" alt="" />
+                <h2>
+                    <span class="danger" style="font-size: 0.8rem">parfums</span>
+                </h2>
+            </div>
+            <div class="close" id="close-btn">
+                <span class="material-symbols-outlined">close</span>
+            </div>
+        </div>
+
+        <div class="sidebar">
+            <a href="index.html">
+                <span class="material-symbols-outlined"> dashboard </span>
+                <h3>Dashboard</h3>
+            </a>
+
+            <a href="productos.html">
+                <span class="material-symbols-outlined"> inventory </span>
+                <h3>Productos</h3>
+            </a>
+
+            <a href="movimientos.html">
+                <span class="material-symbols-outlined"> mobiledata_arrows </span>
+                <h3>Movimientos</h3>
+            </a>
+
+            <a href="categorias.html">
+                <span class="material-symbols-outlined"> category </span>
+                <h3>Categorias</h3>
+            </a>
+
+            <a href="pedidos.html">
+                <span class="material-symbols-outlined"> shopping_bag_speed </span>
+                <h3>Pedidos</h3>
+            </a>
+
+            <a href="proveedores.html" class="active">
+                <span class="material-symbols-outlined"> local_shipping </span>
+                <h3>Proveedores</h3>
+            </a>
+
+            <a href="analisis.html">
+                <span class="material-symbols-outlined"> analytics </span>
+                <h3>Analisis</h3>
+            </a>
+
+            <a href="usuarios.html">
+                <span class="material-symbols-outlined"> group </span>
+                <h3>Usuarios</h3>
+            </a>
+
+            <a href="auditoria.html">
+                <span class="material-symbols-outlined"> fact_check </span>
+                <h3>Auditoria</h3>
+            </a>
+
+            <a href="reportes.html">
+                <span class="material-symbols-outlined"> description </span>
+                <h3>Reportes</h3>
+            </a>
+
+            <a href="#">
+                <span class="material-symbols-outlined"> logout </span>
+                <h3>Logout</h3>
+            </a>
+        </div>
+    </aside>
+
+    <!------------end of aside-------------->
+
+    <main>
+        <h1>Gestión de Proveedores</h1>
+
+        <!-- Resumen -->
+        <div class="insights">
+            <div class="sales">
+                <span class="material-symbols-outlined">group</span>
+                <div class="middle">
+                    <div class="left">
+                        <h3>Total Proveedores</h3>
+                        <h1>5</h1>
+                    </div>
+                </div>
+                <small class="text-muted">4 activos</small>
+            </div>
+
+            <div class="income">
+                <span class="material-symbols-outlined">inventory</span>
+                <div class="middle">
+                    <div class="left">
+                        <h3>Productos Suministrados</h3>
+                        <h1>226</h1>
+                    </div>
+                </div>
+                <small class="text-muted">En total</small>
+            </div>
+
+            <div class="orders">
+                <span class="material-symbols-outlined">public</span>
+                <div class="middle">
+                    <div class="left">
+                        <h3>Países</h3>
+                        <h1>5</h1>
+                    </div>
+                </div>
+                <small class="text-muted">Diferentes países</small>
+            </div>
+        </div>
+
+        <!-- Lista de proveedores -->
+        <h2>Lista de Proveedores</h2>
+        <div class="recent-orders">
+            <table>
+                <thead>
+                <tr>
+                    <th>Proveedor</th>
+                    <th>Contacto</th>
+                    <th>Email</th>
+                    <th>Teléfono</th>
+                    <th>País</th>
+                    <th>Productos</th>
+                    <th>Estado</th>
+                    <th>Acciones</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>Fragrance World Distribution</td>
+                    <td>María González</td>
+                    <td>maria@fragworld.com</td>
+                    <td>+34 912 345 678</td>
+                    <td>España</td>
+                    <td>45</td>
+                    <td>Activo</td>
+                    <td><a href="#" class="edit-provider">Editar</a></td>
+                </tr>
+                <tr>
+                    <td>Luxury Scents International</td>
+                    <td>Jean Pierre Dubois</td>
+                    <td>jp.dubois@luxuryscents.fr</td>
+                    <td>+33 1 42 86 82 00</td>
+                    <td>Francia</td>
+                    <td>67</td>
+                    <td>Activo</td>
+                    <td><a href="#" class="edit-provider">Editar</a></td>
+                </tr>
+                <!-- más filas -->
+                </tbody>
+            </table>
+        </div>
+    </main>
+
+    <!-- Modal para editar -->
+    <div id="providerModal" class="modal">
+        <div class="modal-content">
+            <span id="closeProviderModal" class="close">&times;</span>
+            <h2>Editar Proveedor</h2>
+            <form id="editProviderForm">
+                <label>Nombre:</label>
+                <input type="text" id="editProvNombre" required />
+
+                <label>Contacto:</label>
+                <input type="text" id="editProvContacto" required />
+
+                <label>Email:</label>
+                <input type="email" id="editProvEmail" required />
+
+                <label>Teléfono:</label>
+                <input type="text" id="editProvTelefono" required />
+
+                <button type="submit" class="btn-success">Guardar cambios</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Panel lateral -->
+    <div class="right">
+        <div class="top">
+            <button id="menu-btn">
+                <span class="material-symbols-outlined"> menu </span>
+            </button>
+            <div class="theme-toggler">
+                <span class="material-symbols-outlined active"> light_mode </span>
+                <span class="material-symbols-outlined"> dark_mode </span>
+            </div>
+        </div>
+
+        <div class="recent-updates">
+            <h2>Agregar Proveedor</h2>
+            <form id="providerForm" class="updates">
+                <div class="update">
+                    <div class="message">
+                        <label for="provNombre">Nombre:</label>
+                        <input type="text" id="provNombre" name="provNombre" required />
+                    </div>
+                </div>
+
+                <div class="update">
+                    <div class="message">
+                        <label for="provContacto">Contacto:</label>
+                        <input
+                                type="text"
+                                id="provContacto"
+                                name="provContacto"
+                                required
+                        />
+                    </div>
+                </div>
+
+                <div class="update">
+                    <div class="message">
+                        <label for="provEmail">Email:</label>
+                        <input type="email" id="provEmail" name="provEmail" required />
+                    </div>
+                </div>
+
+                <div class="update">
+                    <div class="message">
+                        <label for="provTelefono">Teléfono:</label>
+                        <input
+                                type="text"
+                                id="provTelefono"
+                                name="provTelefono"
+                                required
+                        />
+                    </div>
+                </div>
+
+                <button type="submit" class="btn-success">Guardar</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script src="script.js"></script>
+<script src="proveedores.js"></script>
+</body>
+</html>

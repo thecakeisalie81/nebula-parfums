@@ -1,0 +1,104 @@
+
+/* Controles de productos */
+
+/* Modal base */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 10;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.4);
+    align-items: center;
+    justify-content: center;
+}
+
+/* Contenido del modal */
+.modal-content {
+    background: var(--color-white);
+    padding: var(--card-padding);
+    border-radius: var(--card-border-radius);
+    width: 35%;
+    box-shadow: var(--box-shadow);
+    animation: fadeIn 300ms ease;
+}
+
+.modal-content h2 {
+    margin-bottom: 1rem;
+    color: var(--color-dark);
+}
+
+.modal-content label {
+    display: block;
+    margin-top: 0.8rem;
+    font-weight: 500;
+    color: var(--color-dark-variant);
+}
+
+.modal-content input,
+.modal-content textarea,
+.modal-content select {
+    width: 100%;
+    padding: 0.5rem;
+    margin-top: 0.4rem;
+    border-radius: var(--border-radius-1);
+    border: 1px solid var(--color-light);
+    background: var(--color-background);
+    color: var(--color-dark);
+}
+
+.close {
+    float: right;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: var(--color-danger);
+}
+
+.btn-success {
+    background: var(--color-success);
+    color: var(--color-white);
+    padding: 0.4rem 0.8rem;
+    border-radius: var(--border-radius-1);
+    border: none;
+    cursor: pointer;
+    font-size: 0.85rem;
+    font-weight: 600;
+    margin-top: 1rem;
+    display: block;
+    margin-left: auto; /* lo empuja a la derecha */
+}
+
+.btn-success:hover {
+    background: #2ecc71;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+/* Modal de editar */
+
+#editProductModal .modal-content {
+    background: var(--color-white);
+    padding: var(--card-padding);
+    border-radius: var(--card-border-radius);
+    width: 35%;
+    box-shadow: var(--box-shadow);
+    animation: fadeIn 300ms ease;
+}
+
+#editProductModal .btn-success {
+    background: var(--color-success);
+    color: var(--color-white);
+    padding: 0.4rem 0.8rem;
+    border-radius: var(--border-radius-1);
+    border: none;
+    cursor: pointer;
+    font-size: 0.85rem;
+    font-weight: 600;
+    margin-top: 1rem;
+}
