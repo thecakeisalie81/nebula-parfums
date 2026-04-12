@@ -163,12 +163,26 @@
             </div>
             <div class="paginacion" id="paginacion"></div>
             <div class="controls">
-                <input
-                        type="text"
-                        id="searchInput"
-                        placeholder="Nombre del producto"
-                        class="search-bar"
-                />
+                <div>
+                    <label>Buscar por nombre</label>
+                    <input
+                            type="text"
+                            id="searchInput"
+                            placeholder="Nombre del producto"
+                            class="search-bar"
+                    />
+                </div>
+
+                <div>
+                    <label for="selectStock">Filtrar por stock</label>
+                    <select name="stock" id="selectStock">
+                        <option value="">Todos</option>
+                        <option value="bajo">Bajo stock</option>
+                        <option value="sin">Sin stock</option>
+                        <option value="suficiente">Stock suficiente</option>
+                    </select>
+                </div>
+
             </div>
             <table>
                 <thead>

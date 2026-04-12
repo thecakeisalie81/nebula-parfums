@@ -10,6 +10,13 @@ function obtenerToken() {
     return token;
 }
 
+let paginaActual = 0;
+let totalPaginas = 0;
+let terminoBusqueda = "";
+let debounceTimer = null;
+let productosPaginaActual = [];
+let filtroStockActual = "";
+
 async function cargarCuadros() {
     let response = await authFetch("/producto/totalproductos");
     let data = await response.text();   // aquí llega "28"
@@ -41,6 +48,17 @@ document.addEventListener("DOMContentLoaded", () => {
     cargarUltimosMovimientos()
 
     const searchInput = document.getElementById("searchInput");
+
+    const selectStock = document.getElementById("selectStock");
+
+    if (selectStock) {
+        filtroStockActual = selectStock.value;
+
+        selectStock.addEventListener("change", function () {
+            filtroStockActual = this.value;
+            aplicarFiltrosLocales();
+        });
+    }
 
     if (searchInput) {
         searchInput.addEventListener("input", function () {
@@ -106,10 +124,7 @@ function authFetch(url, options = {}) {
 }
 
 
-let paginaActual = 0;
-let totalPaginas = 0;
-let terminoBusqueda = "";
-let debounceTimer = null;
+
 
 function cargarProductos(page = 0) {
     let url = "";
@@ -133,7 +148,8 @@ function cargarProductos(page = 0) {
         .then(data => {
             console.log("RESPUESTA:", data);
 
-            renderizarProductos(data.content);
+            productosPaginaActual = data.content || [];
+            aplicarFiltrosLocales();
 
             const currentPage = data.number ?? data.page?.number ?? 0;
             const totalPages = data.totalPages ?? data.page?.totalPages ?? 0;
@@ -149,6 +165,26 @@ function cargarProductos(page = 0) {
         .catch(err => {
             console.error("Error cargando productos:", err);
         });
+}
+
+function aplicarFiltrosLocales() {
+    let productosFiltrados = [...productosPaginaActual];
+
+    if (filtroStockActual === "bajo") {
+        productosFiltrados = productosFiltrados.filter(producto =>
+            producto.stock_actual > 0 && producto.stock_actual <= producto.stock_minimo
+        );
+    } else if (filtroStockActual === "sin") {
+        productosFiltrados = productosFiltrados.filter(producto =>
+            producto.stock_actual === 0
+        );
+    } else if (filtroStockActual === "suficiente") {
+        productosFiltrados = productosFiltrados.filter(producto =>
+            producto.stock_actual > producto.stock_minimo
+        );
+    }
+
+    renderizarProductos(productosFiltrados);
 }
 
 

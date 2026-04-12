@@ -100,6 +100,8 @@ public class ProductoController {
         Proveedor prov = iProveedorService.getProveedorById(proveedor);
         LocalDate fecha = LocalDate.now();
 
+        Producto producto = iProductoService.getProductoById(id_producto);
+
         String nombreImagen = null;
         if (imagen != null && !imagen.isEmpty()) {
             try {
@@ -109,13 +111,15 @@ public class ProductoController {
                 Path path = Paths.get(ruta + nombreImagen);
                 Files.write(path, imagen.getBytes());
 
+                producto.setImagen(nombreImagen);
+
             } catch (IOException e) {
                 return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                         .body("Error al guardar imagen");
             }
         }
 
-        Producto producto = iProductoService.getProductoById(id_producto);
+
         producto.setNombre(nombre);
         producto.setDescripcion(descripcion);
         producto.setCategoria(cat);
@@ -124,7 +128,8 @@ public class ProductoController {
         producto.setStock_actual(stock_actual);
         producto.setStock_minimo(stock_minimo);
         producto.setFecha_registro(fecha);
-        producto.setImagen(nombreImagen);
+
+
 
         iProductoService.editProducto(producto);
         MovimientoDTO movimientoDTO = new MovimientoDTO();
