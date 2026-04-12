@@ -103,67 +103,36 @@
 
         <!-- Controles de búsqueda y filtros -->
         <div class="controls">
-            <input
-                    type="text"
-                    placeholder="Buscar por producto..."
-                    class="search-bar"
-            />
+            <input type="text" id="searchProducto" placeholder="Buscar por producto..." class="search-bar" />
+
 
             <select id="tipoMovimiento" class="filter-select">
                 <option value="">Todos los tipos</option>
-                <option value="Venta">Venta</option>
-                <option value="Entrada">Entrada</option>
-                <option value="Salida">Salida</option>
-                <option value="Devolución">Devolución</option>
-                <option value="Ajuste">Ajuste</option>
+                <option value="ENTRADA">Entrada</option>
+                <option value="SALIDA">Salida</option>
+                <option value="REGISTRO">Registro</option>
             </select>
 
             <input type="date" id="fechaInicio" />
             <input type="date" id="fechaFin" />
+
         </div>
 
         <!-- Tabla de movimientos -->
         <div class="recent-orders">
             <h2>Historial de Movimientos</h2>
+            <div class="paginacion" id="paginacionMovimientos"></div>
             <table>
                 <thead>
                 <tr>
-                    <th>Fecha/Hora</th>
+                    <th>Fecha</th>
                     <th>Tipo</th>
                     <th>Producto</th>
                     <th>Cantidad</th>
-                    <th>Stock Anterior</th>
-                    <th>Stock Nuevo</th>
-                    <th>Motivo</th>
-                    <th>Referencia</th>
                     <th>Usuario</th>
                 </tr>
                 </thead>
-                <tbody>
-                <tr>
-                    <td>2026-03-14 10:30</td>
-                    <td>Venta</td>
-                    <td>Sauvage - Dior</td>
-                    <td>-2</td>
-                    <td>45</td>
-                    <td>43</td>
-                    <td>Venta en tienda física</td>
-                    <td>VENTA-001</td>
-                    <td>Carlos Martínez</td>
-                </tr>
-                <tr>
-                    <td>2026-03-14 09:15</td>
-                    <td>Entrada</td>
-                    <td>Chanel No. 5 - Chanel</td>
-                    <td>+50</td>
-                    <td>15</td>
-                    <td>65</td>
-                    <td>Reposición de stock - Proveedor</td>
-                    <td>PO-2026-015</td>
-                    <td>Sistema</td>
-                </tr>
-                <!-- Más filas aquí -->
-                </tbody>
+                <tbody id="tablaMovimientos"></tbody>
             </table>
         </div>
     </main>
@@ -182,62 +151,10 @@
         </div>
         <!-----end of top-->
 
-        <div class="recent-updates">
-            <h2>Entradas recientes</h2>
-            <div class="updates">
-                <div class="update">
-                    <div class="message">
-                        <p><b>Empleado</b> Realizo un movimiento en el producto</p>
-                        <small class="text-muted">A X fecha</small>
-                    </div>
-                </div>
-
-                <div class="update">
-                    <div class="message">
-                        <p><b>Empleado</b> Realizo un movimiento en el producto</p>
-                        <small class="text-muted">A X fecha</small>
-                    </div>
-                </div>
-
-                <div class="update">
-                    <div class="message">
-                        <p><b>Empleado</b> Realizo un movimiento en el producto</p>
-                        <small class="text-muted">A X fecha</small>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-----------end of ultimos movimientos--------------->
-
-        <div class="recent-updates">
-            <h2>Salidas recientes</h2>
-            <div class="updates">
-                <div class="update">
-                    <div class="message">
-                        <p><b>Empleado</b> Realizo un movimiento en el producto</p>
-                        <small class="text-muted">A X fecha</small>
-                    </div>
-                </div>
-
-                <div class="update">
-                    <div class="message">
-                        <p><b>Empleado</b> Realizo un movimiento en el producto</p>
-                        <small class="text-muted">A X fecha</small>
-                    </div>
-                </div>
-
-                <div class="update">
-                    <div class="message">
-                        <p><b>Empleado</b> Realizo un movimiento en el producto</p>
-                        <small class="text-muted">A X fecha</small>
-                    </div>
-                </div>
-            </div>
-        </div>
     </div>
 </div>
 
 <script src="/js/script.js"></script>
+<script src="/js/movimientos.js"></script>
 </body>
 </html>

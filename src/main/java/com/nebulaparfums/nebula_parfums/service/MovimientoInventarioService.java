@@ -13,13 +13,16 @@ import com.nebulaparfums.nebula_parfums.service.interfaces.IProductoService;
 import com.nebulaparfums.nebula_parfums.service.interfaces.IUsuarioService;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 
 @Service
@@ -34,10 +37,10 @@ public class MovimientoInventarioService implements IMovimientoInventarioService
     @Autowired
     private ILogActividadService iLogActividadService;
 
+
     @Override
-    public List<MovimientoInventario> getMovimientoInventario() {
-        List<MovimientoInventario> listaMovimientos =  iMovimientoInventarioRepository.findAll();
-        return listaMovimientos;
+    public Page<MovimientoInventario> getMovimientoInventario(Pageable pageable) {
+        return iMovimientoInventarioRepository.findAll(pageable);
     }
 
     @Override
@@ -155,6 +158,42 @@ public class MovimientoInventarioService implements IMovimientoInventarioService
     public List<MovimientoInventario> ultimos5Movimientos() {
         Pageable limiteCinco = PageRequest.of(0, 5);
         return iMovimientoInventarioRepository.ultimosMovimientoInventario(limiteCinco);
+    }
+
+    @Override
+    public Page<MovimientoInventario> filtrarMovimientos(
+            Pageable pageable,
+            String producto,
+            String tipo,
+            LocalDate fechaInicio,
+            LocalDate fechaFin
+    ) {
+        LocalDateTime inicio = null;
+        LocalDateTime fin = null;
+
+        if (fechaInicio != null) {
+            inicio = fechaInicio.atStartOfDay();
+        }
+
+        if (fechaFin != null) {
+            fin = fechaFin.atTime(LocalTime.MAX);
+        }
+
+        if (producto != null && producto.isBlank()) {
+            producto = null;
+        }
+
+        if (tipo != null && tipo.isBlank()) {
+            tipo = null;
+        }
+
+        return iMovimientoInventarioRepository.filtrarMovimientos(
+                pageable,
+                producto,
+                tipo,
+                inicio,
+                fin
+        );
     }
 
 
