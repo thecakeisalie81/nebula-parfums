@@ -4,7 +4,15 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Auditoria</title>
-    <link rel="stylesheet" href="styles.css" />
+    <script>
+        (function () {
+            const theme = localStorage.getItem("theme");
+            if (theme === "dark") {
+                document.documentElement.classList.add("dark-theme-variables");
+            }
+        })();
+    </script>
+    <link rel="stylesheet" href="/css/styles.css" />
     <link />
     <link
             href="https://fonts.googleapis.com/icon?family=Material+Icons"
@@ -20,7 +28,7 @@
     <aside>
         <div class="top">
             <div class="logo">
-                <img class="img-logo" src="logo.png" alt="" />
+                <img class="img-logo" src="/images/logo.png" alt="" />
                 <h2>
                     <span class="danger" style="font-size: 0.8rem">parfums</span>
                 </h2>
@@ -81,7 +89,7 @@
                 <h3>Reportes</h3>
             </a>
 
-            <a href="#">
+            <a href="#" id="logoutBtn">
                 <span class="material-symbols-outlined"> logout </span>
                 <h3>Logout</h3>
             </a>
@@ -301,6 +309,6 @@
 </div>
 
 
-    <script src="script.js"></script>
+<script src="/js/script.js"></script>
 </body>
 </html>

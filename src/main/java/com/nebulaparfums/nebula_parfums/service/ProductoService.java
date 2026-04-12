@@ -6,6 +6,9 @@ import com.nebulaparfums.nebula_parfums.model.Producto;
 import com.nebulaparfums.nebula_parfums.repository.IProductoRepository;
 import com.nebulaparfums.nebula_parfums.service.interfaces.IProductoService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -16,15 +19,13 @@ public class ProductoService implements IProductoService {
     private IProductoRepository iProductoRepository;
 
     @Override
-    public List<Producto> getProductos() {
-        List<Producto> productos = iProductoRepository.findAll();
-        return productos;
+    public Page<Producto> getProductos(Pageable pageable) {
+        return iProductoRepository.findAll(pageable);
     }
 
     @Override
-    public List<Producto> getProductosBusqueda(String nombre) {
-        List<Producto> resultados = iProductoRepository.findByNombre(nombre);
-        return resultados;
+    public Page<Producto> getProductosBusqueda(Pageable pageable,String nombre) {
+        return iProductoRepository.findByNombre(pageable, nombre);
     }
 
     @Override
@@ -61,4 +62,31 @@ public class ProductoService implements IProductoService {
     public void saveProducto(Producto producto) {
         iProductoRepository.save(producto);
     }
+
+    @Override
+    public Integer getProductosLowStock() {
+        return iProductoRepository.countProductosConStockBajo();
+    }
+
+    @Override
+    public Integer getProductosSinStock() {
+        return iProductoRepository.countProductosSinStock();
+    }
+
+    @Override
+    public Integer getTotalStock() {
+        return Math.toIntExact(iProductoRepository.count());
+    }
+
+    @Override
+    public Integer getProductosConStock() {
+        return iProductoRepository.countProductosConStock();
+    }
+
+    @Override
+    public List<Producto> get4ProductosBajoStock() {
+        Pageable limiteCuatro = PageRequest.of(0, 4);
+        return iProductoRepository.findProductosConStockBajo(limiteCuatro);
+    }
+
 }

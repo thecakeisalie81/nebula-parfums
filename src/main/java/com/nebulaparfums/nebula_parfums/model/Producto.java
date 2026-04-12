@@ -18,6 +18,7 @@ public class Producto {
     private int stock_actual;
     private int stock_minimo;
     private LocalDate fecha_registro;
+    private String imagen;
 
     @ManyToOne
     @JoinColumn(name = "categoria")

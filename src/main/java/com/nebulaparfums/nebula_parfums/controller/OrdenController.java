@@ -18,6 +18,11 @@ public class OrdenController {
         return iOrdenService.getOrdenes();
     }
 
+    @GetMapping("/orden/recientes")
+    public List<Orden> recientes(){
+        return iOrdenService.getUltimasOrdenesPendiente();
+    }
+
     @GetMapping("/orden/buscar")
     public Orden buscarOrden(@RequestParam("id") int id){
         return iOrdenService.getOrdenById(id);

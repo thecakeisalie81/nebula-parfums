@@ -24,6 +24,11 @@ public class MovimientoInventarioController {
         return iMovimientoInventarioService.getMovimientoInventario();
     }
 
+    @GetMapping("/movimiento/ultimos")
+    public List<MovimientoInventario> getUltimosMovimientoInventario() {
+        return iMovimientoInventarioService.ultimos5Movimientos();
+    }
+
     @PostMapping("/movimiento/salida")
     public ResponseEntity<?> movimietoSalida(@RequestBody MovimientoDTO movimientoDTO) {
         iMovimientoInventarioService.registrarSalida(movimientoDTO.getId_producto(), movimientoDTO.getCantidad());

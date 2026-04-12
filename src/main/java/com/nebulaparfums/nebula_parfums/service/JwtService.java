@@ -24,7 +24,9 @@ public class JwtService {
 
 
     public String getToken(UserDetails usuario) {
-        return getToken(new HashMap<>(), usuario);
+        Map<String, Object> claims = new HashMap<>();
+        claims.put("role", usuario.getAuthorities().iterator().next().getAuthority());
+        return getToken(claims, usuario);
     }
 
     public String getToken(Map<String, Object> claims, UserDetails usuario) {

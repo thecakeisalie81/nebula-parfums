@@ -14,23 +14,24 @@
 <body>
 <div class="container" id="container">
     <div class="form-container sign-up">
-        <form>
+        <form id="registerForm">
             <h1>Crear cuenta</h1>
 
-            <input type="text" placeholder="Nombre" />
-            <input type="email" placeholder="Email" />
-            <input type="password" placeholder="contraseña" />
-            <button>Registrarse</button>
+            <input type="text" id="regNombre" placeholder="Nombre" />
+            <input type="email" id="regEmail" placeholder="Email" />
+            <input type="password" id="regPassword" placeholder="contraseña" />
+            <button type="submit">Registrarse</button>
         </form>
     </div>
+    <!-- LOGIN -->
     <div class="form-container sign-in">
-        <form>
+        <form id="loginForm">
             <h1>Ingresar</h1>
 
-            <input type="email" placeholder="Email" />
-            <input type="password" placeholder="Password" />
+            <input type="email" id="loginEmail" placeholder="Email" />
+            <input type="password" id="loginPassword" placeholder="Password" />
             <a href="#">Olvido su contraseña?</a>
-            <button>Ingresar</button>
+            <button type="submit">Ingresar</button>
         </form>
     </div>
     <div class="toggle-container">

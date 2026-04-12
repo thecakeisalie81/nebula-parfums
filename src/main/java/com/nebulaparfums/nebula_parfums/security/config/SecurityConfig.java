@@ -34,13 +34,13 @@ public class SecurityConfig {
                         authRequest
                                 // 🔓 rutas públicas
                                 .requestMatchers(
-                                        "/",
-                                        "/index.html",
                                         "/login.html",
                                         "/css/**",
                                         "/js/**",
                                         "/administrador/**",
-                                        "/images/**"
+                                        "/ecommerce/**",
+                                        "/images/**",
+                                        "/uploads/**"
                                 ).permitAll()
 
                                 // 🔓 auth

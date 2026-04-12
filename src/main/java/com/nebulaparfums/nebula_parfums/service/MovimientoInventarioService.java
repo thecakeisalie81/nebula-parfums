@@ -13,6 +13,8 @@ import com.nebulaparfums.nebula_parfums.service.interfaces.IProductoService;
 import com.nebulaparfums.nebula_parfums.service.interfaces.IUsuarioService;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -147,6 +149,12 @@ public class MovimientoInventarioService implements IMovimientoInventarioService
         iLogActividadService.saveLogActividad(logActividad);
 
         return  "Se registro el movimiento correctamente";
+    }
+
+    @Override
+    public List<MovimientoInventario> ultimos5Movimientos() {
+        Pageable limiteCinco = PageRequest.of(0, 5);
+        return iMovimientoInventarioRepository.ultimosMovimientoInventario(limiteCinco);
     }
 
 

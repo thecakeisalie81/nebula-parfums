@@ -11,4 +11,5 @@ public interface IMovimientoInventarioService {
     public String registrarSalida(Integer productoId, int cantidad);
     public String registrarEntrada(Integer productoId, int cantidad);
     public String registrarRegistroProducto(MovimientoDTO movimientoDTO);
+    public List<MovimientoInventario> ultimos5Movimientos();
 }

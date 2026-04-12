@@ -4,7 +4,16 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Dashboard</title>
-    <link rel="stylesheet" href="styles.css" />
+    <script>
+        (function () {
+            const theme = localStorage.getItem("theme");
+            if (theme === "dark") {
+                document.documentElement.classList.add("dark-theme-variables");
+            }
+        })();
+    </script>
+    <link rel="stylesheet" href="/css/styles.css" />
+    <link rel="stylesheet" href="/css/styles.css" />
     <link />
     <link
             href="https://fonts.googleapis.com/icon?family=Material+Icons"
@@ -20,7 +29,7 @@
     <aside>
         <div class="top">
             <div class="logo">
-                <img class="img-logo" src="logo.png" alt="" />
+                <img class="img-logo" src="/images/logo.png" alt="" />
                 <h2>
                     <span class="danger" style="font-size: 0.8rem">parfums</span>
                 </h2>
@@ -81,7 +90,7 @@
                 <h3>Reportes</h3>
             </a>
 
-            <a href="#">
+            <a href="#" id="logoutBtn">
                 <span class="material-symbols-outlined"> logout </span>
                 <h3>Logout</h3>
             </a>
@@ -104,7 +113,7 @@
                     <div class="middle">
                         <div class="left">
                             <h3>Total de productos</h3>
-                            <h1>50</h1>
+                            <h1 id="totalProductos"></h1>
                         </div>
                         <div class="progress"></div>
                     </div>
@@ -115,8 +124,8 @@
                     <span class="material-symbols-outlined"> warning </span>
                     <div class="middle">
                         <div class="left">
-                            <h3>Stock bajo</h3>
-                            <h1>50</h1>
+                            <h3>Productos sin stock</h3>
+                            <h1 id="noStock"></h1>
                         </div>
                         <div class="progress"></div>
                     </div>
@@ -128,7 +137,7 @@
                     <div class="middle">
                         <div class="left">
                             <h3>Dinero en ventas este mes</h3>
-                            <h1>50</h1>
+                            <h1 ></h1>
                         </div>
                         <div class="progress"></div>
                     </div>
@@ -140,44 +149,22 @@
         <!-------------end of sales-------------------->
 
         <div class="recent-orders">
-            <h2>Ordenes recientes</h2>
+            <h2>Ordenes pendientes</h2>
             <table>
                 <thead>
                 <tr>
                     <th>Fecha</th>
-                    <th>Numero de productos</th>
                     <th>Total</th>
-                    <th>Estado</th>
-                    <th></th>
+                    <th>Usuario</th>
+                    <th>Correo</th>
+                    <th>Telefono</th>
                 </tr>
                 </thead>
-                <tbody>
-                <tr>
-                    <td>9/04/2026</td>
-                    <td>6</td>
-                    <td>55000</td>
-                    <td class="warning">PENDIENTE</td>
-                    <td class="primary">Detalles</td>
-                </tr>
+                <tbody id="ordenesRecientesBody">
 
-                <tr>
-                    <td>9/04/2026</td>
-                    <td>6</td>
-                    <td>55000</td>
-                    <td class="warning">PENDIENTE</td>
-                    <td class="primary">Detalles</td>
-                </tr>
-
-                <tr>
-                    <td>9/04/2026</td>
-                    <td>6</td>
-                    <td>55000</td>
-                    <td class="warning">PENDIENTE</td>
-                    <td class="primary">Detalles</td>
-                </tr>
                 </tbody>
             </table>
-            <a href="#">Mostrar todas</a>
+            <a href="pedidos.html">Mostrar todas</a>
         </div>
     </main>
     <!---------------end of main----------------------->
@@ -196,77 +183,24 @@
 
         <div class="recent-updates">
             <h2>Movimientos recientes</h2>
-            <div class="updates">
-                <div class="update">
-                    <div class="message">
-                        <p><b>Empleado</b> Realizo un movimiento en el producto</p>
-                        <small class="text-muted">A X fecha</small>
-                    </div>
-                </div>
-
-                <div class="update">
-                    <div class="message">
-                        <p><b>Empleado</b> Realizo un movimiento en el producto</p>
-                        <small class="text-muted">A X fecha</small>
-                    </div>
-                </div>
-
-                <div class="update">
-                    <div class="message">
-                        <p><b>Empleado</b> Realizo un movimiento en el producto</p>
-                        <small class="text-muted">A X fecha</small>
-                    </div>
-                </div>
-            </div>
+            <div class="updates" id="ultimosMovimientosList"></div>
         </div>
 
         <!-----------end of ultimos movimientos--------------->
 
+
         <div class="sales-analytics">
+            <a href="movimientos.html">Mostrar todas</a>
             <h2>Productos con stock bajo</h2>
-            <div class="item online">
-                <div class="icon">
-                    <span class="material-symbols-outlined"> warning </span>
-                </div>
-                <div class="right">
-                    <div class="info">
-                        <h3>Producto X</h3>
-                        <small class="text-muted">Solo quedan</small>
-                    </div>
-                    <h5 class="danger">X unidades</h5>
-                </div>
-            </div>
 
-            <div class="item online">
-                <div class="icon">
-                    <span class="material-symbols-outlined"> warning </span>
-                </div>
-                <div class="right">
-                    <div class="info">
-                        <h3>Producto X</h3>
-                        <small class="text-muted">Solo quedan</small>
-                    </div>
-                    <h5 class="danger">X unidades</h5>
-                </div>
-            </div>
+            <div id="stockBajoList"></div>
 
-            <div class="item online">
-                <div class="icon">
-                    <span class="material-symbols-outlined"> warning </span>
-                </div>
-                <div class="right">
-                    <div class="info">
-                        <h3>Producto X</h3>
-                        <small class="text-muted">Solo quedan</small>
-                    </div>
-                    <h5 class="danger">X unidades</h5>
-                </div>
-            </div>
-            <a href="#">Mostrar todas</a>
+            <a href="productos.html">Mostrar todas</a>
         </div>
     </div>
 </div>
 
-<script src="script.js"></script>
+<script src="/js/script.js"></script>
+<script src="/js/dashboard.js"></script>
 </body>
 </html>

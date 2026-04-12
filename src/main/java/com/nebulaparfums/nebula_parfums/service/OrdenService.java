@@ -10,6 +10,9 @@ import com.nebulaparfums.nebula_parfums.service.interfaces.IDireccionEnvioServic
 import com.nebulaparfums.nebula_parfums.service.interfaces.IOrdenService;
 import com.nebulaparfums.nebula_parfums.service.interfaces.IUsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -54,6 +57,12 @@ public class OrdenService implements IOrdenService {
         orden.setUsuario(usuario);
         orden.setDireccion(direccionEnvio);
         ordenRepository.save(orden);
+    }
+
+    @Override
+    public List<Orden> getUltimasOrdenesPendiente() {
+        Pageable  pageable = PageRequest.of(0, 5, Sort.by("fecha_creacion").descending());
+        return ordenRepository.ultimasOrdenesPendiente(pageable);
     }
 
     @Override

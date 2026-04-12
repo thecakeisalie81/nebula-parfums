@@ -4,7 +4,15 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Proveedores</title>
-    <link rel="stylesheet" href="styles.css" />
+    <script>
+        (function () {
+            const theme = localStorage.getItem("theme");
+            if (theme === "dark") {
+                document.documentElement.classList.add("dark-theme-variables");
+            }
+        })();
+    </script>
+    <link rel="stylesheet" href="/css/styles.css" />
     <link />
     <link
             href="https://fonts.googleapis.com/icon?family=Material+Icons"
@@ -20,7 +28,7 @@
     <aside>
         <div class="top">
             <div class="logo">
-                <img class="img-logo" src="logo.png" alt="" />
+                <img class="img-logo" src="/images/logo.png" alt="" />
                 <h2>
                     <span class="danger" style="font-size: 0.8rem">parfums</span>
                 </h2>
@@ -81,7 +89,7 @@
                 <h3>Reportes</h3>
             </a>
 
-            <a href="#">
+            <a href="#" id="logoutBtn">
                 <span class="material-symbols-outlined"> logout </span>
                 <h3>Logout</h3>
             </a>
@@ -116,17 +124,6 @@
                 </div>
                 <small class="text-muted">En total</small>
             </div>
-
-            <div class="orders">
-                <span class="material-symbols-outlined">public</span>
-                <div class="middle">
-                    <div class="left">
-                        <h3>Países</h3>
-                        <h1>5</h1>
-                    </div>
-                </div>
-                <small class="text-muted">Diferentes países</small>
-            </div>
         </div>
 
         <!-- Lista de proveedores -->
@@ -139,34 +136,14 @@
                     <th>Contacto</th>
                     <th>Email</th>
                     <th>Teléfono</th>
-                    <th>País</th>
                     <th>Productos</th>
                     <th>Estado</th>
                     <th>Acciones</th>
                 </tr>
                 </thead>
                 <tbody>
-                <tr>
-                    <td>Fragrance World Distribution</td>
-                    <td>María González</td>
-                    <td>maria@fragworld.com</td>
-                    <td>+34 912 345 678</td>
-                    <td>España</td>
-                    <td>45</td>
-                    <td>Activo</td>
-                    <td><a href="#" class="edit-provider">Editar</a></td>
-                </tr>
-                <tr>
-                    <td>Luxury Scents International</td>
-                    <td>Jean Pierre Dubois</td>
-                    <td>jp.dubois@luxuryscents.fr</td>
-                    <td>+33 1 42 86 82 00</td>
-                    <td>Francia</td>
-                    <td>67</td>
-                    <td>Activo</td>
-                    <td><a href="#" class="edit-provider">Editar</a></td>
-                </tr>
-                <!-- más filas -->
+
+
                 </tbody>
             </table>
         </div>
@@ -254,7 +231,7 @@
     </div>
 </div>
 
-<script src="script.js"></script>
-<script src="proveedores.js"></script>
+<script src="/js/script.js"></script>
+<script src="/js/proveedores.js"></script>
 </body>
 </html>

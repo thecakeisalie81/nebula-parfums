@@ -19,11 +19,11 @@ public class Orden {
     private Double total;
     private LocalDateTime fecha_creacion;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "usuario", referencedColumnName = "id_usuario")
     private Usuario usuario;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "direccion", referencedColumnName = "id_direccion")
     private DireccionEnvio direccion;
 
