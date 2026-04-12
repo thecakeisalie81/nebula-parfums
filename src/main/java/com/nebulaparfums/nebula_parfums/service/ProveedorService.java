@@ -5,6 +5,8 @@ import com.nebulaparfums.nebula_parfums.model.Proveedor;
 import com.nebulaparfums.nebula_parfums.repository.IProveedorRepository;
 import com.nebulaparfums.nebula_parfums.service.interfaces.IProveedorService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -16,9 +18,13 @@ public class ProveedorService implements IProveedorService {
 
 
     @Override
-    public List<Proveedor> getProveedores() {
-        List<Proveedor> proveedores = iProveedorRepository.findAll();
-        return proveedores;
+    public Page<Proveedor> getProveedores(Pageable pageable) {
+        return iProveedorRepository.findAll(pageable);
+    }
+
+    @Override
+    public List<Proveedor> getAllProveedores() {
+        return iProveedorRepository.findAll();
     }
 
     @Override
@@ -44,5 +50,10 @@ public class ProveedorService implements IProveedorService {
     @Override
     public void editProveedor(Proveedor proveedor) {
         this.saveProveedor(proveedor);
+    }
+
+    @Override
+    public int totalProveedores() {
+        return iProveedorRepository.findAll().size();
     }
 }

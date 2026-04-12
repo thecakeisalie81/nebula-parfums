@@ -10,17 +10,33 @@ function obtenerToken() {
     return token;
 }
 
+function authFetch(url, options = {}) {
+    const token = localStorage.getItem("token");
+
+    if (!token) {
+        window.location.href = "/login.html";
+        return Promise.reject("Token no encontrado");
+    }
+
+    return fetch(url, {
+        ...options,
+        headers: {
+            ...options.headers,
+            Authorization: "Bearer " + token
+        }
+    });
+}
+
 let paginaActual = 0;
 let totalPaginas = 0;
 let terminoBusqueda = "";
 let debounceTimer = null;
-let productosPaginaActual = [];
 let filtroStockActual = "";
 
 async function cargarCuadros() {
     let response = await authFetch("/producto/totalproductos");
-    let data = await response.text();   // aquí llega "28"
-    const total = Number(data.trim());    // convertir a número
+    let data = await response.text();
+    const total = Number(data.trim());
     document.querySelector("#totalProductos").innerHTML = total;
 
     response = await authFetch("/producto/constock");
@@ -39,24 +55,27 @@ async function cargarCuadros() {
     document.querySelector("#bajoStock").innerHTML = lowStock;
 }
 
-
-
-
-
 document.addEventListener("DOMContentLoaded", () => {
     cargarCuadros();
-    cargarUltimosMovimientos()
+    cargarUltimosMovimientos();
 
     const searchInput = document.getElementById("searchInput");
-
     const selectStock = document.getElementById("selectStock");
+    const openModalBtn = document.getElementById("openModal");
+    const inputImagenEdit = document.getElementById("imagenEdit");
+
+    const token = obtenerToken();
+    if (!token) {
+        window.location.replace("/login.html");
+        return;
+    }
 
     if (selectStock) {
         filtroStockActual = selectStock.value;
 
         selectStock.addEventListener("change", function () {
             filtroStockActual = this.value;
-            aplicarFiltrosLocales();
+            cargarProductos(0);
         });
     }
 
@@ -75,24 +94,15 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    document.getElementById("openModal").onclick = function () {
-        document.getElementById("productModal").style.display = "flex"; // aquí sí flex
-    };
-
-    const token = obtenerToken();
-    cargarCategorias("categoria");
-    cargarProveedores("proveedor");
-
-    if (!token) {
-        window.location.replace("/login.html");
+    if (openModalBtn) {
+        openModalBtn.onclick = function () {
+            document.getElementById("productModal").style.display = "flex";
+        };
     }
 
-    cargarProductos();
-
-
-
-    const inputImagenEdit = document.getElementById("imagenEdit");
-
+    cargarCategorias("categoria");
+    cargarProveedores("proveedor");
+    cargarProductos(0);
 
     if (inputImagenEdit) {
         inputImagenEdit.addEventListener("change", function () {
@@ -102,41 +112,29 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         });
     }
-
 });
 
+function construirUrlProductos(page = 0) {
+    const params = new URLSearchParams();
 
-function authFetch(url, options = {}) {
-    const token = localStorage.getItem("token");
+    params.append("page", page);
+    params.append("size", 10);
 
-    if (!token) {
-        window.location.href = "/login.html";
-        return;
+    if (terminoBusqueda.trim() !== "") {
+        params.append("nombre", terminoBusqueda.trim());
     }
 
-    return fetch(url, {
-        ...options,
-        headers: {
-            ...options.headers,
-            "Authorization": "Bearer " + token
-        }
-    });
+    if (filtroStockActual.trim() !== "") {
+        params.append("estadoStock", filtroStockActual.trim());
+    }
+
+    return `/producto/traer?${params.toString()}`;
 }
 
-
-
-
 function cargarProductos(page = 0) {
-    let url = "";
+    const url = construirUrlProductos(page);
 
-    if (terminoBusqueda.trim() === "") {
-        url = `/producto/traer?page=${page}&size=10`;
-    } else {
-        url = `/producto/resultados?nombre=${encodeURIComponent(terminoBusqueda.trim())}&page=${page}&size=10`;
-    }
-
-    console.log("URL USADA:", url);
-    console.log("terminoBusqueda:", "[" + terminoBusqueda + "]");
+    console.log("URL PRODUCTOS:", url);
 
     authFetch(url)
         .then(res => {
@@ -146,53 +144,53 @@ function cargarProductos(page = 0) {
             return res.json();
         })
         .then(data => {
-            console.log("RESPUESTA:", data);
+            console.log("RESPUESTA PRODUCTOS:", data);
 
-            productosPaginaActual = data.content || [];
-            aplicarFiltrosLocales();
-
+            const productos = data.content || [];
             const currentPage = data.number ?? data.page?.number ?? 0;
             const totalPages = data.totalPages ?? data.page?.totalPages ?? 0;
-
-            console.log("currentPage:", currentPage);
-            console.log("totalPages:", totalPages);
 
             paginaActual = currentPage;
             totalPaginas = totalPages;
 
+            renderizarProductos(productos);
             renderizarPaginacion(totalPages, currentPage);
         })
         .catch(err => {
             console.error("Error cargando productos:", err);
+
+            const tbody = document.getElementById("tablaProductos");
+            if (tbody) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="9">Error al cargar productos</td>
+                    </tr>
+                `;
+            }
+
+            const contenedor = document.getElementById("paginacion");
+            if (contenedor) {
+                contenedor.innerHTML = "";
+            }
         });
 }
-
-function aplicarFiltrosLocales() {
-    let productosFiltrados = [...productosPaginaActual];
-
-    if (filtroStockActual === "bajo") {
-        productosFiltrados = productosFiltrados.filter(producto =>
-            producto.stock_actual > 0 && producto.stock_actual <= producto.stock_minimo
-        );
-    } else if (filtroStockActual === "sin") {
-        productosFiltrados = productosFiltrados.filter(producto =>
-            producto.stock_actual === 0
-        );
-    } else if (filtroStockActual === "suficiente") {
-        productosFiltrados = productosFiltrados.filter(producto =>
-            producto.stock_actual > producto.stock_minimo
-        );
-    }
-
-    renderizarProductos(productosFiltrados);
-}
-
 
 function renderizarProductos(productos) {
     const tbody = document.getElementById("tablaProductos");
     const cacheBust = Date.now();
 
+    if (!tbody) return;
+
     tbody.innerHTML = "";
+
+    if (!productos || productos.length === 0) {
+        tbody.innerHTML = `
+            <tr>
+                <td colspan="9">No hay productos para mostrar</td>
+            </tr>
+        `;
+        return;
+    }
 
     productos.forEach(producto => {
         const nombreImagen = producto.imagen
@@ -230,7 +228,6 @@ function renderizarProductos(productos) {
 }
 
 function abrirModalEditar(id) {
-
     Promise.all([
         cargarCategorias("categoriaEdit"),
         cargarProveedores("proveedorEdit")
@@ -238,7 +235,6 @@ function abrirModalEditar(id) {
         authFetch(`/producto/buscar?id=${id}`)
             .then(res => res.json())
             .then(producto => {
-
                 document.getElementById("idProducto").value = producto.id_producto;
                 document.getElementById("nombreEdit").value = producto.nombre;
                 document.getElementById("descripcionEdit").value = producto.descripcion;
@@ -250,24 +246,47 @@ function abrirModalEditar(id) {
                 document.getElementById("proveedorEdit").value = producto.proveedor.id_proveedor;
 
                 document.getElementById("previewEdit").src =
-                    `/uploads/${producto.imagen || 'default.png'}?t=${Date.now()}`;
+                    `/uploads/${producto.imagen || "default.png"}?t=${Date.now()}`;
 
                 document.getElementById("editProductModal").style.display = "flex";
             });
-
     });
 }
 
 function renderizarPaginacion(totalPages, currentPage) {
-
     const contenedor = document.getElementById("paginacion");
+    if (!contenedor) return;
+
     contenedor.innerHTML = "";
 
-    for (let i = 0; i < totalPages; i++) {
+    if (totalPages <= 1) return;
 
+    // Flecha atrás
+    if (currentPage > 0) {
+        const prevBtn = document.createElement("button");
+        prevBtn.innerText = "←";
+        prevBtn.classList.add("btn-pagina");
+        prevBtn.addEventListener("click", () => {
+            cargarProductos(currentPage - 1);
+        });
+        contenedor.appendChild(prevBtn);
+    }
+
+    let startPage = Math.max(0, currentPage - 2);
+    let endPage = Math.min(totalPages - 1, currentPage + 2);
+
+    // Ajuste para siempre intentar mostrar 5 páginas
+    if (currentPage <= 1) {
+        endPage = Math.min(totalPages - 1, 4);
+    }
+
+    if (currentPage >= totalPages - 2) {
+        startPage = Math.max(0, totalPages - 5);
+    }
+
+    for (let i = startPage; i <= endPage; i++) {
         const btn = document.createElement("button");
         btn.innerText = i + 1;
-
         btn.classList.add("btn-pagina");
 
         if (i === currentPage) {
@@ -280,26 +299,38 @@ function renderizarPaginacion(totalPages, currentPage) {
 
         contenedor.appendChild(btn);
     }
+
+    // Flecha adelante
+    if (currentPage < totalPages - 1) {
+        const nextBtn = document.createElement("button");
+        nextBtn.innerText = "→";
+        nextBtn.classList.add("btn-pagina");
+        nextBtn.addEventListener("click", () => {
+            cargarProductos(currentPage + 1);
+        });
+        contenedor.appendChild(nextBtn);
+    }
 }
 
-document.getElementById("closeModal").onclick = function () {
+document.getElementById("closeModal")?.addEventListener("click", function () {
     document.getElementById("productModal").style.display = "none";
-};
+});
 
+document.getElementById("closeEditModal")?.addEventListener("click", function () {
+    document.getElementById("editProductModal").style.display = "none";
+});
 
 window.onclick = function (event) {
-
-    if (event.target == document.getElementById("productModal")) {
+    if (event.target === document.getElementById("productModal")) {
         document.getElementById("productModal").style.display = "none";
     }
 
-    if (event.target == document.getElementById("editProductModal")) {
+    if (event.target === document.getElementById("editProductModal")) {
         document.getElementById("editProductModal").style.display = "none";
     }
 };
 
-
-document.getElementById("editProductForm").addEventListener("submit", function(e) {
+document.getElementById("editProductForm")?.addEventListener("submit", function (e) {
     e.preventDefault();
 
     const token = obtenerToken();
@@ -322,7 +353,7 @@ document.getElementById("editProductForm").addEventListener("submit", function(e
     fetch("/producto/editar", {
         method: "PUT",
         headers: {
-            "Authorization": "Bearer " + token
+            Authorization: "Bearer " + token
         },
         body: formData
     })
@@ -331,7 +362,6 @@ document.getElementById("editProductForm").addEventListener("submit", function(e
             return res.json();
         })
         .then(() => {
-
             document.getElementById("editProductModal").style.display = "none";
 
             Swal.fire({
@@ -340,6 +370,7 @@ document.getElementById("editProductForm").addEventListener("submit", function(e
             });
 
             cargarProductos(paginaActual);
+            cargarCuadros();
         })
         .catch(err => {
             console.error(err);
@@ -350,21 +381,12 @@ document.getElementById("editProductForm").addEventListener("submit", function(e
         });
 });
 
-// Cerrar modal con la X
-document.getElementById("closeEditModal").onclick = function () {
-    document.getElementById("editProductModal").style.display = "none";
-};
-
-
-
-document.getElementById("productForm").addEventListener("submit", function(e) {
+document.getElementById("productForm")?.addEventListener("submit", function (e) {
     e.preventDefault();
 
     const token = obtenerToken();
-
     const formData = new FormData();
 
-    // 📦 datos del producto
     formData.append("nombre", document.getElementById("nombre").value);
     formData.append("descripcion", document.getElementById("descripcion").value);
     formData.append("precio", document.getElementById("precio").value);
@@ -373,7 +395,6 @@ document.getElementById("productForm").addEventListener("submit", function(e) {
     formData.append("categoria", document.getElementById("categoria").value);
     formData.append("proveedor", document.getElementById("proveedor").value);
 
-    // 🖼️ imagen
     const imagen = document.getElementById("imagen").files[0];
     if (imagen) {
         formData.append("imagen", imagen);
@@ -382,7 +403,7 @@ document.getElementById("productForm").addEventListener("submit", function(e) {
     fetch("/producto/crear", {
         method: "POST",
         headers: {
-            "Authorization": "Bearer " + token
+            Authorization: "Bearer " + token
         },
         body: formData
     })
@@ -391,16 +412,17 @@ document.getElementById("productForm").addEventListener("submit", function(e) {
             return res.json();
         })
         .then(() => {
-
             document.getElementById("productModal").style.display = "none";
             document.getElementById("productForm").reset();
-            cargarProductos(paginaActual);
 
             Swal.fire({
                 icon: "success",
                 title: "Producto creado",
                 text: "Se guardó correctamente"
             });
+
+            cargarProductos(0);
+            cargarCuadros();
         })
         .catch(err => {
             console.error(err);
@@ -411,23 +433,6 @@ document.getElementById("productForm").addEventListener("submit", function(e) {
             });
         });
 });
-
-function authFetch(url, options = {}) {
-    const token = localStorage.getItem("token");
-
-    if (!token) {
-        window.location.href = "/login.html";
-        return Promise.reject("Token no encontrado");
-    }
-
-    return fetch(url, {
-        ...options,
-        headers: {
-            ...options.headers,
-            Authorization: "Bearer " + token
-        }
-    });
-}
 
 function formatearFecha(fecha) {
     if (!fecha) return "Fecha no disponible";
@@ -511,12 +516,14 @@ function cargarUltimosMovimientos() {
 function cargarCategorias(elemento) {
     const token = obtenerToken();
 
-    return fetch("/categoria/traer", {   // 👈 CLAVE
-        headers: { "Authorization": "Bearer " + token }
+    return fetch("/categoria/traer", {
+        headers: { Authorization: "Bearer " + token }
     })
         .then(res => res.json())
         .then(data => {
             const select = document.getElementById(elemento);
+            if (!select) return;
+
             select.innerHTML = "<option value=''>Seleccione</option>";
 
             data.forEach(c => {
@@ -528,15 +535,17 @@ function cargarCategorias(elemento) {
         });
 }
 
-function cargarProveedores(elemento){
+function cargarProveedores(elemento) {
     const token = obtenerToken();
 
-    return fetch("/proveedor/traer", {   // 👈 AGREGA return
-        headers: { "Authorization": "Bearer " + token }
+    return fetch("/proveedores/traer", {
+        headers: { Authorization: "Bearer " + token }
     })
         .then(res => res.json())
         .then(data => {
             const select = document.getElementById(elemento);
+            if (!select) return;
+
             select.innerHTML = "<option value=''>Seleccione</option>";
 
             data.forEach(p => {
@@ -547,5 +556,3 @@ function cargarProveedores(elemento){
             });
         });
 }
-
-

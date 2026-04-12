@@ -24,6 +24,32 @@ public class ProductoService implements IProductoService {
     }
 
     @Override
+    public Page<Producto> getProductosFiltrados(
+            Pageable pageable,
+            String nombre,
+            Integer idCategoria,
+            Integer idProveedor,
+            String estadoStock
+    ) {
+        if (nombre != null && nombre.isBlank()) {
+            nombre = null;
+        }
+
+        if (estadoStock != null && estadoStock.isBlank()) {
+            estadoStock = null;
+        }
+
+        return iProductoRepository.filtrarProductos(
+                pageable,
+                nombre,
+                idCategoria,
+                idProveedor,
+                estadoStock
+        );
+    }
+
+
+    @Override
     public Page<Producto> getProductosBusqueda(Pageable pageable,String nombre) {
         return iProductoRepository.findByNombre(pageable, nombre);
     }

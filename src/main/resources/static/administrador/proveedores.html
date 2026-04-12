@@ -108,10 +108,9 @@
                 <div class="middle">
                     <div class="left">
                         <h3>Total Proveedores</h3>
-                        <h1>5</h1>
+                        <h1 id="totalProveedores"></h1>
                     </div>
                 </div>
-                <small class="text-muted">4 activos</small>
             </div>
 
             <div class="income">
@@ -119,7 +118,7 @@
                 <div class="middle">
                     <div class="left">
                         <h3>Productos Suministrados</h3>
-                        <h1>226</h1>
+                        <h1 id="totalProductos"></h1>
                     </div>
                 </div>
                 <small class="text-muted">En total</small>
@@ -129,6 +128,7 @@
         <!-- Lista de proveedores -->
         <h2>Lista de Proveedores</h2>
         <div class="recent-orders">
+            <div class="paginacion" id="paginacionProveedores"></div>
             <table>
                 <thead>
                 <tr>
@@ -136,12 +136,10 @@
                     <th>Contacto</th>
                     <th>Email</th>
                     <th>Teléfono</th>
-                    <th>Productos</th>
-                    <th>Estado</th>
                     <th>Acciones</th>
                 </tr>
                 </thead>
-                <tbody>
+                <tbody id="tablaProveedores">
 
 
                 </tbody>
@@ -152,6 +150,7 @@
     <!-- Modal para editar -->
     <div id="providerModal" class="modal">
         <div class="modal-content">
+            <input type="hidden" id="editProvId" />
             <span id="closeProviderModal" class="close">&times;</span>
             <h2>Editar Proveedor</h2>
             <form id="editProviderForm">
@@ -232,6 +231,7 @@
 </div>
 
 <script src="/js/script.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="/js/proveedores.js"></script>
 </body>
 </html>

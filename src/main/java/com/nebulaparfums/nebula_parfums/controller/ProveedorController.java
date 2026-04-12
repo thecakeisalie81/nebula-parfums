@@ -3,6 +3,8 @@ package com.nebulaparfums.nebula_parfums.controller;
 import com.nebulaparfums.nebula_parfums.model.Proveedor;
 import com.nebulaparfums.nebula_parfums.service.interfaces.IProveedorService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -14,8 +16,18 @@ public class ProveedorController {
     private IProveedorService iProveedorService;
 
     @GetMapping("/proveedor/traer")
-    public List<Proveedor> traerProveedores(){
-        return iProveedorService.getProveedores();
+    public Page<Proveedor> traerProveedores(Pageable pageable){
+        return iProveedorService.getProveedores(pageable);
+    }
+
+    @GetMapping("/proveedores/traer")
+    public List<Proveedor> traerTodosProveedores(){
+        return iProveedorService.getAllProveedores();
+    }
+
+    @GetMapping("proveedor/total")
+    public int totalProveedores(){
+        return iProveedorService.totalProveedores();
     }
 
     @GetMapping("/proveedor/buscar")

@@ -8,6 +8,13 @@ import java.util.List;
 
 public interface IProductoService {
     public Page<Producto> getProductos(Pageable pageable);
+    Page<Producto> getProductosFiltrados(
+            Pageable pageable,
+            String nombre,
+            Integer idCategoria,
+            Integer idProveedor,
+            String estadoStock
+    );
     public Page<Producto> getProductosBusqueda(Pageable pageable,String nombre);
     public List<Producto> getProductosCategoria(Integer categoria);
     public Producto getProductoById(Integer id);
@@ -19,4 +26,5 @@ public interface IProductoService {
     public Integer getTotalStock();
     public Integer getProductosConStock();
     public List<Producto> get4ProductosBajoStock();
+
 }

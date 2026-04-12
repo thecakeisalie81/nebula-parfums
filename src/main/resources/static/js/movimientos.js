@@ -205,7 +205,32 @@
 
         contenedor.innerHTML = "";
 
-        for (let i = 0; i < totalPages; i++) {
+        if (totalPages <= 1) return;
+
+        // Flecha atrás
+        if (currentPage > 0) {
+            const prevBtn = document.createElement("button");
+            prevBtn.innerText = "←";
+            prevBtn.classList.add("btn-pagina");
+            prevBtn.addEventListener("click", () => {
+                cargarMovimientos(currentPage - 1);
+            });
+            contenedor.appendChild(prevBtn);
+        }
+
+        let startPage = Math.max(0, currentPage - 2);
+        let endPage = Math.min(totalPages - 1, currentPage + 2);
+
+        // Ajuste para intentar mostrar siempre 5 páginas
+        if (currentPage <= 1) {
+            endPage = Math.min(totalPages - 1, 4);
+        }
+
+        if (currentPage >= totalPages - 2) {
+            startPage = Math.max(0, totalPages - 5);
+        }
+
+        for (let i = startPage; i <= endPage; i++) {
             const btn = document.createElement("button");
             btn.innerText = i + 1;
             btn.classList.add("btn-pagina");
@@ -219,6 +244,17 @@
             });
 
             contenedor.appendChild(btn);
+        }
+
+        // Flecha adelante
+        if (currentPage < totalPages - 1) {
+            const nextBtn = document.createElement("button");
+            nextBtn.innerText = "→";
+            nextBtn.classList.add("btn-pagina");
+            nextBtn.addEventListener("click", () => {
+                cargarMovimientos(currentPage + 1);
+            });
+            contenedor.appendChild(nextBtn);
         }
     }
 

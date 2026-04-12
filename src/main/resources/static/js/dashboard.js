@@ -10,6 +10,13 @@ function obtenerToken() {
     return token;
 }
 
+function fechaActual(){
+    const inputFecha = document.getElementById("inputFecha");
+    const hoy = new Date();
+    const fechaFormateada = hoy.toISOString().split("T")[0];
+    inputFecha.value = fechaFormateada;
+}
+
 
 async function cargarCuadros() {
     let response = await authFetch("/producto/totalproductos");
@@ -266,4 +273,5 @@ document.addEventListener("DOMContentLoaded", () => {
     cargarProductosBajoStock();
     cargarOrdenesRecientes();
     cargarUltimosMovimientos();
+    fechaActual();
 });
