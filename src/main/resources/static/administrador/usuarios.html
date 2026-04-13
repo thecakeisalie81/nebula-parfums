@@ -108,7 +108,7 @@
                 <div class="middle">
                     <div class="left">
                         <h3>Total de Usuarios</h3>
-                        <h1>8</h1>
+                        <h1 id="totalUsers"></h1>
                     </div>
                 </div>
                 <small class="text-muted">Todos los registrados</small>
@@ -118,97 +118,42 @@
                 <span class="material-symbols-outlined">verified</span>
                 <div class="middle">
                     <div class="left">
-                        <h3>Usuarios Activos</h3>
-                        <h1>6</h1>
+                        <h3>Empleados Activos</h3>
+                        <h1 id="totalActivos"></h1>
                     </div>
                 </div>
                 <small class="text-muted">Actualmente activos</small>
-            </div>
-
-            <div class="expenses">
-                <span class="material-symbols-outlined">admin_panel_settings</span>
-                <div class="middle">
-                    <div class="left">
-                        <h3>Administradores</h3>
-                        <h1>1</h1>
-                    </div>
-                </div>
-                <small class="text-muted">Cuentas de administrador</small>
-            </div>
-
-            <div class="orders">
-                <span class="material-symbols-outlined">supervisor_account</span>
-                <div class="middle">
-                    <div class="left">
-                        <h3>Gerentes</h3>
-                        <h1>3</h1>
-                    </div>
-                </div>
-                <small class="text-muted">Cuentas de gerente</small>
             </div>
         </div>
 
         <!-- Tabla de usuarios -->
         <div class="recent-orders">
-            <h2>Usuarios (8)</h2>
+            <h2>Usuarios</h2>
+
             <div class="controls">
-                <input type="text" class="search-bar" placeholder="Buscar usuario..." />
-                <button>+ Nuevo Usuario</button>
+                <input
+                        type="text"
+                        class="search-bar"
+                        id="searchInput"
+                        placeholder="Buscar usuario..."
+                />
+                <button id="openModal" class="primary">+ Nuevo Usuario</button>
             </div>
+
+            <div class="paginacion" id="paginacion"></div>
+
             <table>
                 <thead>
                 <tr>
                     <th>Nombre</th>
                     <th>Email</th>
                     <th>Rol</th>
-                    <th>Departamento</th>
                     <th>Estado</th>
-                    <th>Último Acceso</th>
                     <th>Creado</th>
                     <th>Acciones</th>
                 </tr>
                 </thead>
-                <tbody>
-                <tr>
-                    <td>John Smith</td>
-                    <td>john.smith@company.com</td>
-                    <td>Admin</td>
-                    <td>IT</td>
-                    <td class="success">Activo</td>
-                    <td>2024-03-13</td>
-                    <td>2023-01-15</td>
-                    <td>
-                        <span class="material-symbols-outlined primary">edit</span>
-                        <span class="material-symbols-outlined danger">delete</span>
-                    </td>
-                </tr>
-                <tr>
-                    <td>Sarah Johnson</td>
-                    <td>sarah.johnson@company.com</td>
-                    <td>Gerente</td>
-                    <td>Operations</td>
-                    <td class="success">Activo</td>
-                    <td>2024-03-12</td>
-                    <td>2023-02-20</td>
-                    <td>
-                        <span class="material-symbols-outlined primary">edit</span>
-                        <span class="material-symbols-outlined danger">delete</span>
-                    </td>
-                </tr>
-                <tr>
-                    <td>Robert Martinez</td>
-                    <td>robert.martinez@company.com</td>
-                    <td>Empleado</td>
-                    <td>Operations</td>
-                    <td class="danger">Suspendido</td>
-                    <td>2024-01-20</td>
-                    <td>2023-04-15</td>
-                    <td>
-                        <span class="material-symbols-outlined primary">edit</span>
-                        <span class="material-symbols-outlined danger">delete</span>
-                    </td>
-                </tr>
-                </tbody>
+                <tbody id="tablaUsuarios"></tbody>
             </table>
         </div>
     </main>
@@ -228,8 +173,68 @@
 </div>
         <!-----end of top-->
 
+<div id="userModal" class="modal">
+    <div class="modal-content">
+        <span class="close" id="closeModal">&times;</span>
+        <h2>Agregar Nuevo Usuario</h2>
+
+        <form id="userForm">
+            <label for="nombre">Nombre:</label>
+            <input type="text" id="nombre" name="nombre" required />
+
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" required />
+
+            <label for="password">Contraseña:</label>
+            <input type="password" id="password" name="password" required />
+
+            <label for="rol">Rol:</label>
+            <select name="rol" id="rol">
+                <option value="ROLE_EMPLEADO">Empleado</option>
+                <option value="ROLE_ADMIN">Administrador</option>
+            </select>
+
+            <button type="submit" class="btn-success">Guardar</button>
+        </form>
+    </div>
+</div>
 
 
+<div id="editUserModal" class="modal">
+    <div class="modal-content">
+        <span class="close" id="closeEditModal">&times;</span>
+        <h2>Editar Usuario</h2>
+
+        <form id="editUserForm">
+            <input type="hidden" id="editIdUsuario" />
+
+            <label for="editNombre">Nombre:</label>
+            <input type="text" id="editNombre" name="nombre" required />
+
+            <label for="editEmail">Email:</label>
+            <input type="email" id="editEmail" name="email" required />
+
+            <label for="estado">Estado:</label>
+            <select name="estado" id="estado">
+                <option value="activo">ACTIVO</option>
+                <option value="inactivo">INACTIVO</option>
+            </select>
+
+            <label for="editPassword">Contraseña:</label>
+            <input
+                    type="password"
+                    id="editPassword"
+                    name="password"
+                    placeholder="Déjala vacía si no cambia"
+            />
+
+            <button type="submit" class="btn-success">Guardar cambios</button>
+        </form>
+    </div>
+</div>
+F
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="/js/script.js"></script>
+<script src="/js/usuarios.js"></script>
 </body>
 </html>

@@ -111,27 +111,17 @@
     function cargarMovimientos(page = 0) {
         const url = construirUrlMovimientos(page);
 
-        console.log("URL movimientos:", url);
-
         authFetch(url)
             .then(res => {
-                console.log("STATUS MOVIMIENTOS:", res.status);
-
                 if (!res.ok) {
                     throw new Error("Error al cargar movimientos: " + res.status);
                 }
                 return res.json();
             })
             .then(data => {
-                console.log("RESPUESTA MOVIMIENTOS:", data);
-
                 const movimientos = data.content || [];
                 const currentPage = data.number ?? data.page?.number ?? 0;
                 const totalPages = data.totalPages ?? data.page?.totalPages ?? 0;
-
-                console.log("MOVIMIENTOS:", movimientos);
-                console.log("PAGINA ACTUAL:", currentPage);
-                console.log("TOTAL PAGINAS:", totalPages);
 
                 paginaActualMovimientos = currentPage;
                 totalPaginasMovimientos = totalPages;

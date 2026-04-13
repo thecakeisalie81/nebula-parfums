@@ -1,8 +1,12 @@
 package com.nebulaparfums.nebula_parfums.controller;
 
+import com.nebulaparfums.nebula_parfums.dto.UsuarioDTO;
+import com.nebulaparfums.nebula_parfums.model.Proveedor;
 import com.nebulaparfums.nebula_parfums.model.Usuario;
 import com.nebulaparfums.nebula_parfums.service.interfaces.IUsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -13,8 +17,18 @@ public class UsuarioController {
     private IUsuarioService iUsuarioService;
 
     @GetMapping("/usuario/traer")
-    public List<Usuario> traerUsuarios() {
-        return iUsuarioService.getUsuarios();
+    public Page<UsuarioDTO> traerUsuarios(Pageable pageable,String nombre) {
+        return iUsuarioService.getUsuarios(pageable, nombre);
+    }
+
+    @GetMapping("/usuario/total")
+    public int totalUsuarios() {
+        return iUsuarioService.totalUsuarios();
+    }
+
+    @GetMapping("/usuario/activos")
+    public int activos() {
+        return iUsuarioService.totalUsuariosActivos();
     }
 
     @GetMapping("/usuario/buscar")
@@ -28,7 +42,7 @@ public class UsuarioController {
         return "Usuario creado exitosamente";
     }
 
-    @PutMapping("usuario/editar")
+    @PutMapping("/usuario/editar")
     public String editarUsuario(@RequestBody Usuario usuario) {
         iUsuarioService.editUsuario(usuario);
         return "Usuario editado exitosamente";

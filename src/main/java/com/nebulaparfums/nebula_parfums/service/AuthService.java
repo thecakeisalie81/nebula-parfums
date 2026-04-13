@@ -21,6 +21,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Service
@@ -50,6 +51,8 @@ public class AuthService {
 
 
 
+
+
     public AuthResponse login(LoginRequest loginRequest) {
         try {
             authenticationManager.authenticate(
@@ -75,6 +78,7 @@ public class AuthService {
         usuario.setEmail(registerRequest.getEmail());
         usuario.setPassword(passwordEncoder.encode(registerRequest.getPassword()));
         usuario.setRol(rolController.buscarRol(3));
+        usuario.setFecha_creacion(LocalDate.now());
         usuario.setEstado(true);
 
         usuarioController.crearUsuario(usuario);
@@ -91,7 +95,13 @@ public class AuthService {
         usuario.setNombre(registerRequest.getNombre());
         usuario.setEmail(registerRequest.getEmail());
         usuario.setPassword(passwordEncoder.encode(registerRequest.getPassword()));
-        usuario.setRol(rolController.buscarRol(2));
+
+        if (registerRequest.getRol().equals("ROLE_ADMIN")) {
+            usuario.setRol(rolController.buscarRol(1));
+        }else{
+            usuario.setRol(rolController.buscarRol(2));
+        }
+        usuario.setFecha_creacion(LocalDate.now());
         usuario.setEstado(true);
 
         usuarioController.crearUsuario(usuario);

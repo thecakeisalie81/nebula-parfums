@@ -1,10 +1,14 @@
 package com.nebulaparfums.nebula_parfums.service;
 
+import com.nebulaparfums.nebula_parfums.dto.UsuarioDTO;
 import com.nebulaparfums.nebula_parfums.exception.ResourceNotFoundException;
+import com.nebulaparfums.nebula_parfums.model.Proveedor;
 import com.nebulaparfums.nebula_parfums.model.Usuario;
 import com.nebulaparfums.nebula_parfums.repository.IUsuarioRepository;
 import com.nebulaparfums.nebula_parfums.service.interfaces.IUsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
@@ -22,9 +26,17 @@ public class UsuarioService implements IUsuarioService {
     }
 
     @Override
-    public List<Usuario> getUsuarios() {
-        List<Usuario> usuarios = iUsuarioRepository.findAll();
-        return usuarios;
+    public Page<UsuarioDTO> getUsuarios(Pageable pageable, String nombre) {
+        return iUsuarioRepository.filtrarUsuarios(pageable, nombre).map(usuario ->
+                new UsuarioDTO(
+                        usuario.getId_usuario(),
+                        usuario.getNombre(),
+                        usuario.getEmail(),
+                        usuario.getEstado(),
+                        usuario.getFecha_creacion(),
+                        usuario.getRol() != null ? usuario.getRol().getNombre_rol() : "Sin rol"
+                )
+        );
     }
 
     @Override
@@ -43,12 +55,29 @@ public class UsuarioService implements IUsuarioService {
 
     @Override
     public void editUsuario(Usuario usuario) {
-        this.saveUsuario(usuario);
+
+        Usuario user = getUsuarioById(usuario.getId_usuario());
+        user.setNombre((usuario.getNombre() != null) ? usuario.getNombre() : user.getNombre());
+        user.setEmail((usuario.getEmail() != null) ? usuario.getEmail() : user.getEmail());
+        user.setPassword((usuario.getPassword() != null) ? usuario.getPassword() : user.getPassword());
+        user.setEstado(usuario.getEstado());
+
+        this.saveUsuario(user);
     }
 
     @Override
     public Usuario getUsuarioByEmail(String email) {
         Usuario usuario = iUsuarioRepository.findByEmail(email).orElseThrow(() -> new ResourceNotFoundException("No se encontro el usuario"));
         return usuario;
+    }
+
+    @Override
+    public int totalUsuarios() {
+        return iUsuarioRepository.totalUsuarios();
+    }
+
+    @Override
+    public int totalUsuariosActivos() {
+        return iUsuarioRepository.totalUsuariosActivos();
     }
 }
