@@ -9,6 +9,7 @@ import com.nebulaparfums.nebula_parfums.exception.InvalidPasswordException;
 import com.nebulaparfums.nebula_parfums.model.LogActividad;
 import com.nebulaparfums.nebula_parfums.model.Usuario;
 import com.nebulaparfums.nebula_parfums.repository.IUsuarioRepository;
+import com.nebulaparfums.nebula_parfums.service.interfaces.IUsuarioService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -17,7 +18,6 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -48,6 +48,9 @@ public class AuthService {
     @Autowired
     private LogActividadService logActividadService;
 
+    @Autowired
+    private IUsuarioService  usuarioService;
+
 
 
 
@@ -64,6 +67,18 @@ public class AuthService {
             UserDetails user = usuarioRepository.findByEmail(loginRequest.getEmail())
                     .orElseThrow();
             String token = jwtService.getToken(user);
+
+            LogActividad logActividad = new LogActividad();
+
+            Usuario usuario = usuarioService.getUsuarioByEmail(loginRequest.getEmail());
+
+            if (usuario.getRol().getId_rol() == 1 || usuario.getRol().getId_rol() == 2) {
+                logActividad.setUsuario(usuario);
+                logActividad.setAccion("Login");
+                logActividad.setDetalle("Usuario " + usuario.getNombre() + " ingreso a su cuenta");
+                logActividad.setFecha_actualizacion(LocalDateTime.now());
+                logActividadService.saveLogActividad(logActividad);
+            }
             return AuthResponse.builder().token(token).build();
 
         } catch (BadCredentialsException e) {

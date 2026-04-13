@@ -54,10 +54,6 @@
                 <h3>Movimientos</h3>
             </a>
 
-            <a href="categorias.html">
-                <span class="material-symbols-outlined"> category </span>
-                <h3>Categorias</h3>
-            </a>
 
             <a href="pedidos.html">
                 <span class="material-symbols-outlined"> shopping_bag_speed </span>
@@ -67,11 +63,6 @@
             <a href="proveedores.html">
                 <span class="material-symbols-outlined"> local_shipping </span>
                 <h3>Proveedores</h3>
-            </a>
-
-            <a href="analisis.html">
-                <span class="material-symbols-outlined"> analytics </span>
-                <h3>Analisis</h3>
             </a>
 
             <a href="usuarios.html">
@@ -124,97 +115,42 @@
                 </div>
                 <small class="text-muted">Eventos de hoy</small>
             </div>
-
-            <div class="expenses">
-                <span class="material-symbols-outlined">error</span>
-                <div class="middle">
-                    <div class="left">
-                        <h3>Errores</h3>
-                        <h1>2</h1>
-                    </div>
-                </div>
-                <small class="text-muted">Requieren atención</small>
-            </div>
-
-            <div class="orders">
-                <span class="material-symbols-outlined">warning</span>
-                <div class="middle">
-                    <div class="left">
-                        <h3>Advertencias</h3>
-                        <h1>3</h1>
-                    </div>
-                </div>
-                <small class="text-muted">Para revisar</small>
-            </div>
         </div>
 
         <!-- Tabla de auditoría -->
         <div class="recent-orders">
             <h2>Eventos de Auditoría</h2>
             <div class="controls">
-                <input type="text" class="search-bar" placeholder="Buscar evento..." />
-
                 <!-- Select para filtrar por acción -->
-                <select class="filter-select">
+                <select class="filter-select" id="accionFilter">
                     <option value="">Acción</option>
-                    <option value="Creación">Creación</option>
-                    <option value="Actualización">Actualización</option>
-                    <option value="Eliminación">Eliminación</option>
-                    <option value="Error">Error</option>
-                    <option value="Advertencia">Advertencia</option>
-                    <option value="Inicio de sesión">Inicio de sesión</option>
+                    <option value="Registro de producto">Registro de producto</option>
+                    <option value="Login fallido">Inicio de sesión fallido</option>
+                    <option value="Login">Inicio de sesión</option>
+                    <option value="Logout">Cerrado de sesión</option>
+                    <option value="Modificacion de inventario">Modificacion de inventario</option>
+                    <option value="Registro de empleado">Registro de empleado</option>
+                    <option value="Venta">Venta</option>
                 </select>
 
                 <!-- Filtros de fecha -->
                 <input type="date" id="fechaInicio" />
                 <input type="date" id="fechaFin" />
 
-                <button>Exportar Log</button>
+                <button type="button" id="openExportModal">Exportar Log</button>
             </div>
             <table>
+                <div class="paginacion" id="paginacionLogs"></div>
                 <thead>
                 <tr>
                     <th>Fecha/Hora</th>
                     <th>Usuario</th>
                     <th>Acción</th>
-                    <th>Entidad</th>
-                    <th>Descripción</th>
-                    <th>Detalles</th>
-                    <th>IP</th>
-                    <th>Nivel</th>
+                    <th>Detalle</th>
                 </tr>
                 </thead>
-                <tbody>
-                <tr>
-                    <td>2026-03-14 10:45:23</td>
-                    <td>admin@nebulaparfums.com</td>
-                    <td>Creación</td>
-                    <td>Producto</td>
-                    <td>Producto creado: Sauvage - Dior</td>
-                    <td>Nuevo producto agregado al inventario</td>
-                    <td>192.168.1.100</td>
-                    <td class="success">Éxito</td>
-                </tr>
-                <tr>
-                    <td>2026-03-14 09:30:65</td>
-                    <td>system</td>
-                    <td>Error</td>
-                    <td>Sistema</td>
-                    <td>Error en sincronización de inventario</td>
-                    <td>Timeout al conectar con proveedor</td>
-                    <td>sistema</td>
-                    <td class="danger">Error</td>
-                </tr>
-                <tr>
-                    <td>2026-03-13 17:45:12</td>
-                    <td>system</td>
-                    <td>Advertencia</td>
-                    <td>Sistema</td>
-                    <td>Alerta de stock bajo</td>
-                    <td>5 productos con stock inferior</td>
-                    <td>sistema</td>
-                    <td class="warning">Advertencia</td>
-                </tr>
+                <tbody id="tablaAuditoria"></tbody>
+
                 </tbody>
             </table>
         </div>
@@ -301,14 +237,28 @@
                 </div>
             </div>
         </div>
-
-        <!-----------end of ultimos movimientos--------------->
-
-
     </div>
 </div>
 
+<!-- Modal -->
+<div id="exportarLogsModal" class="modal">
+    <div class="modal-content">
+        <span class="close" id="closeModal">&times;</span>
+        <h2>Exportar logs a PDF</h2>
+        <form id="exportLogsForm">
+            <label for="fechaInicioModal" class="control-label">Desde: </label>
+            <input type="date" id="fechaInicioModal" />
 
+            <label for="fechaFinModal" class="control-label">Hasta: </label>
+            <input type="date" id="fechaFinModal" />
+
+            <button type="submit" class="btn-success">Exportar</button>
+        </form>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="/js/script.js"></script>
+<script src="/js/auditoria.js"></script>
 </body>
 </html>
