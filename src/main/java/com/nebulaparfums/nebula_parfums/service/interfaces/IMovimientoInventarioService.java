@@ -23,4 +23,13 @@ public interface IMovimientoInventarioService {
             LocalDate fechaInicio,
             LocalDate fechaFin
     );
+
+    public List<MovimientoInventario> filtrarMovimientosReportes(
+            LocalDate fechaInicio,
+            LocalDate fechaFin
+    );
+
+    byte[] exportarMovimientosPdf(LocalDate fechaInicio, LocalDate fechaFin);
+    byte[] exportarMovimientosExcel(LocalDate fechaInicio, LocalDate fechaFin);
+
 }

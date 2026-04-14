@@ -14,7 +14,7 @@ public class OrdenDetalle {
     private int cantidad;
     private Double precio;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "producto", referencedColumnName = "id_producto")
     private Producto producto;
 

@@ -33,4 +33,15 @@ public interface IMovimientoInventarioRepository extends JpaRepository<Movimient
             @Param("fechaFin") LocalDateTime fechaFin
     );
 
+    @Query("""
+    SELECT m
+    FROM MovimientoInventario m
+    WHERE (:fechaInicio IS NULL OR m.fecha_movimiento >= :fechaInicio)
+      AND (:fechaFin IS NULL OR m.fecha_movimiento <= :fechaFin)
+          ORDER BY m.fecha_movimiento DESC""")
+    List<MovimientoInventario> filtrarMovimientosReportes(
+            @Param("fechaInicio") LocalDateTime fechaInicio,
+            @Param("fechaFin") LocalDateTime fechaFin
+    );
+
 }

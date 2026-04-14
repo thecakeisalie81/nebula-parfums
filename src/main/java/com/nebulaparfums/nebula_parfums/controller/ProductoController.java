@@ -62,6 +62,11 @@ public class ProductoController {
         return iProductoService.getProductosBusqueda(pageable, nombre);
     }
 
+    @GetMapping("/inventario/reporte")
+    public List<Producto> getProductosReporte() {
+        return iProductoService.getProductosReporte();
+    }
+
     @GetMapping("/producto/lowstock")
     public Integer lowStock() {
         return iProductoService.getProductosLowStock();

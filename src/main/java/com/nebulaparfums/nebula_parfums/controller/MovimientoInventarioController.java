@@ -7,6 +7,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.ContentDisposition;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -52,5 +55,47 @@ public class MovimientoInventarioController {
     public ResponseEntity<?> movimietoEntrada(@RequestBody MovimientoDTO movimientoDTO) {
         iMovimientoInventarioService.registrarEntrada(movimientoDTO.getId_producto(), movimientoDTO.getCantidad());
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/reportes/movimientos/pdf")
+    public ResponseEntity<byte[]> exportarMovimientosPdf(
+            @RequestParam(required = false) LocalDate fechaInicio,
+            @RequestParam(required = false) LocalDate fechaFin
+    ) {
+        byte[] archivo = iMovimientoInventarioService.exportarMovimientosPdf(fechaInicio, fechaFin);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_PDF);
+        headers.setContentDisposition(
+                ContentDisposition.attachment()
+                        .filename("reporte_movimientos.pdf")
+                        .build()
+        );
+
+        return ResponseEntity.ok()
+                .headers(headers)
+                .body(archivo);
+    }
+
+    @GetMapping("/reportes/movimientos/excel")
+    public ResponseEntity<byte[]> exportarMovimientosExcel(
+            @RequestParam(required = false) LocalDate fechaInicio,
+            @RequestParam(required = false) LocalDate fechaFin
+    ) {
+        byte[] archivo = iMovimientoInventarioService.exportarMovimientosExcel(fechaInicio, fechaFin);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.parseMediaType(
+                "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+        ));
+        headers.setContentDisposition(
+                ContentDisposition.attachment()
+                        .filename("reporte_movimientos.xlsx")
+                        .build()
+        );
+
+        return ResponseEntity.ok()
+                .headers(headers)
+                .body(archivo);
     }
 }

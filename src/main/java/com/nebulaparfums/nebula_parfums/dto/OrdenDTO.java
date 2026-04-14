@@ -11,4 +11,6 @@ import lombok.NoArgsConstructor;
 public class OrdenDTO {
     private Integer id_cliente;
     private Integer id_direccion;
+    private Integer id_orden;
+    private String estado;
 }

@@ -92,28 +92,28 @@
 
         <!-- Tipos de reporte -->
         <div class="category-grid reporte-grid">
-          <div class="category-card">
+          <div class="category-card" data-reporte="inventario">
             <span class="material-symbols-outlined">inventory</span>
             <h3>Reporte de Inventario</h3>
             <p>Listado completo de productos, cantidades en stock y valores</p>
           </div>
 
-          <div class="category-card">
+          <div class="category-card" data-reporte="ventas">
             <span class="material-symbols-outlined">shopping_cart</span>
             <h3>Reporte de Ventas</h3>
             <p>Resumen de ventas por período, productos más vendidos</p>
           </div>
 
-          <div class="category-card">
+          <div class="category-card" data-reporte="movimientos">
             <span class="material-symbols-outlined">sync_alt</span>
             <h3>Reporte de Movimientos</h3>
             <p>Historial de entradas, salidas y ajustes de inventario</p>
           </div>
 
-          <div class="category-card">
+          <div class="category-card" data-reporte="pedidos">
             <span class="material-symbols-outlined">assignment</span>
             <h3>Reporte de Pedidos</h3>
-            <p>Estado de pedidos, clientes y estadísticas de envío</p>
+            <p>Estado de pedidos, clientes y total del pedido</p>
           </div>
         </div>
 
@@ -127,13 +127,13 @@
 
         <!-- Opciones de exportación -->
         <div class="category-grid export-option">
-          <div class="category-card">
+          <div class="category-card" id="btnExportPdf">
             <span class="material-symbols-outlined danger">picture_as_pdf</span>
             <h3>Exportar a PDF</h3>
             <p>Genera un documento PDF profesional con gráficos y tablas</p>
           </div>
 
-          <div class="category-card">
+          <div class="category-card" id="btnExportExcel">
             <span class="material-symbols-outlined success">grid_on</span>
             <h3>Exportar a Excel</h3>
             <p>Genera una hoja de cálculo Excel (.xlsx) con datos editables</p>
@@ -235,6 +235,11 @@
       </div>
     </div>
 
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="/js/reportes.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jspdf-autotable@3.8.2/dist/jspdf.plugin.autotable.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
     <script src="/js/script.js"></script>
   </body>
 </html>

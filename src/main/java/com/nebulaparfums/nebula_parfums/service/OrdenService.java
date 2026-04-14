@@ -10,13 +10,17 @@ import com.nebulaparfums.nebula_parfums.service.interfaces.IDireccionEnvioServic
 import com.nebulaparfums.nebula_parfums.service.interfaces.IOrdenService;
 import com.nebulaparfums.nebula_parfums.service.interfaces.IUsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class OrdenService implements IOrdenService {
@@ -66,6 +70,26 @@ public class OrdenService implements IOrdenService {
     }
 
     @Override
+    public Page<Orden> filtrarOrden(Pageable pageable, String estado, LocalDate fechaInicio, LocalDate fechaFin) {
+        LocalDateTime inicio = null;
+        LocalDateTime fin = null;
+
+        if (fechaInicio != null) {
+            inicio = fechaInicio.atStartOfDay();
+        }
+
+        if (fechaFin != null) {
+            fin = fechaFin.atTime(LocalTime.MAX);
+        }
+
+        if (estado != null && estado.isBlank()) {
+            estado = null;
+        }
+
+        return ordenRepository.filtrarOrden(pageable, estado, inicio, fin);
+    }
+
+    @Override
     public void deleteOrden(Integer ordenId) {
         if (ordenRepository.existsById(ordenId)) {
             ordenRepository.deleteById(ordenId);
@@ -75,7 +99,15 @@ public class OrdenService implements IOrdenService {
     }
 
     @Override
-    public void editOrden(Orden orden) {
-        this.saveOrden(orden);
+    public void editOrden(OrdenDTO orden) {
+        if (orden.getId_orden() != null) {
+            Optional<Orden> optionalOrder = ordenRepository.findById(orden.getId_orden());
+            if (optionalOrder.isPresent()) {
+                Orden order = optionalOrder.get();
+                order.setEstado(orden.getEstado());
+                ordenRepository.save(order);
+            }
+        }
     }
+
 }

@@ -4,8 +4,12 @@ import com.nebulaparfums.nebula_parfums.dto.OrdenDTO;
 import com.nebulaparfums.nebula_parfums.model.Orden;
 import com.nebulaparfums.nebula_parfums.service.interfaces.IOrdenService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
@@ -16,6 +20,16 @@ public class OrdenController {
     @GetMapping("/orden/traer")
     public List<Orden> traerOrdenes(){
         return iOrdenService.getOrdenes();
+    }
+
+    @GetMapping("/orden/filtrar")
+    public Page<Orden> filtrarOrdenes(
+            Pageable pageable,
+            @RequestParam(required = false) String estado,
+            @RequestParam(required = false) LocalDate fechaInicio,
+            @RequestParam(required = false) LocalDate fechaFin
+    ) {
+        return iOrdenService.filtrarOrden(pageable, estado, fechaInicio, fechaFin);
     }
 
     @GetMapping("/orden/recientes")
@@ -40,8 +54,9 @@ public class OrdenController {
         return "Orden creado con sucesso";
     }
 
+
     @PutMapping("/orden/editar")
-    public String editarOrden(@RequestBody Orden orden){
+    public String editarOrden(@RequestBody OrdenDTO orden){
         iOrdenService.editOrden(orden);
         return "Orden editado con sucesso";
     }

@@ -93,12 +93,12 @@
 
         <!-- Resumen -->
         <div class="insights">
-            <div class="sales">
+            <div class="expenses">
                 <span class="material-symbols-outlined">shopping_bag</span>
                 <div class="middle">
                     <div class="left">
-                        <h3>Total Pedidos</h3>
-                        <h1>8</h1>
+                        <h3>Pedidos Pendientes</h3>
+                        <h1>0</h1>
                     </div>
                 </div>
                 <small class="text-muted">1 pendiente</small>
@@ -109,33 +109,37 @@
                 <div class="middle">
                     <div class="left">
                         <h3>En Proceso</h3>
-                        <h1>1</h1>
+                        <h1>0</h1>
                     </div>
                 </div>
                 <small class="text-muted">Procesando ahora</small>
             </div>
 
-            <div class="orders">
-                <span class="material-symbols-outlined">done_all</span>
-                <div class="middle">
-                    <div class="left">
-                        <h3>Enviados</h3>
-                        <h1>2</h1>
-                    </div>
-                </div>
-                <small class="text-muted">En tránsito</small>
-            </div>
 
             <div class="orders">
                 <span class="material-symbols-outlined">payments</span>
                 <div class="middle">
                     <div class="left">
                         <h3>Ingresos Totales</h3>
-                        <h1>$1931</h1>
+                        <h1>0</h1>
                     </div>
                 </div>
                 <small class="text-muted">3 entregados</small>
             </div>
+        </div>
+
+        <div class="controls">
+            <select id="estado" class="filter-select">
+                <option value="">Todos los tipos</option>
+                <option value="PENDIENTE">Pendiente</option>
+                <option value="EN PROCESO">En proceso</option>
+                <option value="ENTREGADO">Entregado</option>
+                <option value="CANCELADO">Cancelado</option>
+            </select>
+
+            <input type="date" id="fechaInicio" />
+            <input type="date" id="fechaFin" />
+
         </div>
 
         <!-- Lista de pedidos -->
@@ -153,34 +157,8 @@
                     <th>Acciones</th>
                 </tr>
                 </thead>
-                <tbody>
-                <tr>
-                    <td>ORD-2026-001</td>
-                    <td>Ana García López</td>
-                    <td>13/3/2026</td>
-                    <td>2 productos</td>
-                    <td>$321</td>
-                    <td>Entregado</td>
-                    <td>
-                        <a href="#" class="view-order"
-                        ><span class="material-symbols-outlined"> edit </span></a
-                        >
-                    </td>
-                </tr>
-                <tr>
-                    <td>ORD-2026-002</td>
-                    <td>Carlos Martínez Ruiz</td>
-                    <td>12/3/2026</td>
-                    <td>2 productos</td>
-                    <td>$255</td>
-                    <td>Enviado</td>
-                    <td>
-                        <a href="#" class="view-order"
-                        ><span class="material-symbols-outlined"> edit </span></a
-                        >
-                    </td>
-                </tr>
-                <!-- más filas -->
+                <tbody id="tablaPedidos">
+
                 </tbody>
             </table>
         </div>
@@ -203,17 +181,19 @@
 
                 <label>Productos:</label>
                 <input type="text" id="pedidoProductos" readonly />
+                <div class="controls">
+                    <button type="button" class="primary" id="btnVerProductos">Ver productos</button>
+                </div>
 
                 <label>Total:</label>
                 <input type="text" id="pedidoTotal" readonly />
 
                 <label>Estado:</label>
                 <select id="pedidoEstado">
-                    <option value="Pendiente">Pendiente</option>
-                    <option value="Procesando">Procesando</option>
-                    <option value="Enviado">Enviado</option>
-                    <option value="Entregado">Entregado</option>
-                    <option value="Cancelado">Cancelado</option>
+                    <option value="PENDIENTE">Pendiente</option>
+                    <option value="EN PROCESO">En proceso</option>
+                    <option value="ENTREGADO">Entregado</option>
+                    <option value="CANCELADO">Cancelado</option>
                 </select>
 
                 <button type="submit" class="btn-success">Guardar</button>
@@ -235,13 +215,27 @@
         </div>
     </div>
 </div>
+
+<div id="productosModal" class="modal">
+    <div class="modal-content">
+        <span id="closeProductosModal" class="close">&times;</span>
+        <h2>Productos del Pedido</h2>
+
+        <label>Detalle de productos:</label>
+        <textarea
+                id="productosDetalleTexto"
+                readonly
+                style="width: 100%; min-height: 300px; resize: none; overflow-y: auto;"
+        ></textarea>
+    </div>
+</div>
         <!-----end of top-->
 
         <!-----------end of ultimos movimientos--------------->
 
 
-
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="/js/script.js"></script>
-<script src="/js/script_pedidos.js"></script>
+<script src="/js/pedidos.js"></script>
 </body>
 </html>

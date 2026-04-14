@@ -1025,3 +1025,9 @@ main .recent-orders a {
   text-overflow: ellipsis;
   white-space: nowrap;
 }
+
+.selected-report {
+  border: 2px solid var(--color-primary);
+  box-shadow: 0 0 0 3px rgba(115, 128, 236, 0.15);
+  transform: translateY(-2px);
+}

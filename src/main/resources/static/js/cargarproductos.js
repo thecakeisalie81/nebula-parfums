@@ -218,7 +218,7 @@ function renderizarProductos(productos) {
                 <td>${producto.categoria ? producto.categoria.nombre : "Sin categoría"}</td>
                 <td>${producto.proveedor ? producto.proveedor.nombre : "Sin proveedor"}</td>
                 <td>
-                    <a href="javascript:void(0)" onclick="abrirModalEditar(${producto.id_producto})">Editar</a>
+                    <a href="javascript:void(0)" onclick="abrirModalEditar(${producto.id_producto})"><span class="material-symbols-outlined"> edit </span></a>
                 </td>
             </tr>
         `;

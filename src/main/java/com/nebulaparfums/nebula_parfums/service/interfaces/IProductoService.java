@@ -17,6 +17,7 @@ public interface IProductoService {
     );
     public Page<Producto> getProductosBusqueda(Pageable pageable,String nombre);
     public List<Producto> getProductosCategoria(Integer categoria);
+    public List<Producto> getProductosReporte();
     public Producto getProductoById(Integer id);
     public void editProducto(Producto producto);
     public void deleteProducto(Integer id);
