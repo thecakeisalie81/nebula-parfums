@@ -52,4 +52,10 @@ public class CarritoService implements ICarritoService {
 
         carritoRepository.save(carrito);
     }
+
+    @Override
+    public Carrito obtenerCarritoPorEmail(String email) {
+        Usuario usuario = iUsuarioService.getUsuarioByEmail(email);
+        return usuario.getCarrito();
+    }
 }

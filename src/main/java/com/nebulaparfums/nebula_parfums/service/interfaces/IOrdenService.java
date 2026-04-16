@@ -1,5 +1,6 @@
 package com.nebulaparfums.nebula_parfums.service.interfaces;
 
+import com.nebulaparfums.nebula_parfums.dto.CreateOrdenDTO;
 import com.nebulaparfums.nebula_parfums.dto.OrdenDTO;
 import com.nebulaparfums.nebula_parfums.model.Orden;
 import org.aspectj.weaver.ast.Or;
@@ -14,10 +15,11 @@ import java.util.List;
 public interface IOrdenService {
     public List<Orden> getOrdenes();
     public Orden getOrdenById(Integer ordenId);
+    public List<Orden> getOrdenesUsuario(Integer id);
     public void saveOrden(Orden orden);
     public void deleteOrden(Integer ordenId);
     public void editOrden(OrdenDTO orden);
-    public void crearOrden(OrdenDTO orden);
+    public void crearOrden(CreateOrdenDTO createOrden);
     public List<Orden> getUltimasOrdenesPendiente();
     public Page<Orden> filtrarOrden(Pageable pageable,
                                       @Param("estado") String estado,

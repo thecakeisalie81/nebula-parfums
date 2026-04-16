@@ -27,7 +27,7 @@ public class Orden {
     @JoinColumn(name = "direccion", referencedColumnName = "id_direccion")
     private DireccionEnvio direccion;
 
-    @OneToMany(mappedBy = "orden")
+    @OneToMany(mappedBy = "orden", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference
     private List<OrdenDetalle>  listaOrdenDetalle;
 

@@ -8,4 +8,5 @@ public interface ICarritoService {
     public void deleteCarritoById(Integer id);
     public void editCarrito(Carrito carrito);
     public void saveCarrito(Carrito carrito);
+    Carrito obtenerCarritoPorEmail(String email);
 }

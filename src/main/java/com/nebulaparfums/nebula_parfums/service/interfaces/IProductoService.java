@@ -13,7 +13,9 @@ public interface IProductoService {
             String nombre,
             Integer idCategoria,
             Integer idProveedor,
-            String estadoStock
+            String estadoStock,
+            Integer precioMinimo,
+            Integer precioMaximo
     );
     public Page<Producto> getProductosBusqueda(Pageable pageable,String nombre);
     public List<Producto> getProductosCategoria(Integer categoria);

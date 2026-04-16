@@ -7,6 +7,7 @@ import com.nebulaparfums.nebula_parfums.service.interfaces.IUsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -19,6 +20,12 @@ public class UsuarioController {
     @GetMapping("/usuario/traer")
     public Page<UsuarioDTO> traerUsuarios(Pageable pageable,String nombre) {
         return iUsuarioService.getUsuarios(pageable, nombre);
+    }
+
+    @GetMapping("/usuarioAutenticado")
+    public Usuario usuarioAutenticado(Authentication authentication) {
+        Usuario user = iUsuarioService.getUsuarioByEmail(authentication.getName());
+        return user;
     }
 
     @GetMapping("/usuario/total")

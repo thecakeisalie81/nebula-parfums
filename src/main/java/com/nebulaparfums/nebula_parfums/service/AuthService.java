@@ -6,9 +6,13 @@ import com.nebulaparfums.nebula_parfums.auth.RegisterRequest;
 import com.nebulaparfums.nebula_parfums.controller.RolController;
 import com.nebulaparfums.nebula_parfums.controller.UsuarioController;
 import com.nebulaparfums.nebula_parfums.exception.InvalidPasswordException;
+import com.nebulaparfums.nebula_parfums.model.Carrito;
+import com.nebulaparfums.nebula_parfums.model.DireccionEnvio;
 import com.nebulaparfums.nebula_parfums.model.LogActividad;
 import com.nebulaparfums.nebula_parfums.model.Usuario;
 import com.nebulaparfums.nebula_parfums.repository.IUsuarioRepository;
+import com.nebulaparfums.nebula_parfums.service.interfaces.ICarritoService;
+import com.nebulaparfums.nebula_parfums.service.interfaces.IDireccionEnvioService;
 import com.nebulaparfums.nebula_parfums.service.interfaces.IUsuarioService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,7 +53,8 @@ public class AuthService {
     private LogActividadService logActividadService;
 
     @Autowired
-    private IUsuarioService  usuarioService;
+    private IUsuarioService usuarioService;
+
 
 
 
@@ -88,6 +93,11 @@ public class AuthService {
 
 
     public AuthResponse register(RegisterRequest registerRequest) {
+
+
+        DireccionEnvio direccionEnvio = new DireccionEnvio();
+        Carrito carrito = new Carrito();
+
         Usuario usuario = new Usuario();
         usuario.setNombre(registerRequest.getNombre());
         usuario.setEmail(registerRequest.getEmail());
@@ -95,9 +105,10 @@ public class AuthService {
         usuario.setRol(rolController.buscarRol(3));
         usuario.setFecha_creacion(LocalDate.now());
         usuario.setEstado(true);
-
+        usuario.setDireccionEnvio(direccionEnvio);
+        carrito.setUsuario(usuario);
+        usuario.setCarrito(carrito);
         usuarioController.crearUsuario(usuario);
-
         return new AuthResponse().builder().token(jwtService.getToken(usuario)).build();
     }
 

@@ -60,6 +60,7 @@ public class MovimientoInventarioService implements IMovimientoInventarioService
 
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         String username = auth.getName();
+
         Usuario usuario = iUsuarioService.getUsuarioByEmail(username);
 
         Producto producto = iProductoService.getProductoById(productoId);
@@ -79,7 +80,7 @@ public class MovimientoInventarioService implements IMovimientoInventarioService
         MovimientoInventario movimientoInventario = new MovimientoInventario();
         movimientoInventario.setProducto(producto);
         movimientoInventario.setCantidad(cantidad);
-        movimientoInventario.setTipo_movimiento("SALIDA");
+        movimientoInventario.setTipo_movimiento(String.valueOf(auth.getAuthorities()).equals("[ROLE_CLIENTE]") ? "VENTA":"SALIDA");
         movimientoInventario.setFecha_movimiento(LocalDateTime.now());
         movimientoInventario.setUsuario(usuario);
 

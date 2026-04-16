@@ -33,6 +33,6 @@ public interface IOrdenRepository extends JpaRepository<Orden, Integer> {
                 @Param("fechaFin") LocalDateTime fechaFin
     );
 
-
-
+    @Query("SELECT o FROM Orden o WHERE o.usuario.id_usuario = :idUsuario ORDER BY o.fecha_creacion DESC")
+    List<Orden> getOrdenesUsuario(@Param("idUsuario") Integer idUsuario);
 }

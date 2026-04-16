@@ -47,7 +47,7 @@ document.getElementById("loginForm").addEventListener("submit", function(e) {
             if (role === "ROLE_ADMIN" || role === "ROLE_EMPLEADO") {
                 window.location.href = "/administrador/index.html";
             } else {
-                window.location.href = "/ecommerce.html";
+                window.location.href = "/ecommerce/shop.html";
             }
         })
 });
@@ -78,7 +78,7 @@ document.getElementById("registerForm").addEventListener("submit", function(e) {
         .then(data => {
             localStorage.setItem("token", data.token);
 
-            window.location.href = "/administrador/index.html";
+            window.location.href = "/ecommerce/shop.html";
         })
         .catch(err => alert(err.message));
 });

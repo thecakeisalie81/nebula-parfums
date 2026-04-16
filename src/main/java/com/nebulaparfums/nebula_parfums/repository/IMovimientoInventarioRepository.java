@@ -24,7 +24,8 @@ public interface IMovimientoInventarioRepository extends JpaRepository<Movimient
     WHERE (:producto IS NULL OR LOWER(m.producto.nombre) LIKE LOWER(CONCAT('%', :producto, '%')))
       AND (:tipo IS NULL OR m.tipo_movimiento = :tipo)
       AND (:fechaInicio IS NULL OR m.fecha_movimiento >= :fechaInicio)
-      AND (:fechaFin IS NULL OR m.fecha_movimiento <= :fechaFin)""")
+      AND (:fechaFin IS NULL OR m.fecha_movimiento <= :fechaFin)
+          ORDER BY m.fecha_movimiento DESC""")
     Page<MovimientoInventario> filtrarMovimientos(
             Pageable pageable,
             @Param("producto") String producto,

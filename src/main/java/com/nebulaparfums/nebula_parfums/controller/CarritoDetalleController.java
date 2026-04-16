@@ -11,6 +11,8 @@ import com.nebulaparfums.nebula_parfums.service.interfaces.IProductoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Objects;
+
 
 @RestController
 public class CarritoDetalleController {
@@ -34,6 +36,15 @@ public class CarritoDetalleController {
         Carrito carrito = iCarritoService.getCarritoById(request.getId_carrito());
         Producto producto = iProductoService.getProductoById(request.getId_producto());
 
+        for (CarritoDetalle detalle: carrito.getListaCarritoDetalles()){
+            if (Objects.equals(detalle.getProducto().getId_producto(), producto.getId_producto())) {
+                detalle.setCantidad(detalle.getCantidad()+1);
+                detalle.setPrecio(detalle.getPrecio()+producto.getPrecio());
+                iCarritoDetalleService.saveCarritoDetalle(detalle);
+                return "Se aumento la cantidad en el carrito";
+            }
+        }
+
         CarritoDetalle detalle = new CarritoDetalle();
         detalle.setCantidad(request.getCantidad());
         detalle.setPrecio(request.getPrecio());
@@ -48,11 +59,11 @@ public class CarritoDetalleController {
     @PutMapping("/carritodetalle/editar")
     public String editCarritoDetalle(@RequestBody CarritoDetalleDTO request) {
         iCarritoDetalleService.editCarritoDetalle(request);
-        return "Carrito detalle editado con sucesso";
+        return "Carrito detalle editado con exito";
     }
 
-    @DeleteMapping("/carritodetalle/borrar")
-    public String borrarCarritoDetalle(@RequestBody  Integer id) {
+    @DeleteMapping("/auth/carritodetalle/borrar")
+    public String borrarCarritoDetalle(@RequestParam  Integer id) {
         iCarritoDetalleService.deleteCarritoDetalleById(id);
         return "Carrito detalle borrado con sucesso";
     }

@@ -1,5 +1,6 @@
 package com.nebulaparfums.nebula_parfums.controller;
 
+import com.nebulaparfums.nebula_parfums.dto.CreateOrdenDTO;
 import com.nebulaparfums.nebula_parfums.dto.OrdenDTO;
 import com.nebulaparfums.nebula_parfums.model.Orden;
 import com.nebulaparfums.nebula_parfums.service.interfaces.IOrdenService;
@@ -48,8 +49,13 @@ public class OrdenController {
         return "Orden borrado con sucesso";
     }
 
+    @GetMapping("/orden/useractual")
+    public List<Orden> userActual(@RequestParam("id") Integer id){
+        return iOrdenService.getOrdenesUsuario(id);
+    }
+
     @PostMapping("/orden/crear")
-    public String crearOrden(@RequestBody OrdenDTO orden){
+    public String crearOrden(@RequestBody CreateOrdenDTO orden){
         iOrdenService.crearOrden(orden);
         return "Orden creado con sucesso";
     }

@@ -3,6 +3,7 @@ package com.nebulaparfums.nebula_parfums.controller;
 import com.nebulaparfums.nebula_parfums.model.Carrito;
 import com.nebulaparfums.nebula_parfums.service.interfaces.ICarritoService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -19,6 +20,12 @@ public class CarritoController {
     public String createCarrito(@RequestBody Carrito carrito) {
         iCarritoService.saveCarrito(carrito);
         return "Carrito creado";
+    }
+
+    @GetMapping("/carrito/mio")
+    public Carrito obtenerMiCarrito(Authentication authentication) {
+        String email = authentication.getName();
+        return iCarritoService.obtenerCarritoPorEmail(email);
     }
 
     @DeleteMapping("carrito/borrar")

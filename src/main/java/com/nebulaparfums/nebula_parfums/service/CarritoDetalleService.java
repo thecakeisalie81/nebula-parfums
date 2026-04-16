@@ -36,11 +36,7 @@ public class CarritoDetalleService implements ICarritoDetalleService {
 
     @Override
     public void deleteCarritoDetalleById(Integer id) {
-        if (carritoDetalleRepository.existsById(id)) {
-            carritoDetalleRepository.deleteById(id);
-        }else {
-            throw new ResourceNotFoundException("No se encontro el producto en el carrito");
-        }
+        carritoDetalleRepository.deleteById(id);
     }
 
     @Override

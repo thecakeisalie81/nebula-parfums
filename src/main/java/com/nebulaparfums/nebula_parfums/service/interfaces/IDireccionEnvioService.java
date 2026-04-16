@@ -7,4 +7,5 @@ public interface IDireccionEnvioService {
     public void saveDireccionEnvio(DireccionEnvio direccionEnvio);
     public void deleteDireccionEnvioById(Integer id);
     public void editDireccionEnvio(DireccionEnvio direccionEnvio);
+    public void editarDireccionPorEmail(String email, DireccionEnvio datosNuevaDireccion);
 }

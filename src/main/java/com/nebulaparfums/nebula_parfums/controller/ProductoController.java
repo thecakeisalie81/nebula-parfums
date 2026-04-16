@@ -39,13 +39,15 @@ public class ProductoController {
     @Autowired
     private IMovimientoInventarioService iMovimientoInventarioService;
 
-    @PreAuthorize("hasAnyRole('ADMIN','EMPLEADO')")
+
     @GetMapping("/producto/traer")
     public Page<Producto> getProductos(
             @RequestParam(required = false) String nombre,
             @RequestParam(required = false) Integer idCategoria,
             @RequestParam(required = false) Integer idProveedor,
             @RequestParam(required = false) String estadoStock,
+            @RequestParam(required = false) Integer precioMinimo,
+            @RequestParam(required = false) Integer precioMaximo,
             Pageable pageable
     ) {
         return iProductoService.getProductosFiltrados(
@@ -53,7 +55,9 @@ public class ProductoController {
                 nombre,
                 idCategoria,
                 idProveedor,
-                estadoStock
+                estadoStock,
+                precioMinimo,
+                precioMaximo
         );
     }
 

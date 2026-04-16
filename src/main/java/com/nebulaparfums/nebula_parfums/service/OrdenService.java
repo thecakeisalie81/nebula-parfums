@@ -1,14 +1,11 @@
 package com.nebulaparfums.nebula_parfums.service;
 
+import com.nebulaparfums.nebula_parfums.dto.CreateOrdenDTO;
 import com.nebulaparfums.nebula_parfums.dto.OrdenDTO;
 import com.nebulaparfums.nebula_parfums.exception.ResourceNotFoundException;
-import com.nebulaparfums.nebula_parfums.model.DireccionEnvio;
-import com.nebulaparfums.nebula_parfums.model.Orden;
-import com.nebulaparfums.nebula_parfums.model.Usuario;
+import com.nebulaparfums.nebula_parfums.model.*;
 import com.nebulaparfums.nebula_parfums.repository.IOrdenRepository;
-import com.nebulaparfums.nebula_parfums.service.interfaces.IDireccionEnvioService;
-import com.nebulaparfums.nebula_parfums.service.interfaces.IOrdenService;
-import com.nebulaparfums.nebula_parfums.service.interfaces.IUsuarioService;
+import com.nebulaparfums.nebula_parfums.service.interfaces.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -19,6 +16,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -31,7 +29,16 @@ public class OrdenService implements IOrdenService {
     private IUsuarioService usuarioService;
 
     @Autowired
+    private IMovimientoInventarioService  movimientoInventarioService;
+
+    @Autowired
+    private IProductoService productoService;
+
+    @Autowired
     private IDireccionEnvioService direccionEnvioService;
+
+    @Autowired
+    private ICarritoDetalleService carritoDetalleService;
 
     @Override
     public List<Orden> getOrdenes() {
@@ -46,20 +53,45 @@ public class OrdenService implements IOrdenService {
     }
 
     @Override
+    public List<Orden> getOrdenesUsuario(Integer id) {
+        return ordenRepository.getOrdenesUsuario(id);
+    }
+
+    @Override
     public void saveOrden(Orden orden) {
         ordenRepository.save(orden);
     }
 
-    @Override
-    public void crearOrden(OrdenDTO dto) {
 
-        Usuario usuario = usuarioService.getUsuarioById(dto.getId_cliente());
+    @Override
+    public void crearOrden(CreateOrdenDTO dto) {
+
+        Usuario usuario = usuarioService.getUsuarioById(dto.getId_usuario());
         DireccionEnvio  direccionEnvio = direccionEnvioService.getDireccionEnvioById(dto.getId_direccion());
+        Carrito carrito = usuario.getCarrito();
         Orden orden = new Orden();
         orden.setFecha_creacion(LocalDateTime.now());
         orden.setEstado("PENDIENTE");
         orden.setUsuario(usuario);
         orden.setDireccion(direccionEnvio);
+        orden.setTotal(dto.getTotal());
+
+        List<OrdenDetalle>  ordenDetalles = new ArrayList<>();
+
+        for (CarritoDetalle detalle : carrito.getListaCarritoDetalles()){
+            OrdenDetalle ordenDetalle = new OrdenDetalle();
+            Producto producto = detalle.getProducto();
+            movimientoInventarioService.registrarSalida(producto.getId_producto(), detalle.getCantidad());
+            ordenDetalle.setOrden(orden);
+            ordenDetalle.setPrecio(detalle.getPrecio());
+            ordenDetalle.setCantidad(detalle.getCantidad());
+            ordenDetalle.setProducto(detalle.getProducto());
+            ordenDetalles.add(ordenDetalle);
+            carritoDetalleService.deleteCarritoDetalleById(detalle.getId_carrito_detalle());
+            productoService.saveProducto(producto);
+        }
+
+        orden.setListaOrdenDetalle(ordenDetalles);
         ordenRepository.save(orden);
     }
 
@@ -105,6 +137,14 @@ public class OrdenService implements IOrdenService {
             if (optionalOrder.isPresent()) {
                 Orden order = optionalOrder.get();
                 order.setEstado(orden.getEstado());
+
+                if (orden.getEstado().equals("CANCELADO")) {
+                    for (OrdenDetalle ordenDetalle : order.getListaOrdenDetalle()) {
+                        Producto producto = ordenDetalle.getProducto();
+                        movimientoInventarioService.registrarEntrada(producto.getId_producto(), ordenDetalle.getCantidad());
+                    }
+                }
+
                 ordenRepository.save(order);
             }
         }
