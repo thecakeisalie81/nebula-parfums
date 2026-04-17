@@ -12,12 +12,18 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import org.springframework.security.crypto.password.PasswordEncoder;
+
+
 import java.util.List;
 
 @Service
 public class UsuarioService implements IUsuarioService {
     @Autowired
     private IUsuarioRepository iUsuarioRepository;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
 
     @Override
@@ -55,12 +61,15 @@ public class UsuarioService implements IUsuarioService {
 
     @Override
     public void editUsuario(Usuario usuario) {
-
         Usuario user = getUsuarioById(usuario.getId_usuario());
-        user.setNombre((usuario.getNombre() != null) ? usuario.getNombre() : user.getNombre());
-        user.setEmail((usuario.getEmail() != null) ? usuario.getEmail() : user.getEmail());
-        user.setPassword((usuario.getPassword() != null) ? usuario.getPassword() : user.getPassword());
+
+        user.setNombre(usuario.getNombre() != null ? usuario.getNombre() : user.getNombre());
+        user.setEmail(usuario.getEmail() != null ? usuario.getEmail() : user.getEmail());
         user.setEstado(usuario.getEstado());
+
+        if (usuario.getPassword() != null && !usuario.getPassword().trim().isEmpty()) {
+            user.setPassword(passwordEncoder.encode(usuario.getPassword()));
+        }
 
         this.saveUsuario(user);
     }

@@ -40,7 +40,8 @@ public class SecurityConfig {
                                         "/administrador/**",
                                         "/ecommerce/**",
                                         "/images/**",
-                                        "/uploads/**"
+                                        "/uploads/**",
+                                        "/reset-password.html"
                                 ).permitAll()
 
                                 // 🔓 auth

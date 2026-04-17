@@ -1,8 +1,41 @@
+function parseJwt(token) {
+    try {
+        const base64Url = token.split('.')[1];
+        const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+        return JSON.parse(atob(base64));
+    } catch (error) {
+        console.error("Token inválido:", error);
+        return null;
+    }
+}
+
 window.onload = function () {
     const token = localStorage.getItem("token");
 
     if (!token) {
         window.location.replace("/login.html");
+        return;
+    }
+
+    const decoded = parseJwt(token);
+
+    if (!decoded || !decoded.role) {
+        localStorage.removeItem("token");
+        window.location.replace("/login.html");
+        return;
+    }
+
+    const role = decoded.role;
+
+    if (role === "ROLE_CLIENTE") {
+        window.location.replace("/ecommerce/shop.html");
+        return;
+    }
+
+    if (role !== "ROLE_ADMIN" && role !== "ROLE_EMPLEADO") {
+        localStorage.removeItem("token");
+        window.location.replace("/login.html");
+        return;
     }
 };
 

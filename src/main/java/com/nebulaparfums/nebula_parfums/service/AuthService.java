@@ -1,21 +1,18 @@
 package com.nebulaparfums.nebula_parfums.service;
 
-import com.nebulaparfums.nebula_parfums.auth.AuthResponse;
-import com.nebulaparfums.nebula_parfums.auth.LoginRequest;
-import com.nebulaparfums.nebula_parfums.auth.RegisterRequest;
+import com.nebulaparfums.nebula_parfums.auth.*;
 import com.nebulaparfums.nebula_parfums.controller.RolController;
 import com.nebulaparfums.nebula_parfums.controller.UsuarioController;
 import com.nebulaparfums.nebula_parfums.exception.InvalidPasswordException;
-import com.nebulaparfums.nebula_parfums.model.Carrito;
-import com.nebulaparfums.nebula_parfums.model.DireccionEnvio;
-import com.nebulaparfums.nebula_parfums.model.LogActividad;
-import com.nebulaparfums.nebula_parfums.model.Usuario;
+import com.nebulaparfums.nebula_parfums.model.*;
+import com.nebulaparfums.nebula_parfums.repository.IPasswordResetTokenRepository;
 import com.nebulaparfums.nebula_parfums.repository.IUsuarioRepository;
 import com.nebulaparfums.nebula_parfums.service.interfaces.ICarritoService;
 import com.nebulaparfums.nebula_parfums.service.interfaces.IDireccionEnvioService;
 import com.nebulaparfums.nebula_parfums.service.interfaces.IUsuarioService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -27,6 +24,9 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Map;
+import java.util.Optional;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -55,11 +55,11 @@ public class AuthService {
     @Autowired
     private IUsuarioService usuarioService;
 
+    @Autowired
+    private IPasswordResetTokenRepository passwordResetTokenRepository;
 
-
-
-
-
+    @Autowired
+    private EmailService emailService;
 
     public AuthResponse login(LoginRequest loginRequest) {
         try {
@@ -91,9 +91,97 @@ public class AuthService {
         }
     }
 
+    public ResponseEntity<?> resetPassword(ResetPasswordRequest request) {
+        Optional<PasswordResetToken> tokenOpt = passwordResetTokenRepository.findByToken(request.getToken());
+
+        if (tokenOpt.isEmpty()) {
+            return ResponseEntity.badRequest().body(Map.of(
+                    "message", "Token inválido"
+            ));
+        }
+
+        PasswordResetToken resetToken = tokenOpt.get();
+
+        if (resetToken.getFechaExpiracion().isBefore(LocalDateTime.now())) {
+            return ResponseEntity.badRequest().body(Map.of(
+                    "message", "El token ha expirado"
+            ));
+        }
+
+        if (request.getNuevaPassword() == null || request.getNuevaPassword().length() < 8) {
+            return ResponseEntity.badRequest().body(Map.of(
+                    "message", "La contraseña debe tener al menos 8 caracteres"
+            ));
+        }
+
+        Usuario usuario = resetToken.getUsuario();
+        usuario.setPassword(passwordEncoder.encode(request.getNuevaPassword()));
+        usuarioRepository.save(usuario);
+
+        passwordResetTokenRepository.delete(resetToken);
+
+        return ResponseEntity.ok(Map.of(
+                "message", "Contraseña actualizada correctamente"
+        ));
+    }
+
+    public ResponseEntity<?> forgotPassword(ForgotPasswordRequest request) {
+        if (request == null || request.getEmail() == null || request.getEmail().trim().isEmpty()) {
+            return ResponseEntity.badRequest().body(Map.of(
+                    "message", "Debe ingresar un correo electrónico"
+            ));
+        }
+
+        String email = request.getEmail().trim();
+
+        Optional<Usuario> usuarioOpt = usuarioRepository.findByEmail(email);
+
+        if (usuarioOpt.isEmpty()) {
+            return ResponseEntity.badRequest().body(Map.of(
+                    "message", "No existe una cuenta asociada a ese correo"
+            ));
+        }
+
+        Usuario usuario = usuarioOpt.get();
+
+        if (!"ROLE_CLIENTE".equals(usuario.getRol().getNombre_rol())) {
+            return ResponseEntity.badRequest().body(Map.of(
+                    "message", "Este usuario no puede recuperar la contraseña desde aquí. Contacte al administrador"
+            ));
+        }
+
+        String token = UUID.randomUUID().toString();
+        String enlace = "http://localhost:8080/reset-password.html?token=" + token;
+
+        try {
+            emailService.enviarCorreo(
+                    usuario.getEmail(),
+                    "Recuperación de contraseña",
+                    "Haga clic en el siguiente enlace para restablecer su contraseña: " + enlace
+            );
+
+            PasswordResetToken resetToken = new PasswordResetToken();
+            resetToken.setToken(token);
+            resetToken.setUsuario(usuario);
+            resetToken.setFechaExpiracion(LocalDateTime.now().plusMinutes(30));
+
+            passwordResetTokenRepository.save(resetToken);
+
+            return ResponseEntity.ok(Map.of(
+                    "message", "Se ha enviado un enlace de recuperación a su correo"
+            ));
+
+        } catch (Exception e) {
+            e.printStackTrace();
+
+            return ResponseEntity.internalServerError().body(Map.of(
+                    "message", "No se pudo enviar el correo de recuperación. Verifique la configuración del correo."
+            ));
+        }
+    }
+
 
     public AuthResponse register(RegisterRequest registerRequest) {
-
 
         DireccionEnvio direccionEnvio = new DireccionEnvio();
         Carrito carrito = new Carrito();

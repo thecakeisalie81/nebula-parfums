@@ -124,6 +124,8 @@ public class ProductoController {
 
         Producto producto = iProductoService.getProductoById(id_producto);
 
+        int cant = producto.getStock_actual();
+
         String nombreImagen = null;
         if (imagen != null && !imagen.isEmpty()) {
             try {
@@ -154,11 +156,12 @@ public class ProductoController {
 
 
         iProductoService.editProducto(producto);
-        MovimientoDTO movimientoDTO = new MovimientoDTO();
-        movimientoDTO.setId_producto(producto.getId_producto());
-        movimientoDTO.setCantidad(producto.getStock_actual());
 
-        iMovimientoInventarioService.registrarRegistroProducto(movimientoDTO);
+        if (cant > producto.getStock_actual()) {
+            iMovimientoInventarioService.registrarSalida(producto.getId_producto(), (cant - producto.getStock_actual()));
+        }else if (cant < producto.getStock_actual()) {
+            iMovimientoInventarioService.registrarEntrada(producto.getId_producto(), (producto.getStock_actual() -cant));
+        }
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(producto);

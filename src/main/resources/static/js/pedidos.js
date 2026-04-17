@@ -121,6 +121,8 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     cargarOrdenes(0);
+    cargarIngresosTotales();
+    cargarTotalesPedidos();
 });
 
 function construirUrlOrdenes(page = 0) {
@@ -202,6 +204,82 @@ function cargarOrdenes(page = 0) {
                 text: error.message || "No se pudieron cargar los pedidos"
             });
         });
+}
+
+async function cargarTotalesPedidos() {
+    const pendientesEl = document.querySelector(".expenses h1");
+    const pendientesSmall = document.querySelector(".expenses small");
+
+    const procesoEl = document.querySelector(".income h1");
+    const procesoSmall = document.querySelector(".income small");
+
+    try {
+        const res = await authFetch("/orden/totales");
+
+        if (!res.ok) {
+            throw new Error("Error al cargar totales de pedidos: " + res.status);
+        }
+
+        const data = await res.json();
+
+        const pendientes = Number(data.pendientes || 0);
+        const proceso = Number(data.proceso || 0);
+
+        if (pendientesEl) {
+            pendientesEl.textContent = pendientes;
+        }
+
+        if (pendientesSmall) {
+            pendientesSmall.textContent = `${pendientes} pendiente${pendientes === 1 ? "" : "s"}`;
+        }
+
+        if (procesoEl) {
+            procesoEl.textContent = proceso;
+        }
+
+        if (procesoSmall) {
+            procesoSmall.textContent = `${proceso} en proceso`;
+        }
+    } catch (error) {
+        console.error("[cargarTotalesPedidos] error:", error);
+
+        if (pendientesEl) pendientesEl.textContent = "0";
+        if (pendientesSmall) pendientesSmall.textContent = "No se pudo cargar";
+
+        if (procesoEl) procesoEl.textContent = "0";
+        if (procesoSmall) procesoSmall.textContent = "No se pudo cargar";
+    }
+}
+
+async function cargarIngresosTotales() {
+    const ingresosEl = document.querySelector(".orders h1");
+    const ingresosSmall = document.querySelector(".orders small");
+
+    if (!ingresosEl) return;
+
+    try {
+        const res = await authFetch("/orden/total?fechaInicio=&fechaFin=");
+
+        if (!res.ok) {
+            throw new Error("Error al cargar ingresos totales: " + res.status);
+        }
+
+        const data = await res.text();
+        const total = Number(data);
+
+        ingresosEl.textContent = formatearMoneda(isNaN(total) ? 0 : total);
+
+        if (ingresosSmall) {
+            ingresosSmall.textContent = "Total acumulado";
+        }
+    } catch (error) {
+        console.error("[cargarIngresosTotales] error:", error);
+        ingresosEl.textContent = formatearMoneda(0);
+
+        if (ingresosSmall) {
+            ingresosSmall.textContent = "No se pudo cargar";
+        }
+    }
 }
 
 function renderizarOrdenes(ordenes) {
@@ -413,6 +491,8 @@ async function actualizarEstadoOrden() {
         });
 
         cargarOrdenes(paginaActual);
+        cargarIngresosTotales();
+        cargarTotalesPedidos();
     } catch (error) {
         console.error("[actualizarEstadoOrden] error:", error);
 
@@ -438,47 +518,18 @@ function normalizarEstadoParaSelect(estado) {
 }
 
 function actualizarResumen(ordenes) {
-    const pendientesEl = document.querySelector(".expenses h1");
-    const pendientesSmall = document.querySelector(".expenses small");
-
-    const procesoEl = document.querySelector(".income h1");
-    const procesoSmall = document.querySelector(".income small");
-
-    const ingresosEl = document.querySelector(".orders h1");
     const ingresosSmall = document.querySelector(".orders small");
-
-    const pendientes = contarPorEstado(ordenes, "PENDIENTE");
-    const enProceso = contarPorEstadoFlexible(ordenes, ["EN PROCESO", "EN_PROCESO"]);
     const entregados = contarPorEstado(ordenes, "ENTREGADO");
-    const ingresosTotales = sumarIngresosEntregados(ordenes);
 
-    if (pendientesEl) pendientesEl.textContent = pendientes;
-    if (pendientesSmall) pendientesSmall.textContent = `${pendientes} pendiente${pendientes === 1 ? "" : "s"}`;
-
-    if (procesoEl) procesoEl.textContent = enProceso;
-    if (procesoSmall) procesoSmall.textContent = `${enProceso} procesando`;
-
-    if (ingresosEl) ingresosEl.textContent = formatearMoneda(ingresosTotales);
-    if (ingresosSmall) ingresosSmall.textContent = `${entregados} entregado${entregados === 1 ? "" : "s"}`;
+    if (ingresosSmall) {
+        ingresosSmall.textContent = `${entregados} entregado${entregados === 1 ? "" : "s"} en esta página`;
+    }
 }
 
 function contarPorEstado(ordenes, estadoBuscado) {
     return (ordenes || []).filter((orden) => {
         return (orden.estado || "").toUpperCase().trim() === estadoBuscado;
     }).length;
-}
-
-function contarPorEstadoFlexible(ordenes, estadosPermitidos) {
-    return (ordenes || []).filter((orden) => {
-        const estado = (orden.estado || "").toUpperCase().trim();
-        return estadosPermitidos.includes(estado);
-    }).length;
-}
-
-function sumarIngresosEntregados(ordenes) {
-    return (ordenes || [])
-        .filter((orden) => (orden.estado || "").toUpperCase().trim() === "ENTREGADO")
-        .reduce((acc, orden) => acc + Number(orden.total || 0), 0);
 }
 
 function renderizarPaginacion(totalPages, currentPage) {
@@ -491,7 +542,14 @@ function renderizarPaginacion(totalPages, currentPage) {
         contenedor = document.createElement("div");
         contenedor.id = "paginacionPedidos";
         contenedor.className = "paginacion";
-        recentOrders.appendChild(contenedor);
+
+        const tabla = recentOrders.querySelector("table");
+
+        if (tabla) {
+            recentOrders.insertBefore(contenedor, tabla);
+        } else {
+            recentOrders.prepend(contenedor);
+        }
     }
 
     contenedor.innerHTML = "";

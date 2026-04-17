@@ -2,6 +2,7 @@ package com.nebulaparfums.nebula_parfums.service;
 
 import com.nebulaparfums.nebula_parfums.dto.CreateOrdenDTO;
 import com.nebulaparfums.nebula_parfums.dto.OrdenDTO;
+import com.nebulaparfums.nebula_parfums.dto.ProductosPendientesProceso;
 import com.nebulaparfums.nebula_parfums.exception.ResourceNotFoundException;
 import com.nebulaparfums.nebula_parfums.model.*;
 import com.nebulaparfums.nebula_parfums.repository.IOrdenRepository;
@@ -119,6 +120,19 @@ public class OrdenService implements IOrdenService {
         }
 
         return ordenRepository.filtrarOrden(pageable, estado, inicio, fin);
+    }
+
+    @Override
+    public Double sumaTotalesMes(LocalDateTime fechaInicio, LocalDateTime fechaFin) {
+        return ordenRepository.sumaTotalesMesActual(fechaInicio, fechaFin);
+    }
+
+    @Override
+    public ProductosPendientesProceso getPendientesProcesos() {
+        ProductosPendientesProceso cuenta = new ProductosPendientesProceso();
+        cuenta.setPendientes(ordenRepository.countByEstado("PENDIENTE"));
+        cuenta.setProceso(ordenRepository.countByEstado("EN PROCESO"));
+        return cuenta;
     }
 
     @Override

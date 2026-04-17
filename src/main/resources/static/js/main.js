@@ -97,4 +97,20 @@
     }
     button.parent().parent().find("input").val(newVal);
   });
+
+  // jQuery
+  $(document).ready(function() {
+    $("#logout").on("click", function() {
+      localStorage.removeItem("token");
+      window.location.href = "/login.html";
+    });
+  });
+
+
 })(jQuery);
+
+
+
+
+
+

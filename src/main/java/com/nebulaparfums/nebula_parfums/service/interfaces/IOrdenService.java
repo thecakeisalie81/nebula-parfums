@@ -2,6 +2,7 @@ package com.nebulaparfums.nebula_parfums.service.interfaces;
 
 import com.nebulaparfums.nebula_parfums.dto.CreateOrdenDTO;
 import com.nebulaparfums.nebula_parfums.dto.OrdenDTO;
+import com.nebulaparfums.nebula_parfums.dto.ProductosPendientesProceso;
 import com.nebulaparfums.nebula_parfums.model.Orden;
 import org.aspectj.weaver.ast.Or;
 import org.springframework.data.domain.Page;
@@ -25,4 +26,10 @@ public interface IOrdenService {
                                       @Param("estado") String estado,
                                       @Param("fechaInicio") LocalDate fechaInicio,
                                       @Param("fechaFin") LocalDate fechaFin);
+    public Double sumaTotalesMes(
+            @Param("fechaInicio") LocalDateTime fechaInicio,
+            @Param("fechaFin") LocalDateTime fechaFin
+    );
+
+    public ProductosPendientesProceso getPendientesProcesos();
 }

@@ -1,6 +1,7 @@
 package com.nebulaparfums.nebula_parfums.auth;
 
 import com.nebulaparfums.nebula_parfums.service.AuthService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -18,7 +19,7 @@ public class AuthController {
     private AuthService authService;
 
     @PostMapping("/auth/login")
-    public ResponseEntity<AuthResponse> login(@RequestBody LoginRequest loginRequest){
+    public ResponseEntity<AuthResponse> login(@Valid @RequestBody LoginRequest loginRequest){
         return ResponseEntity.ok(authService.login(loginRequest));
     }
 
@@ -31,5 +32,16 @@ public class AuthController {
     @PostMapping("/admin/empleado")
     public ResponseEntity<AuthResponse> registerEmpleado(@RequestBody RegisterRequest registerRequest){
         return ResponseEntity.ok(authService.registrarEmpleado(registerRequest));
+    }
+
+
+    @PostMapping("/auth/forgot-password")
+    public ResponseEntity<?> forgotPassword(@RequestBody ForgotPasswordRequest request){
+        return authService.forgotPassword(request);
+    }
+
+    @PostMapping("/auth/reset-password")
+    public ResponseEntity<?> resetPassword(@RequestBody ResetPasswordRequest request){
+        return authService.resetPassword(request);
     }
 }

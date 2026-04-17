@@ -13,6 +13,7 @@ public class Producto {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id_producto;
     private String nombre;
+    @Column(name = "descripcion", columnDefinition = "TEXT")
     private String descripcion;
     private Double precio;
     private int stock_actual;

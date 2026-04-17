@@ -35,4 +35,18 @@ public interface IOrdenRepository extends JpaRepository<Orden, Integer> {
 
     @Query("SELECT o FROM Orden o WHERE o.usuario.id_usuario = :idUsuario ORDER BY o.fecha_creacion DESC")
     List<Orden> getOrdenesUsuario(@Param("idUsuario") Integer idUsuario);
+
+    @Query("""
+    SELECT COALESCE(SUM(o.total), 0)
+    FROM Orden o
+    WHERE o.estado <> 'CANCELADO'
+      AND (:fechaInicio IS NULL OR o.fecha_creacion >= :fechaInicio)
+      AND (:fechaFin IS NULL OR o.fecha_creacion < :fechaFin)
+    """)
+    Double sumaTotalesMesActual(
+            @Param("fechaInicio") LocalDateTime fechaInicio,
+            @Param("fechaFin") LocalDateTime fechaFin
+    );
+
+    Integer countByEstado(String s);
 }

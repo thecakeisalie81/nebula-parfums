@@ -8,6 +8,7 @@
             href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
     />
     <link rel="stylesheet" href="css/login.css" />
+    <link href="images/favicon.ico" rel="icon" />
     <title>Login</title>
 </head>
 
@@ -19,7 +20,7 @@
 
             <input type="text" id="regNombre" placeholder="Nombre" />
             <input type="email" id="regEmail" placeholder="Email" />
-            <input type="password" id="regPassword" placeholder="contraseña" />
+            <input type="password" id="regPassword" placeholder="Contraseña" minlength="8" required />
             <button type="submit">Registrarse</button>
         </form>
     </div>
@@ -30,7 +31,7 @@
 
             <input type="email" id="loginEmail" placeholder="Email" />
             <input type="password" id="loginPassword" placeholder="Password" />
-            <a href="#">Olvido su contraseña?</a>
+            <a href="#" id="forgotPasswordLink">Olvidó su contraseña?</a>
             <button type="submit">Ingresar</button>
         </form>
     </div>
@@ -50,6 +51,7 @@
     </div>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="js/login.js"></script>
 </body>
 </html>

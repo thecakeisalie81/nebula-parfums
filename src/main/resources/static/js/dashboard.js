@@ -18,6 +18,55 @@ function fechaActual(){
 }
 
 
+async function cargarVentasMesActual() {
+    const elemento = document.getElementById("ventasMes");
+    if (!elemento) return;
+
+    try {
+        const hoy = new Date();
+
+        // Primer día del mes actual a las 00:00:00
+        const fechaInicio = new Date(hoy.getFullYear(), hoy.getMonth(), 1, 0, 0, 0);
+
+        // Último momento del mes actual
+        const fechaFin = new Date(hoy.getFullYear(), hoy.getMonth() + 1, 0, 23, 59, 59);
+
+        // Formato LocalDateTime para Spring: yyyy-MM-ddTHH:mm:ss
+        const formatearLocalDateTime = (fecha) => {
+            const year = fecha.getFullYear();
+            const month = String(fecha.getMonth() + 1).padStart(2, "0");
+            const day = String(fecha.getDate()).padStart(2, "0");
+            const hours = String(fecha.getHours()).padStart(2, "0");
+            const minutes = String(fecha.getMinutes()).padStart(2, "0");
+            const seconds = String(fecha.getSeconds()).padStart(2, "0");
+
+            return `${year}-${month}-${day}T${hours}:${minutes}:${seconds}`;
+        };
+
+        const inicio = formatearLocalDateTime(fechaInicio);
+        const fin = formatearLocalDateTime(fechaFin);
+
+        const response = await authFetch(
+            `/orden/total?fechaInicio=${encodeURIComponent(inicio)}&fechaFin=${encodeURIComponent(fin)}`
+        );
+
+        if (!response.ok) {
+            throw new Error("Error al cargar ventas del mes: " + response.status);
+        }
+
+        const total = await response.text();
+        const monto = Number(total);
+
+        elemento.textContent = `₡${isNaN(monto) ? 0 : monto.toLocaleString("es-CR", {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2
+        })}`;
+    } catch (error) {
+        console.error(error);
+        elemento.textContent = "₡0";
+    }
+}
+
 async function cargarCuadros() {
     let response = await authFetch("/producto/totalproductos");
     let data = await response.text();   // aquí llega "28"
@@ -274,4 +323,5 @@ document.addEventListener("DOMContentLoaded", () => {
     cargarOrdenesRecientes();
     cargarUltimosMovimientos();
     fechaActual();
+    cargarVentasMesActual();
 });

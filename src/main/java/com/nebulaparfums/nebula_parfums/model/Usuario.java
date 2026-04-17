@@ -25,7 +25,6 @@ public class Usuario implements UserDetails {
     @Email(message = "El correo debe tener una estructura valida")
     @Column(nullable = false, unique = true)
     private String email;
-
     @Size(min = 8, message = "La contraseña debe tener al menos 8 caracteres")
     @Column(nullable = false)
     private String password;

@@ -74,7 +74,7 @@ public class MovimientoInventarioService implements IMovimientoInventarioService
                     "Solo quedan "+producto.getStock_actual());
         }
 
-        producto.setStock_actual(producto.getStock_actual()-cantidad);
+
         iProductoService.saveProducto(producto);
 
         MovimientoInventario movimientoInventario = new MovimientoInventario();

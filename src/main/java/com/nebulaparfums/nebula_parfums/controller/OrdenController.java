@@ -2,6 +2,7 @@ package com.nebulaparfums.nebula_parfums.controller;
 
 import com.nebulaparfums.nebula_parfums.dto.CreateOrdenDTO;
 import com.nebulaparfums.nebula_parfums.dto.OrdenDTO;
+import com.nebulaparfums.nebula_parfums.dto.ProductosPendientesProceso;
 import com.nebulaparfums.nebula_parfums.model.Orden;
 import com.nebulaparfums.nebula_parfums.service.interfaces.IOrdenService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,9 +34,21 @@ public class OrdenController {
         return iOrdenService.filtrarOrden(pageable, estado, fechaInicio, fechaFin);
     }
 
+    @GetMapping("/orden/total")
+    public Double totalMes(
+            @RequestParam(value = "fechaInicio", required = false) LocalDateTime fechaInicio,
+            @RequestParam(value = "fechaFin", required = false) LocalDateTime fechaFin) {
+        return iOrdenService.sumaTotalesMes(fechaInicio, fechaFin);
+    }
+
     @GetMapping("/orden/recientes")
     public List<Orden> recientes(){
         return iOrdenService.getUltimasOrdenesPendiente();
+    }
+
+    @GetMapping("/orden/totales")
+    public ProductosPendientesProceso totales(){
+        return iOrdenService.getPendientesProcesos();
     }
 
     @GetMapping("/orden/buscar")
