@@ -32,4 +32,12 @@ public interface IOrdenService {
     );
 
     public ProductosPendientesProceso getPendientesProcesos();
+
+    public List<OrdenDTO> listarDatosOrdenes(@Param("fechaInicio") LocalDateTime fechaInicio,
+    @Param("fechaFin") LocalDateTime fechaFin);
+
+    byte[] exportarPedidosPdf(LocalDate fechaInicio, LocalDate fechaFin);
+
+    byte[] exportarPedidosExcel(LocalDate fechaInicio, LocalDate fechaFin);
+
 }

@@ -15,4 +15,5 @@ public class OrdenDTO {
     private Integer id_direccion;
     private Integer id_orden;
     private String estado;
+    private Double total;
 }

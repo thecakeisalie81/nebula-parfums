@@ -1,5 +1,6 @@
 package com.nebulaparfums.nebula_parfums.repository;
 
+import com.nebulaparfums.nebula_parfums.dto.OrdenDTO;
 import com.nebulaparfums.nebula_parfums.model.MovimientoInventario;
 import com.nebulaparfums.nebula_parfums.model.Orden;
 import org.springframework.data.domain.Page;
@@ -17,6 +18,25 @@ public interface IOrdenRepository extends JpaRepository<Orden, Integer> {
 
     @Query("SELECT o FROM Orden o WHERE estado = 'PENDIENTE'")
     List<Orden> ultimasOrdenesPendiente(Pageable pageable);
+
+    @Query("""
+    SELECT new com.nebulaparfums.nebula_parfums.dto.OrdenDTO(
+        o.usuario.id_usuario,
+        o.direccion.id_direccion,
+        o.id_orden,
+        o.estado,
+        o.total
+    )
+    FROM Orden o
+    WHERE (:fechaInicio IS NULL OR o.fecha_creacion >= :fechaInicio)
+      AND (:fechaFin IS NULL OR o.fecha_creacion <= :fechaFin)
+    ORDER BY o.fecha_creacion DESC
+    """)
+    List<OrdenDTO> findOrdenesByFecha(
+            @Param("fechaInicio") LocalDateTime fechaInicio,
+            @Param("fechaFin") LocalDateTime fechaFin
+    );
+
 
     @Query("""
     SELECT o

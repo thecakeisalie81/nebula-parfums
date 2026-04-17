@@ -8,6 +8,10 @@ import com.nebulaparfums.nebula_parfums.service.interfaces.IOrdenService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.ContentDisposition;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
@@ -78,6 +82,48 @@ public class OrdenController {
     public String editarOrden(@RequestBody OrdenDTO orden){
         iOrdenService.editOrden(orden);
         return "Orden editado con sucesso";
+    }
+
+    @GetMapping("/reportes/pedidos/pdf")
+    public ResponseEntity<byte[]> exportarPedidosPdf(
+            @RequestParam(required = false) LocalDate fechaInicio,
+            @RequestParam(required = false) LocalDate fechaFin
+    ) {
+        byte[] archivo = iOrdenService.exportarPedidosPdf(fechaInicio, fechaFin);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_PDF);
+        headers.setContentDisposition(
+                ContentDisposition.attachment()
+                        .filename("reporte_pedidos.pdf")
+                        .build()
+        );
+
+        return ResponseEntity.ok()
+                .headers(headers)
+                .body(archivo);
+    }
+
+    @GetMapping("/reportes/pedidos/excel")
+    public ResponseEntity<byte[]> exportarPedidosExcel(
+            @RequestParam(required = false) LocalDate fechaInicio,
+            @RequestParam(required = false) LocalDate fechaFin
+    ) {
+        byte[] archivo = iOrdenService.exportarPedidosExcel(fechaInicio, fechaFin);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(
+                MediaType.parseMediaType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+        );
+        headers.setContentDisposition(
+                ContentDisposition.attachment()
+                        .filename("reporte_pedidos.xlsx")
+                        .build()
+        );
+
+        return ResponseEntity.ok()
+                .headers(headers)
+                .body(archivo);
     }
 
 }

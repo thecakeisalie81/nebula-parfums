@@ -98,18 +98,36 @@ async function exportarSegunSeleccionPDF() {
 
         case "movimientos": {
             const { fechaInicio, fechaFin } = obtenerFechasFiltro();
-            await descargarReporteBackendPDF("/reportes/movimientos/pdf", "reporte_movimientos.pdf", fechaInicio, fechaFin);
+            await descargarReporteBackendPDF(
+                "/reportes/movimientos/pdf",
+                "reporte_movimientos.pdf",
+                fechaInicio,
+                fechaFin
+            );
             break;
         }
 
-        case "ventas":
-        case "pedidos":
-            Swal.fire({
-                icon: "info",
-                title: "Aún no disponible",
-                text: `El reporte ${reporteSeleccionado} todavía no tiene endpoint configurado`
-            });
+        case "ventas": {
+            const { fechaInicio, fechaFin } = obtenerFechasFiltro();
+            await descargarReporteBackendPDF(
+                "/reportes/ventas/pdf",
+                "reporte_ventas.pdf",
+                fechaInicio,
+                fechaFin
+            );
             break;
+        }
+
+        case "pedidos": {
+            const { fechaInicio, fechaFin } = obtenerFechasFiltro();
+            await descargarReporteBackendPDF(
+                "/reportes/pedidos/pdf",
+                "reporte_pedidos.pdf",
+                fechaInicio,
+                fechaFin
+            );
+            break;
+        }
 
         default:
             Swal.fire({
@@ -137,18 +155,36 @@ async function exportarSegunSeleccionExcel() {
 
         case "movimientos": {
             const { fechaInicio, fechaFin } = obtenerFechasFiltro();
-            await descargarReporteBackendExcel("/reportes/movimientos/excel", "reporte_movimientos.xlsx", fechaInicio, fechaFin);
+            await descargarReporteBackendExcel(
+                "/reportes/movimientos/excel",
+                "reporte_movimientos.xlsx",
+                fechaInicio,
+                fechaFin
+            );
             break;
         }
 
-        case "ventas":
-        case "pedidos":
-            Swal.fire({
-                icon: "info",
-                title: "Aún no disponible",
-                text: `El reporte ${reporteSeleccionado} todavía no tiene endpoint configurado`
-            });
+        case "ventas": {
+            const { fechaInicio, fechaFin } = obtenerFechasFiltro();
+            await descargarReporteBackendExcel(
+                "/reportes/ventas/excel",
+                "reporte_ventas.xlsx",
+                fechaInicio,
+                fechaFin
+            );
             break;
+        }
+
+        case "pedidos": {
+            const { fechaInicio, fechaFin } = obtenerFechasFiltro();
+            await descargarReporteBackendExcel(
+                "/reportes/pedidos/excel",
+                "reporte_pedidos.xlsx",
+                fechaInicio,
+                fechaFin
+            );
+            break;
+        }
 
         default:
             Swal.fire({
