@@ -48,6 +48,7 @@ public class ProductoController {
             @RequestParam(required = false) String estadoStock,
             @RequestParam(required = false) Integer precioMinimo,
             @RequestParam(required = false) Integer precioMaximo,
+            @RequestParam(required = false) Integer disponible,
             Pageable pageable
     ) {
         return iProductoService.getProductosFiltrados(
@@ -57,7 +58,8 @@ public class ProductoController {
                 idProveedor,
                 estadoStock,
                 precioMinimo,
-                precioMaximo
+                precioMaximo,
+                disponible
         );
     }
 

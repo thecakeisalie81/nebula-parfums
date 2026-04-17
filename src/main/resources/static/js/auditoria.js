@@ -111,6 +111,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     cargarLogs(0);
+    cargarResumenAuditoria();
 });
 
 function construirUrlLogs(page = 0) {
@@ -161,7 +162,6 @@ function cargarLogs(page = 0) {
 
             renderizarLogs(logs);
             renderizarPaginacionLogs(totalPages, currentPage);
-            actualizarTotalesLogs(data, logs);
         })
         .catch((error) => {
             console.error("Error cargando logs:", error);
@@ -186,6 +186,61 @@ function cargarLogs(page = 0) {
                 text: error.message || "No se pudieron cargar los logs"
             });
         });
+}
+
+async function cargarResumenAuditoria() {
+    const totalEventosEl = document.querySelector(".sales h1");
+    const hoyEl = document.querySelector(".income h1");
+
+    const totalEventosSmall = document.querySelector(".sales small");
+    const hoySmall = document.querySelector(".income small");
+
+    try {
+        const res = await authFetch("/log/totales");
+
+        if (!res.ok) {
+            throw new Error("Error al cargar resumen de auditoría: " + res.status);
+        }
+
+        const data = await res.json();
+
+        const total = Number(data.Total || 0);
+        const hoy = Number(data.Hoy || 0);
+
+        if (totalEventosEl) {
+            totalEventosEl.textContent = total;
+        }
+
+        if (hoyEl) {
+            hoyEl.textContent = hoy;
+        }
+
+        if (totalEventosSmall) {
+            totalEventosSmall.textContent = "Registrados en el sistema";
+        }
+
+        if (hoySmall) {
+            hoySmall.textContent = "Eventos de hoy";
+        }
+    } catch (error) {
+        console.error("Error cargando resumen de auditoría:", error);
+
+        if (totalEventosEl) {
+            totalEventosEl.textContent = "0";
+        }
+
+        if (hoyEl) {
+            hoyEl.textContent = "0";
+        }
+
+        if (totalEventosSmall) {
+            totalEventosSmall.textContent = "No se pudo cargar";
+        }
+
+        if (hoySmall) {
+            hoySmall.textContent = "No se pudo cargar";
+        }
+    }
 }
 
 function renderizarLogs(logs) {
@@ -274,42 +329,6 @@ function renderizarPaginacionLogs(totalPages, currentPage) {
         nextBtn.addEventListener("click", () => cargarLogs(currentPage + 1));
         contenedor.appendChild(nextBtn);
     }
-}
-
-function actualizarTotalesLogs(data, logs) {
-    const totalEventosEl = document.querySelector(".sales h1");
-    const hoyEl = document.querySelector(".income h1");
-
-    const totalEventos = data.totalElements ?? data.page?.totalElements ?? logs.length;
-    const eventosHoy = contarEventosHoy(logs);
-
-    if (totalEventosEl) {
-        totalEventosEl.textContent = totalEventos;
-    }
-
-    if (hoyEl) {
-        hoyEl.textContent = eventosHoy;
-    }
-}
-
-function contarEventosHoy(logs) {
-    const hoy = new Date();
-    const year = hoy.getFullYear();
-    const month = hoy.getMonth();
-    const day = hoy.getDate();
-
-    return logs.filter((log) => {
-        if (!log.fecha_actualizacion) return false;
-
-        const fecha = new Date(log.fecha_actualizacion);
-        if (isNaN(fecha.getTime())) return false;
-
-        return (
-            fecha.getFullYear() === year &&
-            fecha.getMonth() === month &&
-            fecha.getDate() === day
-        );
-    }).length;
 }
 
 function obtenerNombreUsuarioLog(log) {

@@ -7,6 +7,7 @@ import com.nebulaparfums.nebula_parfums.service.interfaces.IUsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
@@ -43,12 +44,14 @@ public class UsuarioController {
         return iUsuarioService.getUsuarioById(id);
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PostMapping("/usuario/crear")
     public String crearUsuario(@RequestBody Usuario usuario) {
         iUsuarioService.saveUsuario(usuario);
         return "Usuario creado exitosamente";
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PutMapping("/usuario/editar")
     public String editarUsuario(@RequestBody Usuario usuario) {
         iUsuarioService.editUsuario(usuario);

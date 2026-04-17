@@ -46,7 +46,7 @@ public class SecurityConfig {
 
                                 // 🔓 auth
                                 .requestMatchers("/auth/**").permitAll()
-
+                                .requestMatchers("/paypal/**").authenticated()
                                 // 🔐 roles
                                 .requestMatchers("/admin/**").hasRole("ADMIN")
                                 .requestMatchers("/empleado/**").hasAnyRole("ADMIN","EMPLEADO")

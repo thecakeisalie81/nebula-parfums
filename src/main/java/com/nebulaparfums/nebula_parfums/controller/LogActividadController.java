@@ -1,5 +1,6 @@
 package com.nebulaparfums.nebula_parfums.controller;
 
+import com.nebulaparfums.nebula_parfums.dto.TotalEventosyHoyDTO;
 import com.nebulaparfums.nebula_parfums.model.LogActividad;
 import com.nebulaparfums.nebula_parfums.service.interfaces.ILogActividadService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +27,11 @@ public class LogActividadController {
     @GetMapping("log/filtrar")
     public Page<LogActividad> filtrarLogs(Pageable pageable, String accion, LocalDate fechaInicio, LocalDate fechaFin) {
         return iLogActividadService.filtrarLogs(pageable, accion, fechaInicio, fechaFin);
+    }
+
+    @GetMapping("/log/totales")
+    public TotalEventosyHoyDTO getTotalEventosyHoyDTO() {
+        return iLogActividadService.getTotalEventosyHoyDTO();
     }
 
     @PostMapping("/log/logout")

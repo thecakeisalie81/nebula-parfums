@@ -31,7 +31,8 @@ public class ProductoService implements IProductoService {
             Integer idProveedor,
             String estadoStock,
             Integer precioMinimo,
-            Integer precioMaximo
+            Integer precioMaximo,
+            Integer disponible
     ) {
         if (nombre != null && nombre.isBlank()) {
             nombre = null;
@@ -48,7 +49,8 @@ public class ProductoService implements IProductoService {
                 idProveedor,
                 estadoStock,
                 precioMinimo,
-                precioMaximo
+                precioMaximo,
+                disponible
         );
     }
 

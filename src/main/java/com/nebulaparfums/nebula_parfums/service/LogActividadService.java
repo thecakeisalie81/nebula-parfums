@@ -1,5 +1,6 @@
 package com.nebulaparfums.nebula_parfums.service;
 
+import com.nebulaparfums.nebula_parfums.dto.TotalEventosyHoyDTO;
 import com.nebulaparfums.nebula_parfums.model.LogActividad;
 import com.nebulaparfums.nebula_parfums.model.Usuario;
 import com.nebulaparfums.nebula_parfums.repository.ILogActividadRepository;
@@ -30,6 +31,17 @@ public class LogActividadService implements ILogActividadService {
 
     @Autowired
     private IUsuarioService usuarioService;
+
+    @Override
+    public TotalEventosyHoyDTO getTotalEventosyHoyDTO() {
+        TotalEventosyHoyDTO totalEventosyHoyDTO = new TotalEventosyHoyDTO();
+        totalEventosyHoyDTO.setTotal(logActividadRepository.count());
+        LocalDate hoy = LocalDate.now();
+        LocalDateTime inicio = hoy.atStartOfDay();
+        LocalDateTime fin = hoy.atTime(LocalTime.MAX);
+        totalEventosyHoyDTO.setHoy(logActividadRepository.contarLogsHoy(inicio, fin));
+        return totalEventosyHoyDTO;
+    }
 
     @Override
     public void saveLogActividad(LogActividad logActividad) {

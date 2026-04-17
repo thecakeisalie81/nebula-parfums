@@ -12,7 +12,6 @@
 
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" />
 
-
   <!-- Google Web Fonts -->
   <link rel="preconnect" href="https://fonts.gstatic.com" />
   <link
@@ -240,10 +239,12 @@
 
       <div class="card border-secondary mb-5">
         <div class="card-footer border-secondary bg-transparent">
+          <div id="paypal-button-container"></div>
           <button
                   id="btnHacerPago"
                   class="btn btn-lg btn-block btn-primary font-weight-bold my-3 py-3"
                   disabled
+                  style="display:none;"
           >
             Hacer pago
           </button>
@@ -313,6 +314,7 @@
 <script src="mail/contact.js"></script>
 
 <!-- Template Javascript -->
+<script src="https://www.paypal.com/sdk/js?client-id=AfEX6INYOJlUgMPqlT_7x7zPUyKggWMaleSXIdzqPjxb8QC8cnKsRdJSwtvumf2AQr4V1xKvopR7wOrz&currency=USD&components=buttons"></script>
 <script src="/js/main.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="/js/checkout.js"></script>

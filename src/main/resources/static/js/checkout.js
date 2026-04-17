@@ -3,10 +3,15 @@ const API_DIRECCION_MIA = "/direccion/mia";
 const API_EDITAR_DIRECCION = "/direccion/editar";
 const API_CREAR_ORDEN = "/orden/crear";
 const API_USUARIO_AUTENTICADO = "/usuarioAutenticado";
+const API_PRODUCTO_BUSCAR = "/producto/buscar";
+
+const API_PAYPAL_CREATE_ORDER = "/paypal/create-order";
+const API_PAYPAL_CAPTURE_ORDER = "/paypal/capture-order";
 
 let carritoActual = null;
 let direccionActual = null;
 let usuarioActual = null;
+let paypalBotonesRenderizados = false;
 
 function obtenerToken() {
     const token = localStorage.getItem("token");
@@ -24,7 +29,7 @@ function authFetch(url, options = {}) {
     const token = obtenerToken();
 
     if (!token) {
-        return Promise.reject("Token no encontrado");
+        return Promise.reject(new Error("Token no encontrado"));
     }
 
     return fetch(url, {
@@ -41,6 +46,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (!token) return;
 
     configurarValidacionDireccion();
+    configurarBotonFallback();
 
     Promise.all([
         cargarCarrito(),
@@ -49,17 +55,28 @@ document.addEventListener("DOMContentLoaded", () => {
     ])
         .then(() => {
             validarDireccionCompleta();
+            inicializarPaypal();
         })
         .catch((error) => {
             console.error("Error inicializando checkout:", error);
             validarDireccionCompleta();
         });
-
-    const btnHacerPago = document.getElementById("btnHacerPago");
-    if (btnHacerPago) {
-        btnHacerPago.addEventListener("click", crearOrden);
-    }
 });
+
+function configurarBotonFallback() {
+    const btnHacerPago = document.getElementById("btnHacerPago");
+    if (!btnHacerPago) return;
+
+    btnHacerPago.addEventListener("click", async () => {
+        Swal.fire({
+            icon: "info",
+            title: "PayPal no disponible",
+            text: "No se cargó el botón de PayPal. Verifica que el SDK de PayPal esté incluido correctamente.",
+            confirmButtonText: "Aceptar",
+            heightAuto: false
+        });
+    });
+}
 
 function cargarCarrito() {
     return authFetch(API_CARRITO_MIO)
@@ -140,7 +157,7 @@ function cargarUsuarioAutenticado() {
 }
 
 function actualizarBadgeCarrito(carrito) {
-    const lista = Array.isArray(carrito.listaCarritoDetalles)
+    const lista = Array.isArray(carrito?.listaCarritoDetalles)
         ? carrito.listaCarritoDetalles
         : [];
 
@@ -160,7 +177,7 @@ function renderizarResumenOrden(carrito) {
 
     listaProductosOrden.innerHTML = "";
 
-    const lista = Array.isArray(carrito.listaCarritoDetalles)
+    const lista = Array.isArray(carrito?.listaCarritoDetalles)
         ? carrito.listaCarritoDetalles
         : [];
 
@@ -184,15 +201,15 @@ function renderizarResumenOrden(carrito) {
             "beforeend",
             `
             <div class="d-flex justify-content-between">
-                <p>${nombre}</p>
-                <p>₡${precio.toFixed(2)}</p>
+                <p>${escapeHtml(nombre)}</p>
+                <p>${formatearMontoCRC(precio)}</p>
             </div>
             `
         );
     });
 
-    if (subtotalOrden) subtotalOrden.textContent = `₡${subtotal.toFixed(2)}`;
-    if (totalOrden) totalOrden.textContent = `₡${subtotal.toFixed(2)}`;
+    if (subtotalOrden) subtotalOrden.textContent = formatearMontoCRC(subtotal);
+    if (totalOrden) totalOrden.textContent = formatearMontoCRC(subtotal);
 }
 
 function calcularTotalCarrito(carrito) {
@@ -283,8 +300,6 @@ function validarDireccionCompleta() {
     const btnHacerPago = document.getElementById("btnHacerPago");
     const mensaje = document.getElementById("mensajeDireccionIncompleta");
 
-    if (!btnHacerPago) return false;
-
     const {
         ciudadInput,
         provinciaInput,
@@ -311,10 +326,11 @@ function validarDireccionCompleta() {
         : [];
 
     const hayProductos = lista.length > 0;
-
     const puedePagar = direccionCompleta && hayProductos;
 
-    btnHacerPago.disabled = !puedePagar;
+    if (btnHacerPago) {
+        btnHacerPago.disabled = !puedePagar;
+    }
 
     if (mensaje) {
         if (!hayProductos) {
@@ -368,46 +384,257 @@ function guardarDireccionActualizada() {
         .then(() => cargarMiDireccion());
 }
 
-function crearOrden() {
-    if (!validarDireccionCompleta()) {
-        const lista = Array.isArray(carritoActual?.listaCarritoDetalles)
-            ? carritoActual.listaCarritoDetalles
-            : [];
+async function validarStockAntesDePagar() {
+    if (!carritoActual || !Array.isArray(carritoActual.listaCarritoDetalles)) {
+        throw new Error("No se pudo validar el carrito actual");
+    }
 
-        const hayProductos = lista.length > 0;
+    const lista = carritoActual.listaCarritoDetalles;
+
+    if (lista.length === 0) {
+        throw new Error("No hay productos en el carrito");
+    }
+
+    const resultados = await Promise.all(
+        lista.map(async (detalle) => {
+            const idProducto =
+                detalle?.producto?.id_producto ??
+                detalle?.id_producto ??
+                null;
+
+            const nombreProducto =
+                detalle?.producto?.nombre ??
+                "Producto sin nombre";
+
+            const cantidadSolicitada = Number(detalle?.cantidad ?? 0);
+
+            if (!idProducto) {
+                throw new Error(`No se encontró el id del producto "${nombreProducto}"`);
+            }
+
+            const res = await authFetch(`${API_PRODUCTO_BUSCAR}?id=${encodeURIComponent(idProducto)}`);
+
+            if (!res.ok) {
+                throw new Error(`No se pudo consultar el stock del producto "${nombreProducto}"`);
+            }
+
+            const producto = await res.json();
+            const stockActual = Number(producto?.stock_actual ?? 0);
+
+            return {
+                idProducto,
+                nombreProducto: producto?.nombre || nombreProducto,
+                cantidadSolicitada,
+                stockActual
+            };
+        })
+    );
+
+    const sinStock = resultados.filter((item) => item.cantidadSolicitada > item.stockActual);
+
+    if (sinStock.length > 0) {
+        const mensaje = sinStock
+            .map((item) =>
+                `${item.nombreProducto}: solicitados ${item.cantidadSolicitada}, disponibles ${item.stockActual}`
+            )
+            .join("\n");
 
         Swal.fire({
             icon: "warning",
-            title: hayProductos ? "Dirección incompleta" : "Carrito vacío",
-            text: hayProductos
-                ? "Debes completar todos los campos de dirección antes de hacer el pago"
-                : "Debes tener al menos un producto en el carrito antes de hacer el pago",
-            confirmButtonText: "Aceptar"
+            title: "Stock insuficiente",
+            text: mensaje,
+            confirmButtonText: "Aceptar",
+            heightAuto: false
         });
+
+        return false;
+    }
+
+    return true;
+}
+
+function convertirCRCaUSD(montoCRC) {
+    const tipoCambio = 520;
+    const monto = Number(montoCRC || 0);
+
+    return (monto / tipoCambio).toFixed(2);
+}
+
+function inicializarPaypal() {
+    if (paypalBotonesRenderizados) return;
+
+    const contenedorPaypal = document.getElementById("paypal-button-container");
+    if (!contenedorPaypal) {
+        console.warn("No se encontró #paypal-button-container");
         return;
     }
 
-    guardarDireccionActualizada()
-        .then(() => Promise.all([
-            authFetch(API_CARRITO_MIO).then((res) => {
-                if (!res.ok) {
-                    throw new Error("Error al obtener carrito: " + res.status);
+    if (typeof paypal === "undefined") {
+        console.warn("PayPal SDK no está cargado");
+        return;
+    }
+
+    paypal.Buttons({
+        style: {
+            layout: "vertical",
+            color: "gold",
+            shape: "rect",
+            label: "paypal"
+        },
+
+        onClick: async function () {
+            if (!validarDireccionCompleta()) {
+                const lista = Array.isArray(carritoActual?.listaCarritoDetalles)
+                    ? carritoActual.listaCarritoDetalles
+                    : [];
+
+                const hayProductos = lista.length > 0;
+
+                Swal.fire({
+                    icon: "warning",
+                    title: hayProductos ? "Dirección incompleta" : "Carrito vacío",
+                    text: hayProductos
+                        ? "Debes completar todos los campos de dirección antes de hacer el pago"
+                        : "Debes tener al menos un producto en el carrito antes de hacer el pago",
+                    confirmButtonText: "Aceptar",
+                    heightAuto: false
+                });
+
+                return false;
+            }
+
+            try {
+                const stockValido = await validarStockAntesDePagar();
+                return stockValido;
+            } catch (error) {
+                console.error("Error validando stock:", error);
+
+                Swal.fire({
+                    icon: "error",
+                    title: "Error",
+                    text: error.message || "No se pudo validar el stock de los productos",
+                    confirmButtonText: "Aceptar",
+                    heightAuto: false
+                });
+
+                return false;
+            }
+        },
+
+        createOrder: async function () {
+            await guardarDireccionActualizada();
+
+            const totalCRC = calcularTotalCarrito(carritoActual);
+
+            if (!totalCRC || totalCRC <= 0) {
+                throw new Error("El total del carrito es inválido");
+            }
+
+            const totalUSD = convertirCRCaUSD(totalCRC);
+
+            const res = await authFetch(API_PAYPAL_CREATE_ORDER, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    total: totalUSD
+                })
+            });
+
+            const data = await res.json().catch(() => ({}));
+
+            if (!res.ok) {
+                throw new Error(data.message || "No se pudo crear la orden en PayPal");
+            }
+
+            if (!data.orderId) {
+                throw new Error("El backend no devolvió orderId de PayPal");
+            }
+
+            return data.orderId;
+        },
+
+        onApprove: async function (data) {
+            try {
+                const captureRes = await authFetch(API_PAYPAL_CAPTURE_ORDER, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        orderId: data.orderID
+                    })
+                });
+
+                const captureData = await captureRes.json().catch(() => ({}));
+
+                if (!captureRes.ok) {
+                    throw new Error(captureData.message || "No se pudo capturar el pago en PayPal");
                 }
-                return res.json();
-            }),
-            authFetch(API_USUARIO_AUTENTICADO).then((res) => {
-                if (!res.ok) {
-                    throw new Error("Error al obtener usuario autenticado: " + res.status);
-                }
-                return res.json();
-            }),
-            authFetch(API_DIRECCION_MIA).then((res) => {
-                if (!res.ok) {
-                    throw new Error("Error al obtener dirección: " + res.status);
-                }
-                return res.json();
-            })
-        ]))
+
+                await crearOrdenInternaDespuesDePago();
+
+                Swal.fire({
+                    icon: "success",
+                    title: "Pago realizado",
+                    text: "El pago fue aprobado y la orden fue creada correctamente",
+                    confirmButtonText: "Aceptar",
+                    heightAuto: false
+                }).then(() => {
+                    window.location.href = "orders.html";
+                });
+
+            } catch (error) {
+                console.error("Error capturando pago:", error);
+
+                Swal.fire({
+                    icon: "error",
+                    title: "Error",
+                    text: error.message || "No se pudo completar el pago",
+                    confirmButtonText: "Aceptar",
+                    heightAuto: false
+                });
+            }
+        },
+
+        onError: function (err) {
+            console.error("Error PayPal:", err);
+
+            Swal.fire({
+                icon: "error",
+                title: "Error en PayPal",
+                text: "No se pudo completar el pago con PayPal",
+                confirmButtonText: "Aceptar",
+                heightAuto: false
+            });
+        }
+    }).render("#paypal-button-container");
+
+    paypalBotonesRenderizados = true;
+}
+
+function crearOrdenInternaDespuesDePago() {
+    return Promise.all([
+        authFetch(API_CARRITO_MIO).then((res) => {
+            if (!res.ok) {
+                throw new Error("Error al obtener carrito: " + res.status);
+            }
+            return res.json();
+        }),
+        authFetch(API_USUARIO_AUTENTICADO).then((res) => {
+            if (!res.ok) {
+                throw new Error("Error al obtener usuario autenticado: " + res.status);
+            }
+            return res.json();
+        }),
+        authFetch(API_DIRECCION_MIA).then((res) => {
+            if (!res.ok) {
+                throw new Error("Error al obtener dirección: " + res.status);
+            }
+            return res.json();
+        })
+    ])
         .then(([carrito, usuario, direccion]) => {
             carritoActual = carrito;
             usuarioActual = usuario;
@@ -430,13 +657,7 @@ function crearOrden() {
                 : [];
 
             if (lista.length === 0) {
-                Swal.fire({
-                    icon: "warning",
-                    title: "Carrito vacío",
-                    text: "No hay productos para procesar",
-                    confirmButtonText: "Aceptar"
-                });
-                return null;
+                throw new Error("No hay productos para procesar");
             }
 
             const total = calcularTotalCarrito(carritoActual);
@@ -457,34 +678,29 @@ function crearOrden() {
             });
         })
         .then((res) => {
-            if (!res) return null;
-
             if (!res.ok) {
                 throw new Error("Error al crear orden: " + res.status);
             }
 
             return res.text();
-        })
-        .then((mensaje) => {
-            if (!mensaje) return;
-
-            Swal.fire({
-                icon: "success",
-                title: "Orden creada",
-                text: mensaje,
-                confirmButtonText: "Aceptar"
-            }).then(() => {
-                window.location.href = "shop.html";
-            });
-        })
-        .catch((error) => {
-            console.error("Error en checkout:", error);
-
-            Swal.fire({
-                icon: "error",
-                title: "Error",
-                text: error.message || "No se pudo completar el proceso",
-                confirmButtonText: "Aceptar"
-            });
         });
+}
+
+function formatearMontoCRC(valor) {
+    const numero = Number(valor || 0);
+
+    return new Intl.NumberFormat("es-CR", {
+        style: "currency",
+        currency: "CRC",
+        minimumFractionDigits: 2
+    }).format(numero);
+}
+
+function escapeHtml(texto) {
+    return String(texto)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
 }

@@ -99,6 +99,7 @@ function construirUrlProductos(page = 0) {
 
     params.append("page", page);
     params.append("size", productosPorPagina);
+    params.append("disponible", 0);
 
     if (nombreFiltro !== "") {
         params.append("nombre", nombreFiltro);

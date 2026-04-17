@@ -28,6 +28,7 @@ public interface IProductoRepository extends JpaRepository<Producto, Integer> {
       )
       AND (:precioMinimo IS NULL OR p.precio >= :precioMinimo)
       AND (:precioMaximo IS NULL OR p.precio <= :precioMaximo)
+      AND (:disponible IS NULL OR p.stock_actual > :disponible)
 """)
     Page<Producto> filtrarProductos(
             Pageable pageable,
@@ -36,7 +37,8 @@ public interface IProductoRepository extends JpaRepository<Producto, Integer> {
             @Param("idProveedor") Integer idProveedor,
             @Param("estadoStock") String estadoStock,
             @Param("precioMinimo") Integer precioMinimo,
-            @Param("precioMaximo") Integer precioMaximo
+            @Param("precioMaximo") Integer precioMaximo,
+            @Param("disponible") Integer disponible
     );
 
 
