@@ -30,6 +30,7 @@ public class Usuario implements UserDetails {
     private String password;
     private Boolean estado;
     private LocalDate fecha_creacion;
+    @Enumerated(EnumType.STRING)
     private Rol rol;
 
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)

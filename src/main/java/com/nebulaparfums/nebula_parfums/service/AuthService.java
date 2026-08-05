@@ -1,14 +1,11 @@
 package com.nebulaparfums.nebula_parfums.service;
 
 import com.nebulaparfums.nebula_parfums.auth.*;
-import com.nebulaparfums.nebula_parfums.controller.RolController;
 import com.nebulaparfums.nebula_parfums.controller.UsuarioController;
 import com.nebulaparfums.nebula_parfums.exception.InvalidPasswordException;
 import com.nebulaparfums.nebula_parfums.model.*;
 import com.nebulaparfums.nebula_parfums.repository.IPasswordResetTokenRepository;
 import com.nebulaparfums.nebula_parfums.repository.IUsuarioRepository;
-import com.nebulaparfums.nebula_parfums.service.interfaces.ICarritoService;
-import com.nebulaparfums.nebula_parfums.service.interfaces.IDireccionEnvioService;
 import com.nebulaparfums.nebula_parfums.service.interfaces.IUsuarioService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,8 +28,6 @@ import java.util.UUID;
 @Service
 @RequiredArgsConstructor
 public class AuthService {
-    @Autowired
-    private RolController rolController;
 
     @Autowired
     private UsuarioController usuarioController;
@@ -77,7 +72,7 @@ public class AuthService {
 
             Usuario usuario = usuarioService.getUsuarioByEmail(loginRequest.getEmail());
 
-            if (usuario.getRol().getId_rol() == 1 || usuario.getRol().getId_rol() == 2) {
+            if (usuario.getRol() != Rol.CLIENTE) {
                 logActividad.setUsuario(usuario);
                 logActividad.setAccion("Login");
                 logActividad.setDetalle("Usuario " + usuario.getNombre() + " ingreso a su cuenta");
@@ -144,7 +139,7 @@ public class AuthService {
 
         Usuario usuario = usuarioOpt.get();
 
-        if (!"ROLE_CLIENTE".equals(usuario.getRol().getNombre_rol())) {
+        if (!usuario.getRol().equals(Rol.CLIENTE)) {
             return ResponseEntity.badRequest().body(Map.of(
                     "message", "Este usuario no puede recuperar la contraseña desde aquí. Contacte al administrador"
             ));
@@ -190,7 +185,7 @@ public class AuthService {
         usuario.setNombre(registerRequest.getNombre());
         usuario.setEmail(registerRequest.getEmail());
         usuario.setPassword(passwordEncoder.encode(registerRequest.getPassword()));
-        usuario.setRol(rolController.buscarRol(3));
+        usuario.setRol(Rol.CLIENTE);
         usuario.setFecha_creacion(LocalDate.now());
         usuario.setEstado(true);
         usuario.setDireccionEnvio(direccionEnvio);
@@ -211,9 +206,9 @@ public class AuthService {
         usuario.setPassword(passwordEncoder.encode(registerRequest.getPassword()));
 
         if (registerRequest.getRol().equals("ROLE_ADMIN")) {
-            usuario.setRol(rolController.buscarRol(1));
+            usuario.setRol(Rol.ADMINISTRADOR);
         }else{
-            usuario.setRol(rolController.buscarRol(2));
+            usuario.setRol(Rol.EMPLEADO);
         }
         usuario.setFecha_creacion(LocalDate.now());
         usuario.setEstado(true);

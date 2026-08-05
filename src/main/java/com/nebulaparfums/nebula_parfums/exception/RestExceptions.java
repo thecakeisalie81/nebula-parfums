@@ -1,6 +1,7 @@
 package com.nebulaparfums.nebula_parfums.exception;
 
 import com.nebulaparfums.nebula_parfums.model.LogActividad;
+import com.nebulaparfums.nebula_parfums.model.Rol;
 import com.nebulaparfums.nebula_parfums.model.Usuario;
 import com.nebulaparfums.nebula_parfums.service.interfaces.ILogActividadService;
 import com.nebulaparfums.nebula_parfums.service.interfaces.IUsuarioService;
@@ -96,7 +97,7 @@ public class RestExceptions {
 
         Usuario usuario = usuarioService.getUsuarioByEmail(e.getMessage());
 
-        if (usuario.getRol().getId_rol() == 1 || usuario.getRol().getId_rol() == 2) {
+        if (!usuario.getRol().equals(Rol.CLIENTE)) {
             logActividad.setUsuario(usuario);
             logActividad.setAccion("Login fallido");
             logActividad.setDetalle("Usuario " + usuario.getNombre() + " realizo un intento login");

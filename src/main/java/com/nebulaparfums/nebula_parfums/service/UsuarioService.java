@@ -40,7 +40,7 @@ public class UsuarioService implements IUsuarioService {
                         usuario.getEmail(),
                         usuario.getEstado(),
                         usuario.getFecha_creacion(),
-                        usuario.getRol() != null ? usuario.getRol().getNombre_rol() : "Sin rol"
+                        usuario.getRol() != null ? usuario.getRol().name() : "Sin rol"
                 )
         );
     }

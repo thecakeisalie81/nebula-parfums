@@ -18,16 +18,16 @@ public interface IUsuarioRepository extends JpaRepository<Usuario, Integer> {
         SELECT u
         FROM Usuario u
         WHERE (:nombre IS NULL OR LOWER(u.nombre) LIKE LOWER(CONCAT('%', :nombre, '%')))
-        AND u.rol.nombre_rol IN ('ROLE_ADMIN', 'ROLE_EMPLEADO')
+        AND u.rol IN ('ADMINISTRADOR', 'EMPLEADO')
     """)
     Page<Usuario> filtrarUsuarios(
             Pageable pageable,
             @Param("nombre") String nombre
     );
 
-    @Query("SELECT COUNT(u) FROM Usuario u WHERE u.rol.nombre_rol IN ('ROLE_ADMIN', 'ROLE_EMPLEADO')")
+    @Query("SELECT COUNT(u) FROM Usuario u WHERE u.rol IN ('ADMINISTRADOR', 'EMPLEADO')")
     int totalUsuarios();
 
-    @Query("SELECT COUNT(u) FROM Usuario u WHERE u.estado = true AND u.rol.nombre_rol IN ('ROLE_ADMIN', 'ROLE_EMPLEADO')")
+    @Query("SELECT COUNT(u) FROM Usuario u WHERE u.estado = true AND u.rol IN ('ADMINISTRADOR', 'EMPLEADO')")
     int totalUsuariosActivos();
 }
