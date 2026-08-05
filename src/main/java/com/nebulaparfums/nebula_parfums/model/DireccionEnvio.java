@@ -30,4 +30,15 @@ public class DireccionEnvio {
         this.codigo_postal = codigo_postal;
         this.telefono = telefono;
     }
+
+    @Override
+    public String toString() {
+        return "DireccionEnvio{" +
+                ", direccion='" + direccion + '\'' +
+                ", ciudad='" + ciudad + '\'' +
+                ", provincia='" + provincia + '\'' +
+                ", codigo_postal='" + codigo_postal + '\'' +
+                ", telefono='" + telefono + '\'' +
+                '}';
+    }
 }

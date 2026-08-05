@@ -15,17 +15,17 @@ public class Orden {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id_orden;
-    private String estado;
     private Double total;
     private LocalDateTime fecha_creacion;
+    private String direccion;
+
+    @Enumerated(EnumType.STRING)
+    private EstadoOrden estado;
+
 
     @ManyToOne
     @JoinColumn(name = "usuario", referencedColumnName = "id_usuario")
     private Usuario usuario;
-
-    @ManyToOne
-    @JoinColumn(name = "direccion", referencedColumnName = "id_direccion")
-    private DireccionEnvio direccion;
 
     @OneToMany(mappedBy = "orden", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference
@@ -34,7 +34,7 @@ public class Orden {
     public Orden() {
     }
 
-    public Orden(Integer id_orden, String estado, Double total, LocalDateTime fecha_creacion, Usuario usuario, DireccionEnvio direccion, List<OrdenDetalle> listaOrdenDetalle) {
+    public Orden(Integer id_orden, EstadoOrden estado, Double total, LocalDateTime fecha_creacion, Usuario usuario, String direccion, List<OrdenDetalle> listaOrdenDetalle) {
         this.id_orden = id_orden;
         this.estado = estado;
         this.total = total;

@@ -76,9 +76,9 @@ public class OrdenService implements IOrdenService {
         Carrito carrito = usuario.getCarrito();
         Orden orden = new Orden();
         orden.setFecha_creacion(LocalDateTime.now());
-        orden.setEstado("PENDIENTE");
+        orden.setEstado(EstadoOrden.PENDIENTE);
         orden.setUsuario(usuario);
-        orden.setDireccion(direccionEnvio);
+        orden.setDireccion(direccionEnvio.toString());
         orden.setTotal(dto.getTotal());
 
         List<OrdenDetalle>  ordenDetalles = new ArrayList<>();
@@ -161,7 +161,7 @@ public class OrdenService implements IOrdenService {
                 Orden order = optionalOrder.get();
                 order.setEstado(orden.getEstado());
 
-                if (orden.getEstado().equals("CANCELADO")) {
+                if (orden.getEstado().equals(EstadoOrden.CANCELADA)) {
                     for (OrdenDetalle ordenDetalle : order.getListaOrdenDetalle()) {
                         Producto producto = ordenDetalle.getProducto();
                         movimientoInventarioService.registrarEntrada(producto.getId_producto(), ordenDetalle.getCantidad());
@@ -212,10 +212,10 @@ public class OrdenService implements IOrdenService {
                         orden.getId_cliente() != null ? orden.getId_cliente() : 0
                 );
                 row.createCell(2).setCellValue(
-                        orden.getId_direccion() != null ? orden.getId_direccion() : 0
+                        orden.getDireccion() != null ? orden.getDireccion() : ""
                 );
                 row.createCell(3).setCellValue(
-                        orden.getEstado() != null ? orden.getEstado() : ""
+                        orden.getEstado() != null ? orden.getEstado().name() : ""
                 );
                 row.createCell(4).setCellValue(
                         orden.getTotal() != null ? orden.getTotal() : 0
@@ -277,8 +277,8 @@ public class OrdenService implements IOrdenService {
             for (OrdenDTO orden : pedidos) {
                 table.addCell(orden.getId_orden() != null ? String.valueOf(orden.getId_orden()) : "0");
                 table.addCell(orden.getId_cliente() != null ? String.valueOf(orden.getId_cliente()) : "0");
-                table.addCell(orden.getId_direccion() != null ? String.valueOf(orden.getId_direccion()) : "0");
-                table.addCell(orden.getEstado() != null ? orden.getEstado() : "");
+                table.addCell(orden.getDireccion() != null ? orden.getDireccion() : "");
+                table.addCell(orden.getEstado() != null ? orden.getEstado().name() : "");
                 table.addCell(orden.getTotal() != null ? String.valueOf(orden.getTotal()) : "0");
             }
 

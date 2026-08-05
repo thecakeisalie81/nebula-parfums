@@ -22,7 +22,7 @@ public interface IOrdenRepository extends JpaRepository<Orden, Integer> {
     @Query("""
     SELECT new com.nebulaparfums.nebula_parfums.dto.OrdenDTO(
         o.usuario.id_usuario,
-        o.direccion.id_direccion,
+        o.direccion,
         o.id_orden,
         o.estado,
         o.total

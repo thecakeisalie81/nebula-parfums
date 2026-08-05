@@ -22,14 +22,18 @@ public class Usuario implements UserDetails {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id_usuario;
     private String nombre;
+
     @Email(message = "El correo debe tener una estructura valida")
     @Column(nullable = false, unique = true)
     private String email;
+
     @Size(min = 8, message = "La contraseña debe tener al menos 8 caracteres")
     @Column(nullable = false)
     private String password;
+
     private Boolean estado;
     private LocalDate fecha_creacion;
+
     @Enumerated(EnumType.STRING)
     private Rol rol;
 
