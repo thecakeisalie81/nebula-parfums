@@ -30,9 +30,6 @@ public class Usuario implements UserDetails {
     private String password;
     private Boolean estado;
     private LocalDate fecha_creacion;
-    
-    @ManyToOne
-    @JoinColumn(name = "id_rol", referencedColumnName = "id_rol")
     private Rol rol;
 
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
@@ -60,7 +57,7 @@ public class Usuario implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority(rol.getNombre_rol()));
+        return List.of(new SimpleGrantedAuthority(rol.name()));
     }
 
     @Override
