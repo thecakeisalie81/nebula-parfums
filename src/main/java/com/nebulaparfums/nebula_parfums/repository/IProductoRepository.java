@@ -13,7 +13,25 @@ import java.util.List;
 @Repository
 public interface IProductoRepository extends JpaRepository<Producto, Integer> {
 
-
+    /**
+     * Filtra productos según criterios opcionales.
+     * <p>
+     * La consulta admite múltiples filtros: nombre parcial, categoría, proveedor,
+     * estado del stock (sin, bajo, suficiente), rango de precios y disponibilidad.
+     * Si un parámetro es nulo, el filtro correspondiente no se aplica.
+     * </p>
+     *
+     * @param pageable     información de paginación (número de página, tamaño, orden)
+     * @param nombre       nombre parcial del producto (puede ser null)
+     * @param idCategoria  identificador de la categoría (puede ser null)
+     * @param idProveedor  identificador del proveedor (puede ser null)
+     * @param estadoStock  estado del stock: "sin" (stock = 0), "bajo" (stock ≤ mínimo),
+     *                     "suficiente" (stock > mínimo). Puede ser null.
+     * @param precioMinimo precio mínimo para filtrar (puede ser null)
+     * @param precioMaximo precio máximo para filtrar (puede ser null)
+     * @param disponible   valor mínimo de stock actual para considerar disponible (puede ser null)
+     * @return Page con productos filtrados según los criterios y metadatos de paginación
+     */
     @Query("""
     SELECT p
     FROM Producto p
@@ -29,7 +47,7 @@ public interface IProductoRepository extends JpaRepository<Producto, Integer> {
       AND (:precioMinimo IS NULL OR p.precio >= :precioMinimo)
       AND (:precioMaximo IS NULL OR p.precio <= :precioMaximo)
       AND (:disponible IS NULL OR p.stock_actual > :disponible)
-""")
+    """)
     Page<Producto> filtrarProductos(
             Pageable pageable,
             @Param("nombre") String nombre,
@@ -41,23 +59,24 @@ public interface IProductoRepository extends JpaRepository<Producto, Integer> {
             @Param("disponible") Integer disponible
     );
 
-
-
-    @Query("SELECT p FROM Producto p WHERE p.nombre LIKE CONCAT('%', :nombre, '%')")
-    Page<Producto> findByNombre(Pageable pageable, @Param("nombre") String nombre);
-
-    @Query("SELECT p FROM Producto p WHERE p.categoria.id_categoria = :idCategoria")
-    List<Producto> findByCategoriaId_categoria(@Param("idCategoria") Integer idCategoria);
-
+    /**
+     * Cuenta los productos cuyo stock actual es menor al mínimo,
+     * pero mayor que cero (stock bajo).
+     */
     @Query("SELECT COUNT(p) FROM Producto p WHERE p.stock_actual < p.stock_minimo AND p.stock_actual > 0")
     Integer countProductosConStockBajo();
 
+    /**
+     * Busca los productos que tengan bajo stock,
+     * pero mayor que cero (stock bajo).
+     */
     @Query("SELECT p FROM Producto p WHERE p.stock_actual < p.stock_minimo AND p.stock_actual > 0")
-    List<Producto> findProductosConStockBajo(Pageable pageable);
+    Page<Producto> findProductosConStockBajo(Pageable pageable);
 
+    /**
+     * Cuenta cuantos productos que tienen 0 en stock
+     * @return
+     */
     @Query("SELECT COUNT(p) FROM Producto p WHERE p.stock_actual = 0")
     Integer countProductosSinStock();
-
-    @Query("SELECT COUNT(p) FROM Producto p WHERE p.stock_actual > 0")
-    Integer countProductosConStock();
 }

@@ -1,5 +1,6 @@
 package com.nebulaparfums.nebula_parfums.service.interfaces;
 
+import com.nebulaparfums.nebula_parfums.dto.ProductoDTO;
 import com.nebulaparfums.nebula_parfums.model.Producto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -7,8 +8,8 @@ import org.springframework.data.domain.Pageable;
 import java.util.List;
 
 public interface IProductoService {
-    public Page<Producto> getProductos(Pageable pageable);
-    Page<Producto> getProductosFiltrados(
+    public Page<ProductoDTO> getProductos(Pageable pageable);
+    public Page<ProductoDTO> getProductosFiltrados(
             Pageable pageable,
             String nombre,
             Integer idCategoria,
@@ -18,17 +19,12 @@ public interface IProductoService {
             Integer precioMaximo,
             Integer disponible
     );
-    public Page<Producto> getProductosBusqueda(Pageable pageable,String nombre);
-    public List<Producto> getProductosCategoria(Integer categoria);
-    public List<Producto> getProductosReporte();
-    public Producto getProductoById(Integer id);
-    public void editProducto(Producto producto);
+    public ProductoDTO getProductoById(Integer id);
+    public ProductoDTO editProducto(Integer id,ProductoDTO producto);
     public void deleteProducto(Integer id);
-    public void saveProducto(Producto producto);
+    public ProductoDTO saveProducto(ProductoDTO producto);
     public Integer getProductosLowStock();
     public Integer getProductosSinStock();
     public Integer getTotalStock();
-    public Integer getProductosConStock();
-    public List<Producto> get4ProductosBajoStock();
-
+    public Page<ProductoDTO> getProductosBajoStock(Pageable pageable);
 }

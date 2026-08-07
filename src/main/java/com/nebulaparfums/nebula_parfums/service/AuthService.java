@@ -28,32 +28,14 @@ import java.util.UUID;
 @Service
 @RequiredArgsConstructor
 public class AuthService {
-
-    @Autowired
     private UsuarioController usuarioController;
-
-    @Autowired
     private JwtService jwtService;
-
-    @Autowired
     private PasswordEncoder passwordEncoder;
-
-    @Autowired
     private AuthenticationManager authenticationManager;
-
-    @Autowired
     private IUsuarioRepository usuarioRepository;
-
-    @Autowired
     private LogActividadService logActividadService;
-
-    @Autowired
     private IUsuarioService usuarioService;
-
-    @Autowired
     private IPasswordResetTokenRepository passwordResetTokenRepository;
-
-    @Autowired
     private EmailService emailService;
 
     public AuthResponse login(LoginRequest loginRequest) {

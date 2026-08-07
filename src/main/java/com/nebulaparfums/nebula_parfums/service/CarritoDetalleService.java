@@ -10,27 +10,25 @@ import com.nebulaparfums.nebula_parfums.repository.ICarritoRepository;
 import com.nebulaparfums.nebula_parfums.service.interfaces.ICarritoDetalleService;
 import com.nebulaparfums.nebula_parfums.service.interfaces.ICarritoService;
 import com.nebulaparfums.nebula_parfums.service.interfaces.IProductoService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
+@RequiredArgsConstructor
 public class CarritoDetalleService implements ICarritoDetalleService {
-    @Autowired
+
     private ICarritoDetalleRepository  carritoDetalleRepository;
-
-
-    @Autowired
     private IProductoService productoService;
 
-
     @Override
-    public CarritoDetalle getCarritoDetalleById(Integer id) {
+    public CarritoDetalleDTO getCarritoDetalleById(Integer id) {
         CarritoDetalle carritoDetalle = carritoDetalleRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("No se encontro el producto en el carrito"));;
         return carritoDetalle;
     }
 
     @Override
-    public void saveCarritoDetalle(CarritoDetalle carritoDetalle) {
+    public void saveCarritoDetalle(CarritoDetalleDTO carritoDetalle) {
         carritoDetalleRepository.save(carritoDetalle);
     }
 
@@ -40,7 +38,7 @@ public class CarritoDetalleService implements ICarritoDetalleService {
     }
 
     @Override
-    public void editCarritoDetalle(CarritoDetalleDTO request) {
+    public void editCarritoDetalle(Integer id,CarritoDetalleDTO request) {
 
         CarritoDetalle carritoDetalle = getCarritoDetalleById(request.getId_carrito_detalle());
         Producto producto = productoService.getProductoById(request.getId_producto());

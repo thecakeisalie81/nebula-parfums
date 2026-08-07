@@ -6,18 +6,18 @@ import com.nebulaparfums.nebula_parfums.model.Usuario;
 import com.nebulaparfums.nebula_parfums.repository.ICarritoRepository;
 import com.nebulaparfums.nebula_parfums.service.interfaces.ICarritoService;
 import com.nebulaparfums.nebula_parfums.service.interfaces.IUsuarioService;
+import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 @Service
+@RequiredArgsConstructor
 public class CarritoService implements ICarritoService {
 
-    @Autowired
     private ICarritoRepository carritoRepository;
-
-    @Autowired
     private IUsuarioService iUsuarioService;
 
     @Override
