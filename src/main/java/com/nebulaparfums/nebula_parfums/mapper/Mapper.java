@@ -2,8 +2,10 @@ package com.nebulaparfums.nebula_parfums.mapper;
 
 import com.nebulaparfums.nebula_parfums.dto.ProductoDTO;
 import com.nebulaparfums.nebula_parfums.dto.ProveedorDTO;
+import com.nebulaparfums.nebula_parfums.dto.UsuarioDTO;
 import com.nebulaparfums.nebula_parfums.model.Producto;
 import com.nebulaparfums.nebula_parfums.model.Proveedor;
+import com.nebulaparfums.nebula_parfums.model.Usuario;
 
 public class Mapper {
 
@@ -47,6 +49,21 @@ public class Mapper {
                 .contacto(proveedor.getContacto())
                 .telefono(proveedor.getTelefono())
                 .email(proveedor.getEmail())
+                .build();
+    }
+
+    public static UsuarioDTO toDTO(Usuario usuario) {
+        if (usuario == null) {
+            return null;
+        }
+
+        return UsuarioDTO.builder()
+                .nombre(usuario.getNombre())
+                .email(usuario.getEmail())
+                .password(usuario.getPassword())
+                .estado(usuario.getEstado())
+                .rol(usuario.getRol())
+                .fecha_creacion(usuario.getFecha_creacion())
                 .build();
     }
 }

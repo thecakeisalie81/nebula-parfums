@@ -14,6 +14,12 @@ import java.util.Optional;
 public interface IUsuarioRepository extends JpaRepository<Usuario, Integer> {
     Optional<Usuario> findByEmail(String email);
 
+    /**
+     *Busca entre los empleados y administradores basada en el nombre de usuario
+     * @param pageable información de paginación (número de página, tamaño, orden)
+     * @param nombre cadena usada para buscar usuarios que encajen con la búsqueda
+     * @return Page con los usuarios filtrados que coincidan con el nombre
+     */
     @Query("""
         SELECT u
         FROM Usuario u
@@ -25,9 +31,17 @@ public interface IUsuarioRepository extends JpaRepository<Usuario, Integer> {
             @Param("nombre") String nombre
     );
 
+    /**
+     * Devuelve el número de usuarios que tiene el sistema de administración incluyendo los inactivos
+     * @return Número total de usuarios
+     */
     @Query("SELECT COUNT(u) FROM Usuario u WHERE u.rol IN ('ADMINISTRADOR', 'EMPLEADO')")
     int totalUsuarios();
 
+    /**
+     * Devuelve el número de usuarios que tiene el sistema de administración pero excluyendo los inactivos
+     * @return Número de usuarios activos en el sistema
+     */
     @Query("SELECT COUNT(u) FROM Usuario u WHERE u.estado = true AND u.rol IN ('ADMINISTRADOR', 'EMPLEADO')")
     int totalUsuariosActivos();
 }
