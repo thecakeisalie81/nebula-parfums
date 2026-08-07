@@ -1,7 +1,9 @@
 package com.nebulaparfums.nebula_parfums.mapper;
 
 import com.nebulaparfums.nebula_parfums.dto.ProductoDTO;
+import com.nebulaparfums.nebula_parfums.dto.ProveedorDTO;
 import com.nebulaparfums.nebula_parfums.model.Producto;
+import com.nebulaparfums.nebula_parfums.model.Proveedor;
 
 public class Mapper {
 
@@ -26,6 +28,25 @@ public class Mapper {
                 .categoria(producto.getCategoria().getId_categoria())
                 .proveedor(producto.getProveedor().getId_proveedor())
                 .imagen(producto.getImagen())
+                .build();
+    }
+
+    /**
+     * Convierte un Proveedor en su representación DTO
+     *
+     * @param proveedor entidad proveedor que viene de la base de datos
+     * @return ProveedorDTO con los datos mapeados
+     */
+    public static ProveedorDTO toDTO(Proveedor proveedor) {
+        if (proveedor == null) {
+            return null;
+        }
+
+        return ProveedorDTO.builder()
+                .nombre(proveedor.getNombre())
+                .contacto(proveedor.getContacto())
+                .telefono(proveedor.getTelefono())
+                .email(proveedor.getEmail())
                 .build();
     }
 }

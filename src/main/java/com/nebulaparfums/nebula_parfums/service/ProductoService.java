@@ -16,9 +16,8 @@ import org.springframework.stereotype.Service;
 
 /**
  * Servicio para gestionar productos.
- * Provee operaciones de consulta y conversión a DTO.
+ * Provee operaciones de consulta, guardado, eliminación, edición y conversión a DTO.
  */
-
 @Service
 public class ProductoService implements IProductoService {
 
@@ -30,6 +29,12 @@ public class ProductoService implements IProductoService {
     @Override
     public Page<ProductoDTO> getProductos(Pageable pageable) {
         return iProductoRepository.findAll(pageable).map(Mapper::toDTO);
+    }
+
+    @Override
+    public ProductoDTO getProductoById(Integer id) {
+        return iProductoRepository.findById(id).map(Mapper::toDTO)
+                .orElseThrow(() -> new ResourceNotFoundException("No se encontró el producto"));
     }
 
     @Override
@@ -85,11 +90,6 @@ public class ProductoService implements IProductoService {
         ).map(Mapper::toDTO);
     }
 
-    @Override
-    public ProductoDTO getProductoById(Integer id) {
-        return iProductoRepository.findById(id).map(Mapper::toDTO)
-                .orElseThrow(() -> new ResourceNotFoundException("No se encontro el producto"));
-    }
 
     /**
      * Edita la información guardada de un producto
@@ -104,16 +104,16 @@ public class ProductoService implements IProductoService {
         }
 
         Producto prod = iProductoRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("No se encontro el producto"));
+                .orElseThrow(() -> new ResourceNotFoundException("No se encontró el producto"));
         prod.setNombre(producto.getNombre());
         prod.setDescripcion(producto.getDescripcion());
         prod.setPrecio(producto.getPrecio());
         prod.setStock_actual(producto.getStock_actual());
         prod.setStock_minimo(producto.getStock_minimo());
         prod.setProveedor(iProveedorRepository.findById(producto.getProveedor())
-                .orElseThrow(() -> new ResourceNotFoundException("No se encontro el proveedor")));
+                .orElseThrow(() -> new ResourceNotFoundException("No se encontró el proveedor")));
         prod.setCategoria(iCategoriaRepository.findById(producto.getCategoria())
-                .orElseThrow(() -> new ResourceNotFoundException("No se encontro el categoria")));
+                .orElseThrow(() -> new ResourceNotFoundException("No se encontró el categoria")));
         prod.setImagen(producto.getImagen());
 
         return Mapper.toDTO(iProductoRepository.save(prod));
@@ -128,7 +128,7 @@ public class ProductoService implements IProductoService {
         if (iProductoRepository.existsById(id)){
             iProductoRepository.deleteById(id);
         }else {
-            throw new ResourceNotFoundException("No se encontro el producto");
+            throw new ResourceNotFoundException("No se encontró el producto");
         }
     }
 
@@ -146,9 +146,9 @@ public class ProductoService implements IProductoService {
                 .stock_actual(producto.getStock_actual())
                 .stock_minimo(producto.getStock_minimo())
                 .proveedor(iProveedorRepository.findById(producto.getProveedor())
-                        .orElseThrow(() -> new ResourceNotFoundException("No se encontro el proveedor")))
+                        .orElseThrow(() -> new ResourceNotFoundException("No se encontró el proveedor")))
                 .categoria(iCategoriaRepository.findById(producto.getCategoria())
-                        .orElseThrow(() -> new ResourceNotFoundException("No se encontro la categoria")))
+                        .orElseThrow(() -> new ResourceNotFoundException("No se encontró la categoria")))
                 .imagen(producto.getImagen())
                 .build();
 

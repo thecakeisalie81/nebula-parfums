@@ -1,6 +1,7 @@
 package com.nebulaparfums.nebula_parfums.model;
 
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -8,6 +9,7 @@ import java.util.List;
 
 @Entity
 @Getter @Setter
+@Builder
 public class Proveedor {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

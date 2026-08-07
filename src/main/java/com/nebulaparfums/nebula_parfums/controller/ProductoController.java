@@ -1,3 +1,4 @@
+/*
 package com.nebulaparfums.nebula_parfums.controller;
 
 import com.nebulaparfums.nebula_parfums.dto.MovimientoDTO;
@@ -40,7 +41,8 @@ public class ProductoController {
     private IMovimientoInventarioService iMovimientoInventarioService;
 
 
-    /*@GetMapping("/producto/traer")
+    */
+/*@GetMapping("/producto/traer")
     public Page<Producto> getProductos(
             @RequestParam(required = false) String nombre,
             @RequestParam(required = false) Integer idCategoria,
@@ -61,12 +63,15 @@ public class ProductoController {
                 precioMaximo,
                 disponible
         );
-    }*/
+    }*//*
 
-    /*@GetMapping("/producto/resultados")
+
+    */
+/*@GetMapping("/producto/resultados")
     public Page<Producto> resultadoBusqueda(@RequestParam("nombre") String nombre, Pageable pageable) {
         return iProductoService.getProductosBusqueda(pageable, nombre);
-    }*/
+    }*//*
+
 
     @GetMapping("/inventario/reporte")
     public List<Producto> getProductosReporte() {
@@ -230,3 +235,4 @@ public class ProductoController {
                 .body(producto);
     }
 }
+*/
