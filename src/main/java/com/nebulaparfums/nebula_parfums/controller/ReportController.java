@@ -1,3 +1,4 @@
+/*
 package com.nebulaparfums.nebula_parfums.controller;
 
 import com.nebulaparfums.nebula_parfums.service.interfaces.ILogActividadService;
@@ -38,4 +39,4 @@ public class ReportController {
                 .headers(headers)
                 .body(pdf);
     }
-}
+}*/

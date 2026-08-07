@@ -1,3 +1,4 @@
+/*
 package com.nebulaparfums.nebula_parfums.controller;
 
 import com.nebulaparfums.nebula_parfums.dto.TotalEventosyHoyDTO;
@@ -39,3 +40,4 @@ public class LogActividadController {
         iLogActividadService.saveLogout(authentication.getName());
     }
 }
+*/

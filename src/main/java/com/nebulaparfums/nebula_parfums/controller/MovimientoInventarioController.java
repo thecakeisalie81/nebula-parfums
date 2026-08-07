@@ -1,3 +1,4 @@
+/*
 package com.nebulaparfums.nebula_parfums.controller;
 
 import com.nebulaparfums.nebula_parfums.dto.MovimientoDTO;
@@ -99,3 +100,4 @@ public class MovimientoInventarioController {
                 .body(archivo);
     }
 }
+*/
