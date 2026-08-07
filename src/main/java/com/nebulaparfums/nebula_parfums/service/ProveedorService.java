@@ -10,6 +10,7 @@ import com.nebulaparfums.nebula_parfums.repository.IProveedorRepository;
 import com.nebulaparfums.nebula_parfums.service.interfaces.ILogActividadService;
 import com.nebulaparfums.nebula_parfums.service.interfaces.IProveedorService;
 import com.nebulaparfums.nebula_parfums.service.interfaces.IUsuarioService;
+import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -22,11 +23,12 @@ import java.util.List;
  * Provee operaciones de consulta, guardado, eliminación, edición y conversión a DTO.
  */
 @Service
+@AllArgsConstructor
 public class ProveedorService implements IProveedorService {
 
-    private IProveedorRepository iProveedorRepository;
-    private IUsuarioService iUsuarioService;
-    private ILogActividadService iLogActividadService;
+    private final IProveedorRepository iProveedorRepository;
+    private final IUsuarioService iUsuarioService;
+    private final ILogActividadService iLogActividadService;
 
 
     @Override

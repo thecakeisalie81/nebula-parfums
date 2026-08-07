@@ -1,8 +1,10 @@
 package com.nebulaparfums.nebula_parfums.mapper;
 
+import com.nebulaparfums.nebula_parfums.dto.CategoriaDTO;
 import com.nebulaparfums.nebula_parfums.dto.ProductoDTO;
 import com.nebulaparfums.nebula_parfums.dto.ProveedorDTO;
 import com.nebulaparfums.nebula_parfums.dto.UsuarioDTO;
+import com.nebulaparfums.nebula_parfums.model.Categoria;
 import com.nebulaparfums.nebula_parfums.model.Producto;
 import com.nebulaparfums.nebula_parfums.model.Proveedor;
 import com.nebulaparfums.nebula_parfums.model.Usuario;
@@ -64,6 +66,18 @@ public class Mapper {
                 .estado(usuario.getEstado())
                 .rol(usuario.getRol())
                 .fecha_creacion(usuario.getFecha_creacion())
+                .build();
+    }
+
+    public static CategoriaDTO toDTO(Categoria categoria) {
+        if (categoria == null) {
+            return null;
+        }
+
+        return CategoriaDTO.builder()
+                .id(categoria.getId_categoria())
+                .nombre(categoria.getNombre())
+                .descripcion(categoria.getDescripcion())
                 .build();
     }
 }

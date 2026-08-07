@@ -1,3 +1,4 @@
+/*
 package com.nebulaparfums.nebula_parfums.controller;
 
 import com.nebulaparfums.nebula_parfums.model.Categoria;
@@ -40,3 +41,4 @@ public class CategoriaController {
         return "Categoria creado con sucesso";
     }
 }
+*/

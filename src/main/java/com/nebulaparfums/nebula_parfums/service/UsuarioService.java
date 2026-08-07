@@ -6,6 +6,7 @@ import com.nebulaparfums.nebula_parfums.mapper.Mapper;
 import com.nebulaparfums.nebula_parfums.model.Usuario;
 import com.nebulaparfums.nebula_parfums.repository.IUsuarioRepository;
 import com.nebulaparfums.nebula_parfums.service.interfaces.IUsuarioService;
+import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -18,16 +19,17 @@ import org.springframework.security.crypto.password.PasswordEncoder;
  * Provee operaciones de consulta, guardado, eliminación, edición y conversión a DTO.
  */
 @Service
+@AllArgsConstructor
 public class UsuarioService implements IUsuarioService {
 
-    private IUsuarioRepository iUsuarioRepository;
-    private PasswordEncoder passwordEncoder;
+    private final IUsuarioRepository iUsuarioRepository;
+    private final PasswordEncoder passwordEncoder;
 
 
     @Override
     public UsuarioDTO getUsuarioById(Integer id) {
         return iUsuarioRepository.findById(id).map(Mapper::toDTO)
-                .orElseThrow(() -> new ResourceNotFoundException("No se encontro el usuario"));
+                .orElseThrow(() -> new ResourceNotFoundException("No se encontró el usuario"));
     }
 
     /**
@@ -61,7 +63,7 @@ public class UsuarioService implements IUsuarioService {
     }
 
     /**
-     * Elimina un usuario de forma fisica de la DB
+     * Elimina un usuario de forma física de la DB
      * @param id id del usuario a eliminar
      */
     @Override
@@ -69,12 +71,12 @@ public class UsuarioService implements IUsuarioService {
         if (iUsuarioRepository.existsById(id)) {
             iUsuarioRepository.deleteById(id);
         }else {
-            throw new UsernameNotFoundException("No se encontro el usuario");
+            throw new UsernameNotFoundException("No se encontró el usuario");
         }
     }
 
     /**
-     *Edita la informacion de un usuario guardado en la db
+     *Edita la información de un usuario guardado en la db
      * @param id id del usuario a modificar
      * @param usuario UsuarioDTO con los nuevos datos
      * @return Devuelve un UsuarioDTO con los datos actualizados
@@ -83,7 +85,7 @@ public class UsuarioService implements IUsuarioService {
     public UsuarioDTO editUsuario(Integer id ,UsuarioDTO usuario) {
 
         Usuario user = iUsuarioRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("No se encontro el usuario"));
+                .orElseThrow(() -> new ResourceNotFoundException("No se encontró el usuario"));
 
         user.setNombre(usuario.getNombre());
         user.setEmail(usuario.getEmail());
@@ -98,7 +100,7 @@ public class UsuarioService implements IUsuarioService {
     @Override
     public Usuario getUsuarioByEmail(String email) {
         return iUsuarioRepository.findByEmail(email)
-                .orElseThrow(() -> new ResourceNotFoundException("No se encontro el usuario"));
+                .orElseThrow(() -> new ResourceNotFoundException("No se encontró el usuario"));
     }
 
     /**
