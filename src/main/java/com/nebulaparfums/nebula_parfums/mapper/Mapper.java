@@ -1,13 +1,7 @@
 package com.nebulaparfums.nebula_parfums.mapper;
 
-import com.nebulaparfums.nebula_parfums.dto.CategoriaDTO;
-import com.nebulaparfums.nebula_parfums.dto.ProductoDTO;
-import com.nebulaparfums.nebula_parfums.dto.ProveedorDTO;
-import com.nebulaparfums.nebula_parfums.dto.UsuarioDTO;
-import com.nebulaparfums.nebula_parfums.model.Categoria;
-import com.nebulaparfums.nebula_parfums.model.Producto;
-import com.nebulaparfums.nebula_parfums.model.Proveedor;
-import com.nebulaparfums.nebula_parfums.model.Usuario;
+import com.nebulaparfums.nebula_parfums.dto.*;
+import com.nebulaparfums.nebula_parfums.model.*;
 
 public class Mapper {
 
@@ -78,6 +72,21 @@ public class Mapper {
                 .id(categoria.getId_categoria())
                 .nombre(categoria.getNombre())
                 .descripcion(categoria.getDescripcion())
+                .build();
+    }
+
+    public static DireccionDTO toDTO(DireccionEnvio direccion){
+        if (direccion == null) {
+            return null;
+        }
+
+        return DireccionDTO.builder()
+                .id_direccion(direccion.getId_direccion())
+                .direccion(direccion.getDireccion())
+                .ciudad(direccion.getCiudad())
+                .provincia(direccion.getProvincia())
+                .codigo_postal(direccion.getCodigo_postal())
+                .telefono(direccion.getTelefono())
                 .build();
     }
 }
