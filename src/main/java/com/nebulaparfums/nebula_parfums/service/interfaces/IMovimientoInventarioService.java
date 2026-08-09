@@ -10,26 +10,23 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 public interface IMovimientoInventarioService {
-    public Page<MovimientoInventario> getMovimientoInventario(Pageable pageable);
-    public void saveMovimientoInventario(MovimientoInventario movimientoInventario);
-    public String registrarSalida(Integer productoId, int cantidad);
-    public String registrarEntrada(Integer productoId, int cantidad);
-    public String registrarRegistroProducto(MovimientoDTO movimientoDTO);
-    public List<MovimientoInventario> ultimos5Movimientos();
-    public Page<MovimientoInventario> filtrarMovimientos(
+    public Page<MovimientoDTO> getMovimientoInventario(Pageable pageable);
+    public MovimientoDTO saveMovimientoInventario(MovimientoDTO movimientoInventario);
+    public MovimientoDTO registrarSalida(MovimientoDTO movimientoInventario);
+    public MovimientoDTO registrarEntrada(MovimientoDTO movimientoInventario);
+    public MovimientoDTO registrarRegistroProducto(MovimientoDTO movimientoDTO);
+    public List<MovimientoDTO> ultimosMovimientos(Integer limite);
+    public Page<MovimientoDTO> filtrarMovimientos(
             Pageable pageable,
             String producto,
             String tipo,
-            LocalDate fechaInicio,
-            LocalDate fechaFin
+            LocalDateTime fechaInicio,
+            LocalDateTime fechaFin
     );
-
-    public List<MovimientoInventario> filtrarMovimientosReportes(
-            LocalDate fechaInicio,
-            LocalDate fechaFin
+    public List<MovimientoDTO> filtrarMovimientosReportes(
+            LocalDateTime fechaInicio,
+            LocalDateTime fechaFin
     );
-
-    byte[] exportarMovimientosPdf(LocalDate fechaInicio, LocalDate fechaFin);
-    byte[] exportarMovimientosExcel(LocalDate fechaInicio, LocalDate fechaFin);
-
+    byte[] exportarMovimientosPdf(LocalDateTime fechaInicio, LocalDateTime fechaFin);
+    byte[] exportarMovimientosExcel(LocalDateTime fechaInicio, LocalDateTime fechaFin);
 }

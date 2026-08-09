@@ -48,6 +48,12 @@ public class Mapper {
                 .build();
     }
 
+    /**
+     * Convierte un usuario en su representación DTO
+     *
+     * @param usuario entidad Usuario que viene de la base de datos
+     * @return UsuarioDTO con los datos mapeados
+     */
     public static UsuarioDTO toDTO(Usuario usuario) {
         if (usuario == null) {
             return null;
@@ -63,6 +69,12 @@ public class Mapper {
                 .build();
     }
 
+    /**
+     * Convierte una Categoria en su representación DTO
+     *
+     * @param categoria entidad categoria que viene de la base de datos
+     * @return CategoriaDTO con los datos mapeados
+     */
     public static CategoriaDTO toDTO(Categoria categoria) {
         if (categoria == null) {
             return null;
@@ -75,6 +87,12 @@ public class Mapper {
                 .build();
     }
 
+    /**
+     * Convierte una Direccion en su representación DTO
+     *
+     * @param direccion entidad DireccionEnvio que viene de la base de datos
+     * @return DireccionDTO con los datos mapeados
+     */
     public static DireccionDTO toDTO(DireccionEnvio direccion){
         if (direccion == null) {
             return null;
@@ -90,6 +108,12 @@ public class Mapper {
                 .build();
     }
 
+    /**
+     * Convierte un Log en su representación DTO
+     *
+     * @param log entidad LogActividad que viene de la base de datos
+     * @return LogDTO con los datos mapeados
+     */
     public static LogDTO toDTO(LogActividad log) {
         if (log == null) {
             return null;
@@ -101,6 +125,26 @@ public class Mapper {
                 .detalle(log.getDetalle())
                 .fecha_actualizacion(log.getFecha_actualizacion())
                 .usuario_id(log.getUsuario().getId_usuario())
+                .build();
+    }
+
+    /**
+     * Convierte un movimiento de inventario en su representación DTO
+     *
+     * @param movimiento entidad MovimientoInventario que viene de la base de datos
+     * @return MovimientoDTO con los datos mapeados
+     */
+    public static MovimientoDTO toDTO(MovimientoInventario movimiento) {
+        if (movimiento == null) {
+            return null;
+        }
+
+        return MovimientoDTO.builder()
+                .tipo_movimiento(movimiento.getTipo_movimiento())
+                .cantidad(movimiento.getCantidad())
+                .fecha_movimiento(movimiento.getFecha_movimiento())
+                .id_usuario(movimiento.getUsuario().getId_usuario())
+                .id_producto(movimiento.getProducto().getId_producto())
                 .build();
     }
 }

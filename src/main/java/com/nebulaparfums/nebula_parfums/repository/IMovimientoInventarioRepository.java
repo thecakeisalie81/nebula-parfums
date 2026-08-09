@@ -15,9 +15,23 @@ import java.util.List;
 @Repository
 public interface IMovimientoInventarioRepository extends JpaRepository<MovimientoInventario, Integer> {
 
+    /**
+     * Ordena los movimientos por fecha desde los más nuevos
+     * @param pageable información de paginación (número de página, tamaño, orden)
+     * @return Lista paginada de los movimientos ordenada por descendentemente por fecha
+     */
     @Query("SELECT m FROM MovimientoInventario m ORDER BY m.fecha_movimiento DESC")
     List<MovimientoInventario> ultimosMovimientoInventario(Pageable pageable);
 
+    /**
+     * Filtra los movimientos guardados en la db por diferentes parámetros
+     * @param pageable información de paginación (número de página, tamaño, orden)
+     * @param producto nombre del producto que se tuvo un movimiento
+     * @param tipo tipo de movimiento realizado
+     * @param fechaInicio fecha de inicio del filtrado
+     * @param fechaFin fecha final del filtrado
+     * @return Lista paginada de los movimientos según el filtrado
+     */
     @Query("""
     SELECT m
     FROM MovimientoInventario m
@@ -34,6 +48,12 @@ public interface IMovimientoInventarioRepository extends JpaRepository<Movimient
             @Param("fechaFin") LocalDateTime fechaFin
     );
 
+    /**
+     *Filtra los movimientos guardados en la db por un rango de fechas
+     * @param fechaInicio fecha de inicio del filtrado
+     * @param fechaFin fecha final del filtrado
+     * @return lista de todos los movimientos guardados en la db según el rango de fecha
+     */
     @Query("""
     SELECT m
     FROM MovimientoInventario m
@@ -44,5 +64,4 @@ public interface IMovimientoInventarioRepository extends JpaRepository<Movimient
             @Param("fechaInicio") LocalDateTime fechaInicio,
             @Param("fechaFin") LocalDateTime fechaFin
     );
-
 }

@@ -1,17 +1,20 @@
 package com.nebulaparfums.nebula_parfums.model;
 
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import java.time.LocalDateTime;
 
 @Entity
 @Getter @Setter
+@Builder
 public class MovimientoInventario {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id_movimiento;
-    private String tipo_movimiento;
+    @Enumerated(EnumType.STRING)
+    private TipoMovimiento tipo_movimiento;
     private Integer cantidad;
     private LocalDateTime fecha_movimiento;
 
@@ -25,7 +28,7 @@ public class MovimientoInventario {
     public MovimientoInventario() {
     }
 
-    public MovimientoInventario(Integer id_movimiento, String tipo_movimiento, Integer cantidad, LocalDateTime fecha_movimiento, Producto producto, Usuario usuario) {
+    public MovimientoInventario(Integer id_movimiento, TipoMovimiento tipo_movimiento, Integer cantidad, LocalDateTime fecha_movimiento, Producto producto, Usuario usuario) {
         this.id_movimiento = id_movimiento;
         this.tipo_movimiento = tipo_movimiento;
         this.cantidad = cantidad;
