@@ -16,17 +16,25 @@ import java.util.List;
 
 @Repository
 public interface ILogActividadRepository extends JpaRepository<LogActividad, Integer> {
-
+    /**
+     *Cuenta la cantidad de logs que hay registrations en la fecha actual
+     * @return Número de logs registrados entre esas fechas
+     */
     @Query("""
     SELECT COUNT(l)
     FROM LogActividad l
-    WHERE l.fecha_actualizacion BETWEEN :inicio AND :fin
+    WHERE DATE(l.fecha_actualizacion) = CURRENT_DATE
     """)
-    long contarLogsHoy(@Param("inicio") LocalDateTime inicio,
-                       @Param("fin") LocalDateTime fin);
+    long contarLogsHoy();
 
-
-
+    /**
+     * Filtra los logs guardados por fecha y tipo de accion, y los devuelve paginados
+     * @param pageable información de paginación (número de página, tamaño, orden)
+     * @param accion tipo de acción realizada que tiene registrado el log
+     * @param fechaInicio fecha inicial de filtrado
+     * @param fechaFin fecha final del filtrado
+     * @return Página con los logs que coinciden con el filtrado
+     */
     @Query("""
     SELECT l
     FROM LogActividad l
@@ -42,6 +50,13 @@ public interface ILogActividadRepository extends JpaRepository<LogActividad, Int
             @Param("fechaFin") LocalDateTime fechaFin
     );
 
+
+    /**
+     * Filtra los logs guardados por fecha y los devuelve todos
+     * @param fechaInicio fecha inicial de filtrado
+     * @param fechaFin fecha final del filtrado
+     * @return Lista con todos los logs en el rango de fechas
+     */
     @Query("""
     SELECT l
     FROM LogActividad l

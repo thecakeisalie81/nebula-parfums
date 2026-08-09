@@ -1,5 +1,6 @@
 package com.nebulaparfums.nebula_parfums.service;
 
+import com.nebulaparfums.nebula_parfums.dto.LogDTO;
 import com.nebulaparfums.nebula_parfums.dto.ProveedorDTO;
 import com.nebulaparfums.nebula_parfums.exception.ResourceNotFoundException;
 import com.nebulaparfums.nebula_parfums.mapper.Mapper;
@@ -58,8 +59,8 @@ public class ProveedorService implements IProveedorService {
     public ProveedorDTO saveProveedor(ProveedorDTO proveedor, String email) {
         Usuario usuario = iUsuarioService.getUsuarioByEmail(email);
 
-        LogActividad logActividad = new LogActividad();
-        logActividad.setUsuario(usuario);
+        LogDTO logActividad = new LogDTO();
+        logActividad.setUsuario_id(usuario.getId_usuario());
         logActividad.setAccion("Registro de proveedor");
         logActividad.setDetalle("Usuario " + usuario.getNombre() + " registro un nuevo proveedor" + proveedor.getNombre());
         logActividad.setFecha_actualizacion(LocalDateTime.now());
@@ -97,8 +98,8 @@ public class ProveedorService implements IProveedorService {
     @Override
     public ProveedorDTO editProveedor(ProveedorDTO proveedor, String email, Integer id) {
         Usuario usuario = iUsuarioService.getUsuarioByEmail(email);
-        LogActividad logActividad = new LogActividad();
-        logActividad.setUsuario(usuario);
+        LogDTO logActividad = new LogDTO();
+        logActividad.setUsuario_id(usuario.getId_usuario());
         logActividad.setAccion("Modificación de proveedor");
         logActividad.setDetalle("Usuario " + usuario.getNombre() + " modifico los datos  del proveedor" + proveedor.getNombre());
         logActividad.setFecha_actualizacion(LocalDateTime.now());

@@ -1,11 +1,17 @@
 package com.nebulaparfums.nebula_parfums.service;
 
+import com.nebulaparfums.nebula_parfums.dto.LogDTO;
 import com.nebulaparfums.nebula_parfums.dto.TotalEventosyHoyDTO;
+import com.nebulaparfums.nebula_parfums.exception.ResourceNotFoundException;
+import com.nebulaparfums.nebula_parfums.mapper.Mapper;
 import com.nebulaparfums.nebula_parfums.model.LogActividad;
 import com.nebulaparfums.nebula_parfums.model.Usuario;
 import com.nebulaparfums.nebula_parfums.repository.ILogActividadRepository;
+import com.nebulaparfums.nebula_parfums.repository.IUsuarioRepository;
 import com.nebulaparfums.nebula_parfums.service.interfaces.ILogActividadService;
 import com.nebulaparfums.nebula_parfums.service.interfaces.IUsuarioService;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import org.openpdf.text.*;
 import org.openpdf.text.Font;
 import org.openpdf.text.pdf.PdfPCell;
@@ -24,94 +30,97 @@ import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
+/**
+ * Servicio para gestionar logs de actividad del sistema.
+ * Provee operaciones de consulta, guardado, eliminación, edición y conversión a DTO.
+ */
 @Service
+@AllArgsConstructor
+@Builder
 public class LogActividadService implements ILogActividadService {
-    @Autowired
-    private ILogActividadRepository logActividadRepository;
 
-    @Autowired
-    private IUsuarioService usuarioService;
+    private final ILogActividadRepository logActividadRepository;
+    private final IUsuarioRepository usuarioRepository;
 
+
+    @Override
+    public List<LogDTO> getLogsActividad() {
+        return logActividadRepository.findAll().stream().map(Mapper::toDTO).toList();
+    }
+
+    /**
+     * Devuelve la cantidad de eventos que hay registrados en el sistema y los que se han registrado hoy
+     * @return DTO con el total de eventos y los de hoy
+     */
     @Override
     public TotalEventosyHoyDTO getTotalEventosyHoyDTO() {
-        TotalEventosyHoyDTO totalEventosyHoyDTO = new TotalEventosyHoyDTO();
-        totalEventosyHoyDTO.setTotal(logActividadRepository.count());
-        LocalDate hoy = LocalDate.now();
-        LocalDateTime inicio = hoy.atStartOfDay();
-        LocalDateTime fin = hoy.atTime(LocalTime.MAX);
-        totalEventosyHoyDTO.setHoy(logActividadRepository.contarLogsHoy(inicio, fin));
-        return totalEventosyHoyDTO;
+        return TotalEventosyHoyDTO.builder()
+                .Hoy(logActividadRepository.contarLogsHoy())
+                .Total(logActividadRepository.count())
+                .build();
     }
 
+    /**
+     *Crea un nuevo log en la base de datos
+     * @param logActividad DTO con los datos que se van a insertar en la db
+     * @return DTO que tiene los datos recien insertados
+     */
     @Override
-    public void saveLogActividad(LogActividad logActividad) {
-        logActividadRepository.save(logActividad);
+    public LogDTO saveLogActividad(LogDTO logActividad) {
+
+        LogActividad log = LogActividad.builder()
+                .accion(logActividad.getAccion())
+                .fecha_actualizacion(logActividad.getFecha_actualizacion())
+                .detalle(logActividad.getDetalle())
+                .usuario(usuarioRepository.findById(logActividad.getUsuario_id())
+                        .orElseThrow(() -> new ResourceNotFoundException("No se encontró el usuario")))
+                .build();
+
+        return Mapper.toDTO(logActividadRepository.save(log));
     }
 
+
+    /**
+     * Filtra los logs por tipo de accion y fecha
+     * @param pageable información de paginación (número de página, tamaño, orden)
+     * @param accion accion realizada por el usuario
+     * @param fechaInicio fecha inicial para el filtrado
+     * @param fechaFin fecha final para el filtrado
+     * @return Paginado de DTO de los logs que cumplan con el filtrado
+     */
     @Override
-    public void saveLogout(String logActividad) {
-
-        Usuario user = usuarioService.getUsuarioByEmail(logActividad);
-
-        LogActividad log =  new LogActividad();
-        log.setFecha_actualizacion(LocalDateTime.now());
-        log.setAccion("Logout");
-        log.setDetalle("El usuario "+ user.getNombre() + " Cerro sesion");
-        log.setUsuario(user);
-        logActividadRepository.save(log);
-    }
-
-    @Override
-    public List<LogActividad> getLogsActividad() {
-        List<LogActividad> logsActividad = logActividadRepository.findAll();
-        return logsActividad;
-    }
-
-    @Override
-    public Page<LogActividad> filtrarLogs(Pageable pageable, String accion, LocalDate fechaInicio, LocalDate fechaFin) {
-        LocalDateTime inicio = null;
-        LocalDateTime fin = null;
-
-        if (fechaInicio != null) {
-            inicio = fechaInicio.atStartOfDay();
-        }
-
-        if (fechaFin != null) {
-            fin = fechaFin.atTime(LocalTime.MAX);
-        }
-        if (accion != null && accion.isBlank()) {
-            accion = null;
-        }
-
+    public Page<LogDTO> filtrarLogs(Pageable pageable, String accion, LocalDateTime fechaInicio, LocalDateTime fechaFin) {
         return logActividadRepository.filtrarLogActividades(
                 pageable,
                 accion,
-                inicio,
-                fin
-        );
+                fechaInicio,
+                fechaFin
+        ).map(Mapper::toDTO);
     }
 
+
+    /**
+     * Filtra los logs por fecha para exportarlos en pdf
+     * @param fechaInicio fecha inicial para el filtrado
+     * @param fechaFin fecha final para el filtrado
+     * @return lista con todos los DTO que cumplan el filtrado
+     */
     @Override
-    public List<LogActividad> filtrarLogsPdf(LocalDate fechaInicio, LocalDate fechaFin) {
-        LocalDateTime inicio = null;
-        LocalDateTime fin = null;
-
-        if (fechaInicio != null) {
-            inicio = fechaInicio.atStartOfDay();
-        }
-
-        if (fechaFin != null) {
-            fin = fechaFin.atTime(LocalTime.MAX);
-        }
-
+    public List<LogDTO> filtrarLogsPdf(LocalDateTime fechaInicio, LocalDateTime fechaFin) {
         return logActividadRepository.filtrarLogsPDF(
-                inicio,
-                fin
-        );
+                fechaInicio,
+                fechaFin
+        ).stream().map(Mapper::toDTO).toList();
     }
 
-    public byte[] exportarLogsPdf(LocalDate fechaInicio, LocalDate fechaFin) {
-        List<LogActividad> logs = filtrarLogsPdf(fechaInicio, fechaFin);
+    /**
+     * Este es el metodo principal que genera un PDF con los logs de auditoría filtrados por un rango de fechas.
+     * @param fechaInicio fecha inicial para el filtrado
+     * @param fechaFin fecha final para el filtrado
+     * @return
+     */
+    public byte[] exportarLogsPdf(LocalDateTime fechaInicio, LocalDateTime fechaFin) {
+        List<LogDTO> logs = filtrarLogsPdf(fechaInicio, fechaFin);
 
         try (ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
             Document document = new Document();
@@ -148,14 +157,16 @@ public class LogActividadService implements ILogActividadService {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
 
             if (logs != null && !logs.isEmpty()) {
-                for (LogActividad log : logs) {
+                for (LogDTO log : logs) {
                     String fecha = log.getFecha_actualizacion() != null
                             ? log.getFecha_actualizacion().format(formatter)
                             : "Sin fecha";
 
-                    String usuario = (log.getUsuario() != null && log.getUsuario().getNombre() != null)
-                            ? log.getUsuario().getNombre()
-                            : "Sin usuario";
+                    Usuario user = usuarioRepository.findById(log.getUsuario_id()).orElse(null);
+                    String usuario = "Sin usuario";
+                    if (user != null) {
+                        usuario = user.getNombre();
+                    }
 
                     String accion = log.getAccion() != null ? log.getAccion() : "Sin acción";
                     String detalle = log.getDetalle() != null ? log.getDetalle() : "Sin detalle";
@@ -182,6 +193,12 @@ public class LogActividadService implements ILogActividadService {
         }
     }
 
+    /**
+     * Este es un metodo auxiliar que se usa dentro de exportarLogsPdf para crear las celdas de encabezado de la tabla.
+     * @param table Es la tabla del PDF donde se van a añadir las celdas de encabezado.
+     * @param texto Es el contenido textual que aparecerá en la celda del encabezado.
+     * @param font Es el estilo tipográfico que se aplicará al texto del encabezado.
+     */
     private void agregarHeader(PdfPTable table, String texto, Font font) {
         PdfPCell cell = new PdfPCell(new Phrase(texto, font));
         cell.setBackgroundColor(Color.DARK_GRAY);

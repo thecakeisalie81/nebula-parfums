@@ -1,5 +1,6 @@
 package com.nebulaparfums.nebula_parfums.service.interfaces;
 
+import com.nebulaparfums.nebula_parfums.dto.LogDTO;
 import com.nebulaparfums.nebula_parfums.dto.TotalEventosyHoyDTO;
 import com.nebulaparfums.nebula_parfums.model.LogActividad;
 import org.springframework.data.domain.Page;
@@ -12,16 +13,9 @@ import java.util.List;
 
 public interface ILogActividadService {
     public TotalEventosyHoyDTO getTotalEventosyHoyDTO();
-    public void saveLogActividad(LogActividad logActividad);
-    public void saveLogout( String correo);
-    public List<LogActividad> getLogsActividad();
-    public Page<LogActividad> filtrarLogs(Pageable pageable,
-                                               @Param("accion") String accion,
-                                               @Param("fechaInicio") LocalDate fechaInicio,
-                                               @Param("fechaFin") LocalDate fechaFin);
-
-    public List<LogActividad> filtrarLogsPdf(@Param("fechaInicio") LocalDate fechaInicio,
-                                             @Param("fechaFin") LocalDate fechaFin);
-
-    byte[] exportarLogsPdf(LocalDate fechaInicio, LocalDate fechaFin);
+    public LogDTO saveLogActividad(LogDTO logActividad);
+    public List<LogDTO> getLogsActividad();
+    public Page<LogDTO> filtrarLogs(Pageable pageable, String accion, LocalDateTime fechaInicio, LocalDateTime fechaFin);
+    public List<LogDTO> filtrarLogsPdf(LocalDateTime fechaInicio, LocalDateTime fechaFin);
+    byte[] exportarLogsPdf(LocalDateTime fechaInicio, LocalDateTime fechaFin);
 }

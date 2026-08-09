@@ -89,4 +89,18 @@ public class Mapper {
                 .telefono(direccion.getTelefono())
                 .build();
     }
+
+    public static LogDTO toDTO(LogActividad log) {
+        if (log == null) {
+            return null;
+        }
+
+        return LogDTO.builder()
+                .id_log(log.getId_log())
+                .accion(log.getAccion())
+                .detalle(log.getDetalle())
+                .fecha_actualizacion(log.getFecha_actualizacion())
+                .usuario_id(log.getUsuario().getId_usuario())
+                .build();
+    }
 }
