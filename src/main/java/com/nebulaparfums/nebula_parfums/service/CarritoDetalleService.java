@@ -12,6 +12,10 @@ import com.nebulaparfums.nebula_parfums.service.interfaces.ICarritoDetalleServic
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+/**
+ * Servicio para detalles de los carritos.
+ * Provee operaciones de consulta, guardado, eliminación, edición y conversión a DTO.
+ */
 @Service
 @RequiredArgsConstructor
 public class CarritoDetalleService implements ICarritoDetalleService {

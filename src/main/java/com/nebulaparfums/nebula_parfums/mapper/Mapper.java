@@ -167,4 +167,24 @@ public class Mapper {
                 .id_carrito(carritoDetalle.getCarrito().getId_carrito())
                 .build();
     }
+
+    /**
+     * Convierte un detalle de una orden en su representación DTO
+     *
+     * @param ordenDetalle entidad OrdenDetalle que viene de la base de datos
+     * @return OrdendetalleDTO con los datos mapeados
+     */
+    public static OrdenDetalleDTO toDTO(OrdenDetalle ordenDetalle) {
+        if (ordenDetalle == null) {
+            return null;
+        }
+
+        return OrdenDetalleDTO.builder()
+                .id_orden_detalle(ordenDetalle.getId_orden_detalle())
+                .cantidad(ordenDetalle.getCantidad())
+                .precio(ordenDetalle.getPrecio())
+                .id_orden(ordenDetalle.getOrden().getId_orden())
+                .id_producto(ordenDetalle.getProducto().getId_producto())
+                .build();
+    }
 }

@@ -2,16 +2,18 @@ package com.nebulaparfums.nebula_parfums.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
 @Entity
 @Setter @Getter
+@Builder
 public class OrdenDetalle {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id_orden_detalle;
-    private int cantidad;
+    private Integer cantidad;
     private Double precio;
 
     @ManyToOne
@@ -27,7 +29,7 @@ public class OrdenDetalle {
     public OrdenDetalle() {
     }
 
-    public OrdenDetalle(Integer id_orden_detalle, int cantidad, Double precio, Producto producto, Orden orden) {
+    public OrdenDetalle(Integer id_orden_detalle, Integer cantidad, Double precio, Producto producto, Orden orden) {
         this.id_orden_detalle = id_orden_detalle;
         this.cantidad = cantidad;
         this.precio = precio;

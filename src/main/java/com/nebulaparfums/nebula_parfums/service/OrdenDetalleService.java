@@ -1,93 +1,100 @@
 package com.nebulaparfums.nebula_parfums.service;
 
-import com.nebulaparfums.nebula_parfums.dto.OrdendetalleDTO;
+import com.nebulaparfums.nebula_parfums.dto.OrdenDetalleDTO;
 import com.nebulaparfums.nebula_parfums.dto.ProductoCantidadDTO;
 import com.nebulaparfums.nebula_parfums.exception.ResourceNotFoundException;
-import com.nebulaparfums.nebula_parfums.model.Orden;
+import com.nebulaparfums.nebula_parfums.mapper.Mapper;
 import com.nebulaparfums.nebula_parfums.model.OrdenDetalle;
-import com.nebulaparfums.nebula_parfums.model.Producto;
 import com.nebulaparfums.nebula_parfums.repository.IOrdenDetalleRepository;
+import com.nebulaparfums.nebula_parfums.repository.IOrdenRepository;
+import com.nebulaparfums.nebula_parfums.repository.IProductoRepository;
 import com.nebulaparfums.nebula_parfums.service.interfaces.IOrdenDetalleService;
-import com.nebulaparfums.nebula_parfums.service.interfaces.IOrdenService;
-import com.nebulaparfums.nebula_parfums.service.interfaces.IProductoService;
+import lombok.AllArgsConstructor;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.jspecify.annotations.NonNull;
+import org.openpdf.text.pdf.PdfPTable;
 import org.springframework.stereotype.Service;
 
 import java.io.ByteArrayOutputStream;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.util.List;
 
 @Service
+@AllArgsConstructor
 public class OrdenDetalleService implements IOrdenDetalleService {
-
-    @Autowired
     private IOrdenDetalleRepository ordenDetalleRepository;
+    private IOrdenRepository iOrdenRepository;
+    private IProductoRepository iProductoRepository;
 
-    @Autowired
-    private IOrdenService ordenService;
-
-    @Autowired
-    private IProductoService productoService;
 
     @Override
-    public void saveOrdenDetalle(OrdenDetalle ordenDetalle) {
-        ordenDetalleRepository.save(ordenDetalle);
+    public OrdenDetalle getOrdenDetalleById(Integer id) {
+        return ordenDetalleRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("No se encontró la orden"));
     }
 
+    public OrdenDetalleDTO saveOrdenDetalle(OrdenDetalleDTO ordenDetalle) {
+        OrdenDetalle orden = OrdenDetalle.builder()
+                .cantidad(ordenDetalle.getCantidad())
+                .precio(ordenDetalle.getPrecio())
+                .producto(iProductoRepository.findById(ordenDetalle.getId_producto())
+                        .orElseThrow(() -> new ResourceNotFoundException("Producto no encontrado")))
+                .orden(iOrdenRepository.findById(ordenDetalle.getId_orden())
+                        .orElseThrow(() -> new ResourceNotFoundException("Orden no encontrada")))
+                .build();
+
+        return Mapper.toDTO(ordenDetalleRepository.save(orden));
+    }
+
+    /**
+     * Borra físicamente un detalle de una orden
+     * @param id id del detalle a eliminar
+     */
     @Override
     public void deleteOrdenDetalleById(Integer id) {
         ordenDetalleRepository.deleteById(id);
     }
 
+    /**
+     * Edita los datos de un detalle de una orden
+     * @param id id del detalle a editar
+     * @param ordenDetalle DTO con los nuevos datos
+     * @return OrdenDetalleDTO actualizado
+     */
     @Override
-    public void editOrdenDetalle(OrdenDetalle ordenDetalle) {
-        this.saveOrdenDetalle(ordenDetalle);
+    public OrdenDetalleDTO editOrdenDetalle(Integer id,OrdenDetalleDTO ordenDetalle) {
+
+        OrdenDetalle orden = ordenDetalleRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Orden no encontrado"));
+        orden.setCantidad(ordenDetalle.getCantidad());
+        orden.setPrecio(ordenDetalle.getPrecio());
+
+        return Mapper.toDTO(ordenDetalleRepository.save(orden));
     }
 
-    @Override
-    public OrdenDetalle getOrdenDetalleById(Integer id) {
-        OrdenDetalle ordenDetalle = ordenDetalleRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("No se encontro el producto en la orden"));
-        return ordenDetalle;
-    }
-
-    @Override
-    public void createOrdenDetalle(OrdendetalleDTO detalleDTO) {
-        Orden orden = ordenService.getOrdenById(detalleDTO.getId_orden());
-        Producto producto = productoService.getProductoById(detalleDTO.getId_producto());
-
-        OrdenDetalle ordenDetalle = new OrdenDetalle();
-        ordenDetalle.setOrden(orden);
-        ordenDetalle.setProducto(producto);
-        ordenDetalle.setCantidad(detalleDTO.getCantidad());
-        ordenDetalle.setPrecio(detalleDTO.getPrecio());
-        saveOrdenDetalle(ordenDetalle);
-    }
-
+    /**
+     * Devuelve la cantidad de cada producto que se haya vendido en un rango de fechas
+     * @param fechaInicio fecha inicial del filtrado
+     * @param fechaFin fecha final del filtrado
+     * @return lista de DTO con las cantidades vendidas de cada producto
+     */
     @Override
     public List<ProductoCantidadDTO> getProductoCantidadDTO(LocalDateTime fechaInicio, LocalDateTime fechaFin) {
         return ordenDetalleRepository.contarCantidadPorProducto(fechaInicio, fechaFin);
     }
 
+    /**
+     * Filtra las ventas por rango de fecha en formato de excel
+     * @param fechaInicio fecha inicial del filtrado
+     * @param fechaFin fecha final del filtrado
+     * @return Archivo Excel en memoria representado como arreglo de bytes
+     */
     @Override
-    public byte[] exportarVentasExcel(LocalDate fechaInicio, LocalDate fechaFin) {
-        LocalDateTime inicio = null;
-        LocalDateTime fin = null;
+    public byte[] exportarVentasExcel(LocalDateTime fechaInicio, LocalDateTime fechaFin) {
 
-        if (fechaInicio != null) {
-            inicio = fechaInicio.atStartOfDay();
-        }
-
-        if (fechaFin != null) {
-            fin = fechaFin.atTime(LocalTime.MAX);
-        }
-
-        List<ProductoCantidadDTO> ventas = getProductoCantidadDTO(inicio, fin);
+        List<ProductoCantidadDTO> ventas = getProductoCantidadDTO(fechaInicio, fechaFin);
 
         try (ByteArrayOutputStream baos = new ByteArrayOutputStream();
              XSSFWorkbook workbook = new XSSFWorkbook()) {
@@ -122,20 +129,16 @@ public class OrdenDetalleService implements IOrdenDetalleService {
         }
     }
 
+    /**
+     * Filtra las ventas por rango de fecha en formato de pdf
+     * @param fechaInicio fecha inicial del filtrado
+     * @param fechaFin fecha final del filtrado
+     * @return Archivo PDF en memoria representado como arreglo de bytes
+     */
     @Override
-    public byte[] exportarVentasPdf(LocalDate fechaInicio, LocalDate fechaFin) {
-        LocalDateTime inicio = null;
-        LocalDateTime fin = null;
+    public byte[] exportarVentasPdf(LocalDateTime fechaInicio, LocalDateTime fechaFin) {
 
-        if (fechaInicio != null) {
-            inicio = fechaInicio.atStartOfDay();
-        }
-
-        if (fechaFin != null) {
-            fin = fechaFin.atTime(LocalTime.MAX);
-        }
-
-        List<ProductoCantidadDTO> ventas = getProductoCantidadDTO(inicio, fin);
+        List<ProductoCantidadDTO> ventas = getProductoCantidadDTO(fechaInicio, fechaFin);
 
         try (ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
             org.openpdf.text.Document document = new org.openpdf.text.Document();
@@ -152,17 +155,7 @@ public class OrdenDetalleService implements IOrdenDetalleService {
             titulo.setSpacingAfter(10f);
             document.add(titulo);
 
-            org.openpdf.text.pdf.PdfPTable table = new org.openpdf.text.pdf.PdfPTable(2);
-            table.setWidthPercentage(100);
-            table.setWidths(new float[]{4f, 2f});
-
-            table.addCell("Producto");
-            table.addCell("Total unidades");
-
-            for (ProductoCantidadDTO item : ventas) {
-                table.addCell(item.getProducto() != null ? item.getProducto() : "");
-                table.addCell(item.getTotalUnidades() != null ? String.valueOf(item.getTotalUnidades()) : "0");
-            }
+            PdfPTable table = createTable(ventas);
 
             document.add(table);
             document.close();
@@ -172,5 +165,25 @@ public class OrdenDetalleService implements IOrdenDetalleService {
         } catch (Exception e) {
             throw new RuntimeException("Error al generar el PDF de ventas", e);
         }
+    }
+
+    /**
+     * Construye una tabla PDF con dos columnas: nombre del producto y total de unidades vendidas.
+     * @param ventas lista de objetos ProductoCantidadDTO que contienen el nombre del producto y la cantidad total vendida
+     * @return objeto PdfPTable con los datos organizados en formato de tabla
+     */
+    private static @NonNull PdfPTable createTable(List<ProductoCantidadDTO> ventas) {
+        PdfPTable table = new PdfPTable(2);
+        table.setWidthPercentage(100);
+        table.setWidths(new float[]{4f, 2f});
+
+        table.addCell("Producto");
+        table.addCell("Total unidades");
+
+        for (ProductoCantidadDTO item : ventas) {
+            table.addCell(item.getProducto() != null ? item.getProducto() : "");
+            table.addCell(item.getTotalUnidades() != null ? String.valueOf(item.getTotalUnidades()) : "0");
+        }
+        return table;
     }
 }

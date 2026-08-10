@@ -13,6 +13,12 @@ import java.util.List;
 @Repository
 public interface IOrdenDetalleRepository extends JpaRepository<OrdenDetalle, Integer> {
 
+    /**
+     *Devuelve la cantidad de unidades de un producto que se han vendido
+     * @param fechaInicio fecha inicial del filtrado
+     * @param fechaFin fecha final del filtrado
+     * @return DTO con el nombre del producto y la cantidad que se ha vendido en el rango de fechas
+     */
     @Query("""
     SELECT new com.nebulaparfums.nebula_parfums.dto.ProductoCantidadDTO(
                od.producto.nombre,
