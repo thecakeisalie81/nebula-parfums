@@ -2,55 +2,79 @@ package com.nebulaparfums.nebula_parfums.service;
 
 import com.nebulaparfums.nebula_parfums.dto.CarritoDetalleDTO;
 import com.nebulaparfums.nebula_parfums.exception.ResourceNotFoundException;
-import com.nebulaparfums.nebula_parfums.model.Carrito;
+import com.nebulaparfums.nebula_parfums.mapper.Mapper;
 import com.nebulaparfums.nebula_parfums.model.CarritoDetalle;
 import com.nebulaparfums.nebula_parfums.model.Producto;
 import com.nebulaparfums.nebula_parfums.repository.ICarritoDetalleRepository;
 import com.nebulaparfums.nebula_parfums.repository.ICarritoRepository;
+import com.nebulaparfums.nebula_parfums.repository.IProductoRepository;
 import com.nebulaparfums.nebula_parfums.service.interfaces.ICarritoDetalleService;
-import com.nebulaparfums.nebula_parfums.service.interfaces.ICarritoService;
-import com.nebulaparfums.nebula_parfums.service.interfaces.IProductoService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
 public class CarritoDetalleService implements ICarritoDetalleService {
 
-    private ICarritoDetalleRepository  carritoDetalleRepository;
-    private IProductoService productoService;
+    private final ICarritoDetalleRepository  carritoDetalleRepository;
+    private final ICarritoRepository iCarritoRepository;
+    private final IProductoRepository iProductoRepository;
 
     @Override
-    public CarritoDetalleDTO getCarritoDetalleById(Integer id) {
-        CarritoDetalle carritoDetalle = carritoDetalleRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("No se encontro el producto en el carrito"));;
-        return carritoDetalle;
+    public CarritoDetalle getCarritoDetalleById(Integer id) {
+        return carritoDetalleRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("No se encontró el producto en el carrito"));
     }
 
+    /**
+     * Guarda un nuevo carrito detalle en la base de datos
+     * @param carritoDetalle DTO con los detalles del nuevo elemento
+     * @return CarritoDetalleDTO con los datos recién guardados
+     */
     @Override
-    public void saveCarritoDetalle(CarritoDetalleDTO carritoDetalle) {
-        carritoDetalleRepository.save(carritoDetalle);
+    public CarritoDetalleDTO saveCarritoDetalle(CarritoDetalleDTO carritoDetalle) {
+
+        CarritoDetalle carrito = CarritoDetalle.builder()
+                .cantidad(carritoDetalle.getCantidad())
+                .precio(carritoDetalle.getPrecio())
+                .carrito(iCarritoRepository.findById(carritoDetalle.getId_carrito())
+                        .orElseThrow(() -> new ResourceNotFoundException("No se encontró el carrito")))
+                .producto(iProductoRepository.findById(carritoDetalle.getId_producto())
+                        .orElseThrow(() -> new ResourceNotFoundException("No se encontró el producto")))
+                .build();
+
+        return Mapper.toDTO(carritoDetalleRepository.save(carrito));
     }
 
+    /**
+     * Borra físicamente un elemento del carrito
+     * @param id id del elemento a eliminar
+     */
     @Override
     public void deleteCarritoDetalleById(Integer id) {
         carritoDetalleRepository.deleteById(id);
     }
 
+    /**
+     * Edita los detalles de un elemento del carrito
+     * @param id id del elemento a modificar
+     * @param Detalle DTO con los datos nuevos
+     * @return CarritoDetalleDTO con los datos que se actualizaron
+     */
     @Override
-    public void editCarritoDetalle(Integer id,CarritoDetalleDTO request) {
+    public CarritoDetalleDTO editCarritoDetalle(Integer id, CarritoDetalleDTO Detalle) {
 
-        CarritoDetalle carritoDetalle = getCarritoDetalleById(request.getId_carrito_detalle());
-        Producto producto = productoService.getProductoById(request.getId_producto());
+        CarritoDetalle carritoDetalle = getCarritoDetalleById(id);
+        Producto producto = iProductoRepository.findById(Detalle.getId_producto())
+                .orElseThrow(() -> new ResourceNotFoundException("No se encontró el producto"));
 
-        carritoDetalle.setCantidad(request.getCantidad());
-        carritoDetalle.setPrecio(producto.getPrecio() * request.getCantidad());
+        carritoDetalle.setCantidad(Detalle.getCantidad());
+        carritoDetalle.setPrecio(producto.getPrecio() * carritoDetalle.getCantidad());
 
-        if (carritoDetalle.getCantidad() > 0){
-            this.saveCarritoDetalle(carritoDetalle);
-        }else {
-            deleteCarritoDetalleById(request.getId_carrito_detalle());
+        if (carritoDetalle.getCantidad() <= 0){
+            deleteCarritoDetalleById(id);
+
         }
-
+        return Mapper.toDTO(carritoDetalleRepository.save(carritoDetalle));
     }
 }

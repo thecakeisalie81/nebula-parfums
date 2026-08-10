@@ -2,17 +2,19 @@ package com.nebulaparfums.nebula_parfums.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
 @Entity
 @Getter
 @Setter
+@Builder
 public class CarritoDetalle {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id_carrito_detalle;
-    private int cantidad;
+    private Integer cantidad;
     private Double precio;
 
     @ManyToOne
@@ -27,7 +29,7 @@ public class CarritoDetalle {
     public CarritoDetalle() {
     }
 
-    public CarritoDetalle(Integer id_carrito_detalle, int cantidad, Double precio, Carrito carrito, Producto producto) {
+    public CarritoDetalle(Integer id_carrito_detalle, Integer cantidad, Double precio, Carrito carrito, Producto producto) {
         this.id_carrito_detalle = id_carrito_detalle;
         this.cantidad = cantidad;
         this.precio = precio;

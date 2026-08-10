@@ -147,4 +147,24 @@ public class Mapper {
                 .id_producto(movimiento.getProducto().getId_producto())
                 .build();
     }
+
+    /**
+     * Convierte un detalle del carrito en su representación DTO
+     *
+     * @param carritoDetalle entidad CarritoDetalle que viene de la base de datos
+     * @return CarritoDetalleDTO con los datos mapeados
+     */
+    public static CarritoDetalleDTO toDTO(CarritoDetalle carritoDetalle) {
+        if (carritoDetalle == null) {
+            return null;
+        }
+
+        return CarritoDetalleDTO.builder()
+                .id_carrito_detalle(carritoDetalle.getId_carrito_detalle())
+                .cantidad(carritoDetalle.getCantidad())
+                .precio(carritoDetalle.getPrecio())
+                .id_producto(carritoDetalle.getProducto().getId_producto())
+                .id_carrito(carritoDetalle.getCarrito().getId_carrito())
+                .build();
+    }
 }
