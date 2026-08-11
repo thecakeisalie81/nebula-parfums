@@ -3,6 +3,8 @@ package com.nebulaparfums.nebula_parfums.mapper;
 import com.nebulaparfums.nebula_parfums.dto.*;
 import com.nebulaparfums.nebula_parfums.model.*;
 
+import java.util.List;
+
 public class Mapper {
 
     /**
@@ -148,6 +150,34 @@ public class Mapper {
                 .build();
     }
 
+
+    public static CarritoDTO toDTO(Carrito carrito) {
+        if (carrito == null) {
+            return null;
+        }
+
+        List<CarritoDetalleDTO> listaDetalles = carrito.getListaCarritoDetalles().stream().map( det ->
+                CarritoDetalleDTO.builder()
+                        .id_carrito_detalle(det.getId_carrito_detalle())
+                        .cantidad(det.getCantidad())
+                        .precio(det.getPrecio())
+                        .id_producto(det.getProducto().getId_producto())
+                        .id_carrito(det.getCarrito().getId_carrito())
+                        .build()
+        ).toList();
+
+
+
+        return CarritoDTO.builder()
+                .id_carrito(carrito.getId_carrito())
+                .fecha_actualizacion(carrito.getFecha_actualizacion())
+                .listaCarritoDetalles(listaDetalles)
+                .id_usuario(carrito.getUsuario().getId_usuario())
+                .total(listaDetalles.stream().map(CarritoDetalleDTO::getPrecio)
+                        .reduce(0.0, Double::sum))
+                .build();
+    }
+
     /**
      * Convierte un detalle del carrito en su representación DTO
      *
@@ -172,7 +202,7 @@ public class Mapper {
      * Convierte un detalle de una orden en su representación DTO
      *
      * @param ordenDetalle entidad OrdenDetalle que viene de la base de datos
-     * @return OrdendetalleDTO con los datos mapeados
+     * @return OrdenDetalleDTO con los datos mapeados
      */
     public static OrdenDetalleDTO toDTO(OrdenDetalle ordenDetalle) {
         if (ordenDetalle == null) {

@@ -21,6 +21,10 @@ import java.io.ByteArrayOutputStream;
 import java.time.LocalDateTime;
 import java.util.List;
 
+/**
+ * Servicio para gestionar OrdenDetalle.
+ * Provee operaciones de consulta, guardado, eliminación, edición, conversión a DTO y exportación a pdf y excel.
+ */
 @Service
 @AllArgsConstructor
 public class OrdenDetalleService implements IOrdenDetalleService {
