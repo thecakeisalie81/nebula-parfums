@@ -9,6 +9,7 @@ import com.nebulaparfums.nebula_parfums.repository.ICategoriaRepository;
 import com.nebulaparfums.nebula_parfums.repository.IProductoRepository;
 import com.nebulaparfums.nebula_parfums.repository.IProveedorRepository;
 import com.nebulaparfums.nebula_parfums.service.interfaces.IProductoService;
+import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -19,11 +20,12 @@ import org.springframework.stereotype.Service;
  * Provee operaciones de consulta, guardado, eliminación, edición y conversión a DTO.
  */
 @Service
+@AllArgsConstructor
 public class ProductoService implements IProductoService {
 
-    private IProductoRepository iProductoRepository;
-    private IProveedorRepository iProveedorRepository;
-    private ICategoriaRepository iCategoriaRepository;
+    private final IProductoRepository iProductoRepository;
+    private final IProveedorRepository iProveedorRepository;
+    private final ICategoriaRepository iCategoriaRepository;
 
 
     @Override

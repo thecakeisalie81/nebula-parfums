@@ -150,7 +150,11 @@ public class Mapper {
                 .build();
     }
 
-
+    /**
+     * Convierte un carrito en su representación DTO
+     * @param carrito entidad Carrito que viene de la base de datos
+     * @return CarritoDTO con los detalles mapeados
+     */
     public static CarritoDTO toDTO(Carrito carrito) {
         if (carrito == null) {
             return null;
@@ -165,8 +169,6 @@ public class Mapper {
                         .id_carrito(det.getCarrito().getId_carrito())
                         .build()
         ).toList();
-
-
 
         return CarritoDTO.builder()
                 .id_carrito(carrito.getId_carrito())
@@ -195,6 +197,32 @@ public class Mapper {
                 .precio(carritoDetalle.getPrecio())
                 .id_producto(carritoDetalle.getProducto().getId_producto())
                 .id_carrito(carritoDetalle.getCarrito().getId_carrito())
+                .build();
+    }
+
+    public static OrdenDTO toDTO(Orden orden) {
+        if (orden == null) {
+            return null;
+        }
+
+        List<OrdenDetalleDTO> listDetalles = orden.getListaOrdenDetalle().stream()
+                .map(det -> OrdenDetalleDTO.builder()
+                        .id_orden_detalle(det.getId_orden_detalle())
+                        .cantidad(det.getCantidad())
+                        .precio(det.getPrecio())
+                        .id_orden(det.getOrden().getId_orden())
+                        .id_producto(det.getProducto().getId_producto())
+                        .build())
+                .toList();
+
+        return OrdenDTO.builder()
+                .id_orden(orden.getId_orden())
+                .id_cliente(orden.getUsuario().getId_usuario())
+                .direccion(orden.getDireccion())
+                .estado(orden.getEstado())
+                .fecha_orden(orden.getFecha_creacion())
+                .ordenDetalles(listDetalles)
+                .total(orden.getTotal())
                 .build();
     }
 
