@@ -1,4 +1,3 @@
-/*
 package com.nebulaparfums.nebula_parfums.controller;
 
 import com.nebulaparfums.nebula_parfums.model.Proveedor;
@@ -57,4 +56,3 @@ public class ProveedorController {
         return "Proveedor eliminado exitosamente";
     }
 }
-*/

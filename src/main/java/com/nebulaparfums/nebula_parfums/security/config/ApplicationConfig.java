@@ -1,7 +1,7 @@
 package com.nebulaparfums.nebula_parfums.security.config;
 
-import com.nebulaparfums.nebula_parfums.repository.IUsuarioRepository;
-import lombok.RequiredArgsConstructor;
+import com.nebulaparfums.nebula_parfums.mapper.Mapper;
+import com.nebulaparfums.nebula_parfums.service.interfaces.IUsuarioService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -13,10 +13,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Configuration
-@RequiredArgsConstructor
 public class ApplicationConfig {
-
-    private final IUsuarioRepository usuarioRepository;
 
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
@@ -24,14 +21,13 @@ public class ApplicationConfig {
     }
 
     @Bean
-    public UserDetailsService userDetailsService() {
-        return email -> usuarioRepository.findByEmail(email)
-                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+    public UserDetailsService userDetailsService(IUsuarioService usuarioService) {
+        return email -> Mapper.toDTO(usuarioService.getUsuarioByEmail(email));
     }
 
     @Bean
-    public AuthenticationProvider authenticationProvider() {
-        DaoAuthenticationProvider daoAuthenticationProvider = new DaoAuthenticationProvider(userDetailsService());
+    public AuthenticationProvider authenticationProvider(UserDetailsService userDetailsService) {
+        DaoAuthenticationProvider daoAuthenticationProvider = new DaoAuthenticationProvider(userDetailsService);
         daoAuthenticationProvider.setPasswordEncoder(passwordEncoder());
         return daoAuthenticationProvider;
     }

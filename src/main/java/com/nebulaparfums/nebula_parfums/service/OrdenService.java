@@ -47,7 +47,7 @@ public class OrdenService implements IOrdenService {
     @Override
     public Orden getOrdenById(Integer ordenId) {
         return ordenRepository.findById(ordenId)
-                .orElseThrow(() -> new ResourceNotFoundException("No se encontro la orden"));
+                .orElseThrow(() -> new ResourceNotFoundException("No se encontró la orden"));
     }
 
     /**
@@ -119,9 +119,9 @@ public class OrdenService implements IOrdenService {
      * @return DTO con los datos recién actualizados
      */
     @Override
-    public OrdenDTO editOrden(OrdenDTO orden) {
+    public OrdenDTO editOrden(Integer id, OrdenDTO orden) {
 
-        Orden order = ordenRepository.findById(orden.getId_orden())
+        Orden order = ordenRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Orden no encontrado"));
 
         if (orden.getDireccion() != null) {

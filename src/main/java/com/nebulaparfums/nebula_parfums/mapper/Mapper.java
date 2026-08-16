@@ -62,12 +62,15 @@ public class Mapper {
         }
 
         return UsuarioDTO.builder()
+                .id(usuario.getId_usuario())
                 .nombre(usuario.getNombre())
                 .email(usuario.getEmail())
                 .password(usuario.getPassword())
                 .estado(usuario.getEstado())
                 .rol(usuario.getRol())
                 .fecha_creacion(usuario.getFecha_creacion())
+                .carrito(usuario.getCarrito())
+                .direccionEnvio(usuario.getDireccionEnvio())
                 .build();
     }
 

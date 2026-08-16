@@ -16,7 +16,7 @@ public interface IOrdenService {
     public List<OrdenDTO> getOrdenesUsuario(Integer id);
     public OrdenDTO saveOrden(OrdenDTO orden);
     public void deleteOrden(Integer ordenId);
-    public OrdenDTO editOrden(OrdenDTO orden);
+    public OrdenDTO editOrden(Integer id, OrdenDTO orden);
     public List<OrdenDTO> getUltimasOrdenesPendiente(Pageable pageable);
     public Page<OrdenDTO> filtrarOrden(Pageable pageable, String estado, LocalDateTime fechaInicio, LocalDateTime fechaFin);
     public Double sumaTotalesMes(LocalDateTime fechaInicio, LocalDateTime fechaFin);

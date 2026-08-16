@@ -32,9 +32,9 @@ public class Carrito {
     public Carrito() {
     }
 
-    public Carrito(Integer id_carrito, List<CarritoDetalle> listaCarritoDetalles, Usuario usuario) {
+    public Carrito(Integer id_carrito, LocalDateTime fecha_actualizacion, List<CarritoDetalle> listaCarritoDetalles, Usuario usuario) {
         this.id_carrito = id_carrito;
-        this.fecha_actualizacion = LocalDateTime.now();
+        this.fecha_actualizacion = fecha_actualizacion;
         this.listaCarritoDetalles = listaCarritoDetalles;
         this.usuario = usuario;
     }

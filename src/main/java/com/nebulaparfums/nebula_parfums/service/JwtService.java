@@ -1,5 +1,6 @@
 package com.nebulaparfums.nebula_parfums.service;
 
+import com.nebulaparfums.nebula_parfums.exception.JwtException;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
@@ -24,9 +25,13 @@ public class JwtService {
 
 
     public String getToken(UserDetails usuario) {
-        Map<String, Object> claims = new HashMap<>();
-        claims.put("role", usuario.getAuthorities().iterator().next().getAuthority());
-        return getToken(claims, usuario);
+        try {
+            Map<String, Object> claims = new HashMap<>();
+            claims.put("role", usuario.getAuthorities().iterator().next().getAuthority());
+            return getToken(claims, usuario);
+        }catch (Exception e){
+            throw new JwtException("Error al obtener el token", e);
+        }
     }
 
     public String getToken(Map<String, Object> claims, UserDetails usuario) {

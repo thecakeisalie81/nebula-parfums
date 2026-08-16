@@ -27,8 +27,8 @@ public class UsuarioService implements IUsuarioService {
 
 
     @Override
-    public UsuarioDTO getUsuarioById(Integer id) {
-        return iUsuarioRepository.findById(id).map(Mapper::toDTO)
+    public Usuario getUsuarioById(Integer id) {
+        return iUsuarioRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("No se encontró el usuario"));
     }
 
@@ -57,6 +57,8 @@ public class UsuarioService implements IUsuarioService {
                 .estado(usuario.getEstado())
                 .fecha_creacion(usuario.getFecha_creacion())
                 .rol(usuario.getRol())
+                .carrito(usuario.getCarrito())
+                .direccionEnvio(usuario.getDireccionEnvio())
                 .build();
 
         return Mapper.toDTO(iUsuarioRepository.save(user));
@@ -93,6 +95,7 @@ public class UsuarioService implements IUsuarioService {
             user.setPassword(passwordEncoder.encode(usuario.getPassword()));
         }
         user.setEstado(usuario.getEstado());
+        user.setDireccionEnvio(usuario.getDireccionEnvio());
 
         return Mapper.toDTO(iUsuarioRepository.save(user));
     }

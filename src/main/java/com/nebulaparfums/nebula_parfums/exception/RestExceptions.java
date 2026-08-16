@@ -1,11 +1,12 @@
 package com.nebulaparfums.nebula_parfums.exception;
 
-import com.nebulaparfums.nebula_parfums.model.LogActividad;
+import com.nebulaparfums.nebula_parfums.dto.LogDTO;
 import com.nebulaparfums.nebula_parfums.model.Rol;
 import com.nebulaparfums.nebula_parfums.model.Usuario;
 import com.nebulaparfums.nebula_parfums.service.interfaces.ILogActividadService;
 import com.nebulaparfums.nebula_parfums.service.interfaces.IUsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -93,12 +94,12 @@ public class RestExceptions {
     @ExceptionHandler
     public ResponseEntity<CustomMessageException> handleException(InvalidPasswordException e) {
 
-        LogActividad logActividad = new LogActividad();
+        LogDTO logActividad = new LogDTO();
 
         Usuario usuario = usuarioService.getUsuarioByEmail(e.getMessage());
 
         if (!usuario.getRol().equals(Rol.CLIENTE)) {
-            logActividad.setUsuario(usuario);
+            logActividad.setUsuario_id(usuario.getId_usuario());
             logActividad.setAccion("Login fallido");
             logActividad.setDetalle("Usuario " + usuario.getNombre() + " realizo un intento login");
             logActividad.setFecha_actualizacion(LocalDateTime.now());
@@ -108,7 +109,52 @@ public class RestExceptions {
         CustomMessageException exception = new CustomMessageException();
         exception.setStatus(HttpStatus.UNAUTHORIZED.value());
         exception.setTimestamp(System.currentTimeMillis());
-        exception.setMessage("La contrasena fallo");
+        exception.setMessage("La contraseña fallo");
         return new ResponseEntity<>(exception, HttpStatus.UNAUTHORIZED);
+    }
+
+    @ExceptionHandler
+    public ResponseEntity<CustomMessageException> handleException(IllegalArgumentException e){
+        CustomMessageException exception = new CustomMessageException();
+        exception.setStatus(HttpStatus.BAD_REQUEST.value());
+        exception.setTimestamp(System.currentTimeMillis());
+        exception.setMessage(e.getMessage());
+        return new ResponseEntity<>(exception, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler
+    public ResponseEntity<CustomMessageException> handleException(BadCredentialsException e){
+        CustomMessageException exception = new CustomMessageException();
+        exception.setStatus(HttpStatus.BAD_REQUEST.value());
+        exception.setTimestamp(System.currentTimeMillis());
+        exception.setMessage(e.getMessage());
+        return new ResponseEntity<>(exception, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler
+    public ResponseEntity<CustomMessageException> handleException(EmailSendException e){
+        CustomMessageException exception = new CustomMessageException();
+        exception.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
+        exception.setTimestamp(System.currentTimeMillis());
+        exception.setMessage(e.getMessage());
+        return new ResponseEntity<>(exception, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @ExceptionHandler
+    public ResponseEntity<CustomMessageException> handleException(JwtException e){
+        CustomMessageException exception = new CustomMessageException();
+        exception.setStatus(HttpStatus.UNAUTHORIZED.value());
+        exception.setTimestamp(System.currentTimeMillis());
+        exception.setMessage(e.getMessage());
+        return new ResponseEntity<>(exception, HttpStatus.UNAUTHORIZED);
+    }
+
+    @ExceptionHandler
+    public ResponseEntity<CustomMessageException> handleException(DataIntegrityViolationException e) {
+        CustomMessageException exception = new CustomMessageException();
+        exception.setStatus(HttpStatus.CONFLICT.value());
+        exception.setTimestamp(System.currentTimeMillis());
+        exception.setMessage("El correo ya está registrado");
+        return new ResponseEntity<>(exception, HttpStatus.CONFLICT);
     }
 }

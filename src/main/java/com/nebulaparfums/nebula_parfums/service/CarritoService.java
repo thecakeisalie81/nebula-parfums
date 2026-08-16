@@ -11,9 +11,6 @@ import com.nebulaparfums.nebula_parfums.repository.IUsuarioRepository;
 import com.nebulaparfums.nebula_parfums.service.interfaces.ICarritoDetalleService;
 import com.nebulaparfums.nebula_parfums.service.interfaces.ICarritoService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -31,7 +28,6 @@ public class CarritoService implements ICarritoService {
 
     private final ICarritoRepository carritoRepository;
     private final IUsuarioRepository usuarioRepository;
-    private final ICarritoService carritoService;
     private final ICarritoDetalleService carritoDetalleService;
 
 
@@ -50,7 +46,7 @@ public class CarritoService implements ICarritoService {
         Carrito carrito = getCarritoById(id);
         carrito.setFecha_actualizacion(LocalDateTime.now());
         for (CarritoDetalle detalle : carrito.getListaCarritoDetalles()){
-            carritoService.deleteCarritoById(detalle.getId_carrito_detalle());
+            carritoDetalleService.deleteCarritoDetalleById(detalle.getId_carrito_detalle());
         }
         carrito.setListaCarritoDetalles(null);
         carritoRepository.save(carrito);

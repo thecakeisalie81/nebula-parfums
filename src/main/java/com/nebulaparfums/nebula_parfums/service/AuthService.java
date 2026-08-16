@@ -1,42 +1,39 @@
 package com.nebulaparfums.nebula_parfums.service;
 
 import com.nebulaparfums.nebula_parfums.auth.*;
-import com.nebulaparfums.nebula_parfums.controller.UsuarioController;
+import com.nebulaparfums.nebula_parfums.dto.LogDTO;
+import com.nebulaparfums.nebula_parfums.dto.UsuarioDTO;
 import com.nebulaparfums.nebula_parfums.exception.InvalidPasswordException;
+import com.nebulaparfums.nebula_parfums.exception.ResourceNotFoundException;
+import com.nebulaparfums.nebula_parfums.mapper.Mapper;
 import com.nebulaparfums.nebula_parfums.model.*;
 import com.nebulaparfums.nebula_parfums.repository.IPasswordResetTokenRepository;
 import com.nebulaparfums.nebula_parfums.repository.IUsuarioRepository;
 import com.nebulaparfums.nebula_parfums.service.interfaces.IUsuarioService;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Map;
-import java.util.Optional;
 import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
 public class AuthService {
-    private UsuarioController usuarioController;
-    private JwtService jwtService;
-    private PasswordEncoder passwordEncoder;
-    private AuthenticationManager authenticationManager;
-    private IUsuarioRepository usuarioRepository;
-    private LogActividadService logActividadService;
-    private IUsuarioService usuarioService;
-    private IPasswordResetTokenRepository passwordResetTokenRepository;
-    private EmailService emailService;
+    private final JwtService jwtService;
+    private final PasswordEncoder passwordEncoder;
+    private final AuthenticationManager authenticationManager;
+    private final IUsuarioRepository usuarioRepository;
+    private final LogActividadService logActividadService;
+    private final IUsuarioService usuarioService;
+    private final IPasswordResetTokenRepository passwordResetTokenRepository;
+    private final EmailService emailService;
 
     public AuthResponse login(LoginRequest loginRequest) {
         try {
@@ -46,8 +43,9 @@ public class AuthService {
                     )
             );
 
-            UserDetails user = usuarioRepository.findByEmail(loginRequest.getEmail())
-                    .orElseThrow();
+            UserDetails user = usuarioRepository.findByEmail(loginRequest.getEmail()).map(Mapper::toDTO)
+                    .orElseThrow(() -> new ResourceNotFoundException("Usuario no encontrado"));
+
             String token = jwtService.getToken(user);
 
             LogActividad logActividad = new LogActividad();
@@ -59,7 +57,7 @@ public class AuthService {
                 logActividad.setAccion("Login");
                 logActividad.setDetalle("Usuario " + usuario.getNombre() + " ingreso a su cuenta");
                 logActividad.setFecha_actualizacion(LocalDateTime.now());
-                logActividadService.saveLogActividad(logActividad);
+                logActividadService.saveLogActividad(Mapper.toDTO(logActividad));
             }
             return AuthResponse.builder().token(token).build();
 
@@ -68,27 +66,17 @@ public class AuthService {
         }
     }
 
-    public ResponseEntity<?> resetPassword(ResetPasswordRequest request) {
-        Optional<PasswordResetToken> tokenOpt = passwordResetTokenRepository.findByToken(request.getToken());
-
-        if (tokenOpt.isEmpty()) {
-            return ResponseEntity.badRequest().body(Map.of(
-                    "message", "Token inválido"
-            ));
-        }
-
-        PasswordResetToken resetToken = tokenOpt.get();
+    @Transactional
+    public void resetPassword(ResetPasswordRequest request) {
+        PasswordResetToken resetToken = passwordResetTokenRepository.findByToken(request.getToken())
+                .orElseThrow(() -> new IllegalArgumentException("Token inválido"));
 
         if (resetToken.getFechaExpiracion().isBefore(LocalDateTime.now())) {
-            return ResponseEntity.badRequest().body(Map.of(
-                    "message", "El token ha expirado"
-            ));
+            throw new IllegalArgumentException("El token ha expirado");
         }
 
         if (request.getNuevaPassword() == null || request.getNuevaPassword().length() < 8) {
-            return ResponseEntity.badRequest().body(Map.of(
-                    "message", "La contraseña debe tener al menos 8 caracteres"
-            ));
+            throw new IllegalArgumentException("La contraseña debe tener al menos 8 caracteres");
         }
 
         Usuario usuario = resetToken.getUsuario();
@@ -96,65 +84,37 @@ public class AuthService {
         usuarioRepository.save(usuario);
 
         passwordResetTokenRepository.delete(resetToken);
-
-        return ResponseEntity.ok(Map.of(
-                "message", "Contraseña actualizada correctamente"
-        ));
     }
 
-    public ResponseEntity<?> forgotPassword(ForgotPasswordRequest request) {
+    @Transactional
+    public void forgotPassword(ForgotPasswordRequest request) {
         if (request == null || request.getEmail() == null || request.getEmail().trim().isEmpty()) {
-            return ResponseEntity.badRequest().body(Map.of(
-                    "message", "Debe ingresar un correo electrónico"
-            ));
+            throw new IllegalArgumentException("Debe ingresar un correo electrónico");
         }
 
         String email = request.getEmail().trim();
-
-        Optional<Usuario> usuarioOpt = usuarioRepository.findByEmail(email);
-
-        if (usuarioOpt.isEmpty()) {
-            return ResponseEntity.badRequest().body(Map.of(
-                    "message", "No existe una cuenta asociada a ese correo"
-            ));
-        }
-
-        Usuario usuario = usuarioOpt.get();
+        Usuario usuario = usuarioRepository.findByEmail(email)
+                .orElseThrow(() -> new IllegalArgumentException("No existe una cuenta asociada a ese correo"));
 
         if (!usuario.getRol().equals(Rol.CLIENTE)) {
-            return ResponseEntity.badRequest().body(Map.of(
-                    "message", "Este usuario no puede recuperar la contraseña desde aquí. Contacte al administrador"
-            ));
+            throw new IllegalArgumentException("Este usuario no puede recuperar la contraseña desde aquí. Contacte al administrador");
         }
 
         String token = UUID.randomUUID().toString();
         String enlace = "http://localhost:8080/reset-password.html?token=" + token;
 
-        try {
-            emailService.enviarCorreo(
-                    usuario.getEmail(),
-                    "Recuperación de contraseña",
-                    "Haga clic en el siguiente enlace para restablecer su contraseña: " + enlace
-            );
+        emailService.enviarCorreo(
+                usuario.getEmail(),
+                "Recuperación de contraseña",
+                "Haga clic en el siguiente enlace para restablecer su contraseña: " + enlace
+        );
 
-            PasswordResetToken resetToken = new PasswordResetToken();
-            resetToken.setToken(token);
-            resetToken.setUsuario(usuario);
-            resetToken.setFechaExpiracion(LocalDateTime.now().plusMinutes(30));
+        PasswordResetToken resetToken = new PasswordResetToken();
+        resetToken.setToken(token);
+        resetToken.setUsuario(usuario);
+        resetToken.setFechaExpiracion(LocalDateTime.now().plusMinutes(30));
 
-            passwordResetTokenRepository.save(resetToken);
-
-            return ResponseEntity.ok(Map.of(
-                    "message", "Se ha enviado un enlace de recuperación a su correo"
-            ));
-
-        } catch (Exception e) {
-            e.printStackTrace();
-
-            return ResponseEntity.internalServerError().body(Map.of(
-                    "message", "No se pudo enviar el correo de recuperación. Verifique la configuración del correo."
-            ));
-        }
+        passwordResetTokenRepository.save(resetToken);
     }
 
 
@@ -163,48 +123,45 @@ public class AuthService {
         DireccionEnvio direccionEnvio = new DireccionEnvio();
         Carrito carrito = new Carrito();
 
-        Usuario usuario = new Usuario();
-        usuario.setNombre(registerRequest.getNombre());
-        usuario.setEmail(registerRequest.getEmail());
-        usuario.setPassword(passwordEncoder.encode(registerRequest.getPassword()));
-        usuario.setRol(Rol.CLIENTE);
-        usuario.setFecha_creacion(LocalDate.now());
-        usuario.setEstado(true);
-        usuario.setDireccionEnvio(direccionEnvio);
-        carrito.setUsuario(usuario);
-        usuario.setCarrito(carrito);
-        usuarioController.crearUsuario(usuario);
-        return new AuthResponse().builder().token(jwtService.getToken(usuario)).build();
+        UsuarioDTO usuario = UsuarioDTO.builder()
+                .nombre(registerRequest.getNombre())
+                .email(registerRequest.getEmail())
+                .password(passwordEncoder.encode(registerRequest.getPassword()))
+                .estado(true)
+                .fecha_creacion(LocalDate.now())
+                .rol(Rol.CLIENTE)
+                .carrito(carrito)
+                .direccionEnvio(direccionEnvio)
+                .build();
+
+        UsuarioDTO dto = usuarioService.saveUsuario(usuario);
+
+        return AuthResponse.builder().token(jwtService.getToken(dto)).build();
     }
 
-    public AuthResponse registrarEmpleado(RegisterRequest registerRequest) {
+    @Transactional
+    public UsuarioDTO registrarEmpleado(RegisterRequest registerRequest, UsuarioDTO usuarioLogueado) {
 
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        Usuario usuarioLogeado = (Usuario) authentication.getPrincipal();
+        UsuarioDTO usuario = UsuarioDTO.builder()
+                .nombre(registerRequest.getNombre())
+                .email(registerRequest.getEmail())
+                .password(passwordEncoder.encode(registerRequest.getPassword()))
+                .estado(true)
+                .fecha_creacion(LocalDate.now())
+                .rol(registerRequest.getRol())
+                .build();
 
-        Usuario usuario = new Usuario();
-        usuario.setNombre(registerRequest.getNombre());
-        usuario.setEmail(registerRequest.getEmail());
-        usuario.setPassword(passwordEncoder.encode(registerRequest.getPassword()));
+        usuario = usuarioService.saveUsuario(usuario);
 
-        if (registerRequest.getRol().equals("ROLE_ADMIN")) {
-            usuario.setRol(Rol.ADMINISTRADOR);
-        }else{
-            usuario.setRol(Rol.EMPLEADO);
-        }
-        usuario.setFecha_creacion(LocalDate.now());
-        usuario.setEstado(true);
+        LogDTO log = LogDTO.builder()
+                .accion("Registro de empleado")
+                .usuario_id(usuario.getId())
+                .detalle("Usuario administrador " + usuarioLogueado.getNombre() + " registro un nuevo empleado")
+                .fecha_actualizacion(LocalDateTime.now())
+                .build();
 
-        usuarioController.crearUsuario(usuario);
+        logActividadService.saveLogActividad(log);
 
-        LogActividad logActividad = new LogActividad();
-        logActividad.setUsuario(usuario);
-        logActividad.setAccion("Registro de empleado");
-        logActividad.setDetalle("Usuario administrador " + usuarioLogeado.getNombre() + " registro un nuevo empleado");
-        logActividad.setFecha_actualizacion(LocalDateTime.now());
-
-        logActividadService.saveLogActividad(logActividad);
-
-        return new AuthResponse().builder().token(jwtService.getToken(usuario)).build();
+        return usuario;
     }
 }

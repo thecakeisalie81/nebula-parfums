@@ -52,7 +52,7 @@ public class PayPalService {
         );
 
         JsonNode json = objectMapper.readTree(response.getBody());
-        return json.get("access_token").asText();
+        return json.get("access_token").asString();
     }
 
     public String crearOrden(BigDecimal total) throws Exception {
@@ -84,7 +84,7 @@ public class PayPalService {
         );
 
         JsonNode json = objectMapper.readTree(response.getBody());
-        return json.get("id").asText();
+        return json.get("id").asString();
     }
 
     public JsonNode capturarOrden(String orderId) throws Exception {

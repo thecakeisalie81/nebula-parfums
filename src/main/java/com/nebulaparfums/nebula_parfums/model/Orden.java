@@ -36,13 +36,13 @@ public class Orden {
     public Orden() {
     }
 
-    public Orden(Integer id_orden, EstadoOrden estado, Double total, LocalDateTime fecha_creacion, Usuario usuario, String direccion, List<OrdenDetalle> listaOrdenDetalle) {
+    public Orden(Integer id_orden, Double total, LocalDateTime fecha_creacion, String direccion, EstadoOrden estado, Usuario usuario, List<OrdenDetalle> listaOrdenDetalle) {
         this.id_orden = id_orden;
-        this.estado = estado;
         this.total = total;
         this.fecha_creacion = fecha_creacion;
-        this.usuario = usuario;
         this.direccion = direccion;
+        this.estado = estado;
+        this.usuario = usuario;
         this.listaOrdenDetalle = listaOrdenDetalle;
     }
 }

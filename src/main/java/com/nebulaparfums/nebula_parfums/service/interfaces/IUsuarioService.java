@@ -7,7 +7,7 @@ import org.springframework.data.domain.Pageable;
 
 
 public interface IUsuarioService {
-    public UsuarioDTO getUsuarioById(Integer id);
+    public Usuario getUsuarioById(Integer id);
     public Page<UsuarioDTO> getUsuarios(Pageable pageable, String nombre);
     public UsuarioDTO saveUsuario(UsuarioDTO usuario);
     public void deleteUsuarioById(Integer id);
