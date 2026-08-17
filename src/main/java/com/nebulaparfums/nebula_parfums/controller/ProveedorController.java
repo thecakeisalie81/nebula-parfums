@@ -1,58 +1,78 @@
 package com.nebulaparfums.nebula_parfums.controller;
 
-import com.nebulaparfums.nebula_parfums.model.Proveedor;
+import com.nebulaparfums.nebula_parfums.dto.ProveedorDTO;
 import com.nebulaparfums.nebula_parfums.service.interfaces.IProveedorService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
+@RequiredArgsConstructor
+@RequestMapping("/api/proveedor")
 public class ProveedorController {
-    @Autowired
-    private IProveedorService iProveedorService;
+    private final IProveedorService iProveedorService;
 
-    @GetMapping("/proveedor/traer")
-    public Page<Proveedor> traerProveedores(Pageable pageable){
-        return iProveedorService.getProveedores(pageable);
+    @GetMapping
+    public ResponseEntity<Page<ProveedorDTO>> traerProveedores(Pageable pageable){
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(iProveedorService.getProveedores(pageable));
     }
 
-    @GetMapping("/proveedores/traer")
-    public List<Proveedor> traerTodosProveedores(){
-        return iProveedorService.getAllProveedores();
+    @GetMapping("/todos")
+    public ResponseEntity<List<ProveedorDTO>> traerTodosProveedores(){
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(iProveedorService.getAllProveedores());
     }
 
-    @GetMapping("proveedor/total")
+    @GetMapping("/total")
     public int totalProveedores(){
         return iProveedorService.totalProveedores();
     }
 
-    @GetMapping("/proveedor/buscar")
-    public Proveedor buscarProveedor(@RequestParam("id") Integer id){
-        return iProveedorService.getProveedorById(id);
+    @GetMapping("/buscar/{id}")
+    public ResponseEntity<ProveedorDTO> buscarProveedor(@PathVariable Integer id){
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(iProveedorService.getProveedorById(id));
     }
 
-    @PreAuthorize("hasAnyRole('ADMIN','EMPLEADO')")
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR','EMPLEADO')")
     @PutMapping("/proveedor/editar")
-    public String editarProveedor(@RequestBody Proveedor proveedor){
-        iProveedorService.editProveedor(proveedor);
-        return "Proveedor editado com sucesso";
+    public ResponseEntity<ProveedorDTO> editarProveedor(@RequestBody ProveedorDTO proveedor, Integer id){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String email = (authentication != null) ? authentication.getName() : null;
+
+        if (email == null) {
+            throw new IllegalStateException("No se pudo obtener el email del usuario autenticado");
+        }
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(iProveedorService.editProveedor(proveedor, email, id));
     }
 
-    @PreAuthorize("hasAnyRole('ADMIN','EMPLEADO')")
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR','EMPLEADO')")
     @PostMapping("/proveedor/crear")
-    public String crearProveedor(@RequestBody Proveedor proveedor){
-        iProveedorService.saveProveedor(proveedor);
-        return "Proveedor creado exitosamente";
+    public ResponseEntity<ProveedorDTO> crearProveedor(@RequestBody ProveedorDTO proveedor){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String email = (authentication != null) ? authentication.getName() : null;
+
+        if (email == null) {
+            throw new IllegalStateException("No se pudo obtener el email del usuario autenticado");
+        }
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(iProveedorService.saveProveedor(proveedor, email));
     }
 
-    @PreAuthorize("hasAnyRole('ADMIN','EMPLEADO')")
-    @DeleteMapping("/proveedor/borrar")
-    public String borrarProveedor(@RequestParam("id") Integer id){
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR','EMPLEADO')")
+    @DeleteMapping("/proveedor/borrar/{id}")
+    public ResponseEntity<String> borrarProveedor(@PathVariable Integer id){
         iProveedorService.deleteProveedor(id);
-        return "Proveedor eliminado exitosamente";
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Proveedor eliminado");
     }
 }

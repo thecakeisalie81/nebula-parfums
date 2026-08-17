@@ -1,131 +1,92 @@
-/*
 package com.nebulaparfums.nebula_parfums.controller;
 
-import com.nebulaparfums.nebula_parfums.dto.CreateOrdenDTO;
 import com.nebulaparfums.nebula_parfums.dto.OrdenDTO;
 import com.nebulaparfums.nebula_parfums.dto.ProductosPendientesProceso;
-import com.nebulaparfums.nebula_parfums.model.Orden;
+import com.nebulaparfums.nebula_parfums.mapper.Mapper;
 import com.nebulaparfums.nebula_parfums.service.interfaces.IOrdenService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.ContentDisposition;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
+@RequestMapping("/api/orden")
 public class OrdenController {
     @Autowired
     private IOrdenService iOrdenService;
 
-    @GetMapping("/orden/traer")
-    public List<Orden> traerOrdenes(){
-        return iOrdenService.getOrdenes();
+    @GetMapping("/ordenes")
+    public ResponseEntity<List<OrdenDTO>> traerOrdenes(){
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(iOrdenService.getOrdenes());
     }
 
-    @GetMapping("/orden/filtrar")
-    public Page<Orden> filtrarOrdenes(
+    @GetMapping("/filtrar")
+    public ResponseEntity<Page<OrdenDTO>> filtrarOrdenes(
             Pageable pageable,
             @RequestParam(required = false) String estado,
-            @RequestParam(required = false) LocalDate fechaInicio,
-            @RequestParam(required = false) LocalDate fechaFin
+            @RequestParam(required = false) LocalDateTime fechaInicio,
+            @RequestParam(required = false) LocalDateTime fechaFin
     ) {
-        return iOrdenService.filtrarOrden(pageable, estado, fechaInicio, fechaFin);
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(iOrdenService.filtrarOrden(pageable, estado, fechaInicio, fechaFin));
     }
 
-    @GetMapping("/orden/total")
-    public Double totalMes(
+    @GetMapping("/total")
+    public ResponseEntity<Double> totalMes(
             @RequestParam(value = "fechaInicio", required = false) LocalDateTime fechaInicio,
             @RequestParam(value = "fechaFin", required = false) LocalDateTime fechaFin) {
-        return iOrdenService.sumaTotalesMes(fechaInicio, fechaFin);
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(iOrdenService.sumaTotalesMes(fechaInicio, fechaFin));
     }
 
-    @GetMapping("/orden/recientes")
-    public List<Orden> recientes(){
-        return iOrdenService.getUltimasOrdenesPendiente();
+    @GetMapping("/recientes")
+    public ResponseEntity<List<OrdenDTO>> recientes(Pageable page){
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(iOrdenService.getUltimasOrdenesPendiente(page));
     }
 
-    @GetMapping("/orden/totales")
-    public ProductosPendientesProceso totales(){
-        return iOrdenService.getPendientesProcesos();
+    @GetMapping("/totales")
+    public ResponseEntity<ProductosPendientesProceso> totales(){
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(iOrdenService.getPendientesProcesos());
     }
 
-    @GetMapping("/orden/buscar")
-    public Orden buscarOrden(@RequestParam("id") int id){
-        return iOrdenService.getOrdenById(id);
+    @GetMapping("/buscar/{id}")
+    public ResponseEntity<OrdenDTO> buscarOrden(@PathVariable Integer id){
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(Mapper.toDTO(iOrdenService.getOrdenById(id)));
     }
 
-    @DeleteMapping("/orden/borrar")
-    public String borrarOrden(@RequestParam("id") int id){
+    @DeleteMapping("/borrar/{id}")
+    public ResponseEntity<String> borrarOrden(@PathVariable int id){
         iOrdenService.deleteOrden(id);
-        return "Orden borrado con sucesso";
+        return ResponseEntity.status(HttpStatus.NO_CONTENT)
+                .body("Orden eliminada");
     }
 
-    @GetMapping("/orden/useractual")
-    public List<Orden> userActual(@RequestParam("id") Integer id){
-        return iOrdenService.getOrdenesUsuario(id);
+    @GetMapping("/usuario")
+    public ResponseEntity<List<OrdenDTO>> userActual(@RequestParam("id") Integer id){
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(iOrdenService.getOrdenesUsuario(id));
     }
 
-    @PostMapping("/orden/crear")
-    public String crearOrden(@RequestBody CreateOrdenDTO orden){
-        iOrdenService.crearOrden(orden);
-        return "Orden creado con sucesso";
+    @PostMapping("/crear")
+    public ResponseEntity<OrdenDTO> crearOrden(@RequestBody OrdenDTO orden){
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(iOrdenService.saveOrden(orden));
     }
 
 
-    @PutMapping("/orden/editar")
-    public String editarOrden(@RequestBody OrdenDTO orden){
-        iOrdenService.editOrden(orden);
-        return "Orden editado con sucesso";
+    @PutMapping("/editar/{id}")
+    public ResponseEntity<OrdenDTO> editarOrden(@PathVariable Integer id, @RequestBody OrdenDTO orden){
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(iOrdenService.editOrden(id, orden));
+
     }
-
-    @GetMapping("/reportes/pedidos/pdf")
-    public ResponseEntity<byte[]> exportarPedidosPdf(
-            @RequestParam(required = false) LocalDate fechaInicio,
-            @RequestParam(required = false) LocalDate fechaFin
-    ) {
-        byte[] archivo = iOrdenService.exportarPedidosPdf(fechaInicio, fechaFin);
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_PDF);
-        headers.setContentDisposition(
-                ContentDisposition.attachment()
-                        .filename("reporte_pedidos.pdf")
-                        .build()
-        );
-
-        return ResponseEntity.ok()
-                .headers(headers)
-                .body(archivo);
-    }
-
-    @GetMapping("/reportes/pedidos/excel")
-    public ResponseEntity<byte[]> exportarPedidosExcel(
-            @RequestParam(required = false) LocalDate fechaInicio,
-            @RequestParam(required = false) LocalDate fechaFin
-    ) {
-        byte[] archivo = iOrdenService.exportarPedidosExcel(fechaInicio, fechaFin);
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(
-                MediaType.parseMediaType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
-        );
-        headers.setContentDisposition(
-                ContentDisposition.attachment()
-                        .filename("reporte_pedidos.xlsx")
-                        .build()
-        );
-
-        return ResponseEntity.ok()
-                .headers(headers)
-                .body(archivo);
-    }
-
 }
-*/

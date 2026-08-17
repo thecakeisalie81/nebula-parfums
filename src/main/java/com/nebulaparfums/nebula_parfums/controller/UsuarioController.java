@@ -20,7 +20,8 @@ public class UsuarioController {
 
     @GetMapping("/usuarios")
     public ResponseEntity<Page<UsuarioDTO>> traerUsuarios(Pageable pageable,String nombre) {
-        return ResponseEntity.status(HttpStatus.OK).body(iUsuarioService.getUsuarios(pageable, nombre));
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(iUsuarioService.getUsuarios(pageable, nombre));
     }
 
     @GetMapping("/autenticacion")
@@ -36,8 +37,9 @@ public class UsuarioController {
     }
 
     @GetMapping("/activos")
-    public int activos() {
-        return iUsuarioService.totalUsuariosActivos();
+    public ResponseEntity<Integer> activos() {
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(iUsuarioService.totalUsuariosActivos());
     }
 
     @GetMapping("/buscar")

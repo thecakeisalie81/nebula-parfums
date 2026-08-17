@@ -157,4 +157,13 @@ public class RestExceptions {
         exception.setMessage("El correo ya está registrado");
         return new ResponseEntity<>(exception, HttpStatus.CONFLICT);
     }
+
+    @ExceptionHandler
+    public ResponseEntity<CustomMessageException> handleException(IllegalStateException e){
+        CustomMessageException exception = new CustomMessageException();
+        exception.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
+        exception.setTimestamp(System.currentTimeMillis());
+        exception.setMessage(e.getMessage());
+        return new ResponseEntity<>(exception, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
 }

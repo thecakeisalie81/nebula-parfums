@@ -19,9 +19,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 @RequestMapping("/api/auth")
 public class AuthController {
-
-    @Autowired
-    private AuthService authService;
+    private final AuthService authService;
 
     @PostMapping("/login")
     public ResponseEntity<AuthResponse> login(@Valid @RequestBody LoginRequest loginRequest){
