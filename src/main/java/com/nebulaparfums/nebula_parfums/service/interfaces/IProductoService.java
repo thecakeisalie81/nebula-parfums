@@ -1,14 +1,13 @@
 package com.nebulaparfums.nebula_parfums.service.interfaces;
 
 import com.nebulaparfums.nebula_parfums.dto.ProductoDTO;
-import com.nebulaparfums.nebula_parfums.model.Producto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
 public interface IProductoService {
-    public Page<ProductoDTO> getProductos(Pageable pageable);
+    public List<ProductoDTO> getProductos();
     public Page<ProductoDTO> getProductosFiltrados(
             Pageable pageable,
             String nombre,

@@ -218,9 +218,42 @@ public class MovimientoInventarioService implements IMovimientoInventarioService
         MovimientoDTO movimientoDTO = saveMovimientoInventario(movimiento);
 
         LogDTO log = LogDTO.builder()
-                .accion("Modificación de inventario")
+                .accion("Registro de producto")
                 .fecha_actualizacion(LocalDateTime.now())
                 .detalle("Usuario " + usuario.getNombre() + " realizo el registro del producto " + producto.getNombre())
+                .usuario_id(movimiento.getId_usuario())
+                .build();
+
+        iLogActividadService.saveLogActividad(log);
+
+        return movimientoDTO;
+    }
+
+    /**
+     * Registra la modification de un producto y el log de actividad
+     * @param movimientoDTO DTO con los datos a registrar en el registro del producto
+     * @return MovimientoDTO con los datos que se acaban de insertar en la db
+     */
+    @Override
+    @Transactional
+    public MovimientoDTO registrarEdicionProducto(MovimientoDTO movimientoDTO) {
+
+        Usuario usuario = iUsuarioRepository.findById(movimientoDTO.getId_usuario())
+                .orElseThrow(()-> new ResourceNotFoundException("No se encontró el usuario"));
+
+        Producto producto = iProductoRepository.findById(movimientoDTO.getId_producto())
+                .orElseThrow(()-> new ResourceNotFoundException("No se encontró el producto"));
+
+        if (movimientoDTO.getCantidad() < 0) {
+            throw new InvalidQuantityException("Cantidad inválida");
+        }
+
+        MovimientoDTO movimiento = saveMovimientoInventario(movimientoDTO);
+
+        LogDTO log = LogDTO.builder()
+                .accion("Edición de producto")
+                .fecha_actualizacion(LocalDateTime.now())
+                .detalle("Usuario " + usuario.getNombre() + " modifico los datos del producto " + producto.getNombre())
                 .usuario_id(movimiento.getId_usuario())
                 .build();
 

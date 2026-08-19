@@ -1,49 +1,34 @@
-/*
 package com.nebulaparfums.nebula_parfums.controller;
 
 import com.nebulaparfums.nebula_parfums.dto.MovimientoDTO;
 import com.nebulaparfums.nebula_parfums.dto.ProductoDTO;
-import com.nebulaparfums.nebula_parfums.model.Categoria;
-import com.nebulaparfums.nebula_parfums.model.Producto;
-import com.nebulaparfums.nebula_parfums.model.Proveedor;
-import com.nebulaparfums.nebula_parfums.service.interfaces.ICategoriaService;
+import com.nebulaparfums.nebula_parfums.dto.UsuarioDTO;
 import com.nebulaparfums.nebula_parfums.service.interfaces.IMovimientoInventarioService;
 import com.nebulaparfums.nebula_parfums.service.interfaces.IProductoService;
-import com.nebulaparfums.nebula_parfums.service.interfaces.IProveedorService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.time.LocalDate;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
+@RequestMapping("/api/producto")
+@RequiredArgsConstructor
 public class ProductoController {
-    @Autowired
-    private IProductoService iProductoService;
-
-    @Autowired
-    private ICategoriaService iCategoriaService;
-
-    @Autowired
-    private IProveedorService iProveedorService;
-
-    @Autowired
-    private IMovimientoInventarioService iMovimientoInventarioService;
+    private final IProductoService iProductoService;
+    private final IMovimientoInventarioService iMovimientoInventarioService;
 
 
-    */
-/*@GetMapping("/producto/traer")
-    public Page<Producto> getProductos(
+    @GetMapping("/productos")
+    public ResponseEntity<Page<ProductoDTO>> getProductos(
             @RequestParam(required = false) String nombre,
             @RequestParam(required = false) Integer idCategoria,
             @RequestParam(required = false) Integer idProveedor,
@@ -53,186 +38,117 @@ public class ProductoController {
             @RequestParam(required = false) Integer disponible,
             Pageable pageable
     ) {
-        return iProductoService.getProductosFiltrados(
-                pageable,
-                nombre,
-                idCategoria,
-                idProveedor,
-                estadoStock,
-                precioMinimo,
-                precioMaximo,
-                disponible
-        );
-    }*//*
-
-
-    */
-/*@GetMapping("/producto/resultados")
-    public Page<Producto> resultadoBusqueda(@RequestParam("nombre") String nombre, Pageable pageable) {
-        return iProductoService.getProductosBusqueda(pageable, nombre);
-    }*//*
-
-
-    @GetMapping("/inventario/reporte")
-    public List<Producto> getProductosReporte() {
-        return iProductoService.getProductosReporte();
+        return ResponseEntity.status(HttpStatus.OK).body(iProductoService.getProductosFiltrados(
+                pageable, nombre, idCategoria, idProveedor, estadoStock, precioMinimo, precioMaximo, disponible
+        ));
     }
 
-    @GetMapping("/producto/lowstock")
+    @GetMapping("/inventario")
+    public ResponseEntity<List<ProductoDTO>> getProductosReporte() {
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(iProductoService.getProductos());
+    }
+
+    @GetMapping("/lowstock")
     public Integer lowStock() {
         return iProductoService.getProductosLowStock();
     }
 
     @GetMapping("/producto/bajostock")
-    public List<Producto> bajosStock() {
-        return iProductoService.get4ProductosBajoStock();
+    public ResponseEntity<Page<ProductoDTO>> bajosStock(Pageable pageable) {
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(iProductoService.getProductosBajoStock(pageable));
     }
 
-    @GetMapping("/producto/nostock")
-    public Integer noStock() {
-        return iProductoService.getProductosSinStock();
+    @GetMapping("/nostock")
+    public ResponseEntity<Integer> noStock() {
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(iProductoService.getProductosSinStock());
     }
 
-    @GetMapping("/producto/totalproductos")
-    public Integer totalProductos() {
-        return iProductoService.getTotalStock();
+    @GetMapping("/totalproductos")
+    public ResponseEntity<Integer> totalProductos() {
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(iProductoService.getTotalStock());
     }
 
-    @GetMapping("/producto/constock")
-    public Integer productoConstock() {
-        return iProductoService.getProductosConStock();
-    }
-
-    @GetMapping("/producto/categoria")
-    public List<Producto> productosPorCategoria(@RequestParam("categoria") Integer categoria) {
-        return iProductoService.getProductosCategoria(categoria);
-    }
-
-    @GetMapping("/producto/buscar")
-    public Producto buscarProducto(@RequestParam("id") Integer id) {
-        return iProductoService.getProductoById(id);
+    @GetMapping("/buscar/{id}")
+    public ResponseEntity<ProductoDTO> buscarProducto(@PathVariable Integer id) {
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(iProductoService.getProductoById(id));
     }
 
     @PreAuthorize("hasAnyRole('ADMIN','EMPLEADO')")
-    @PutMapping("/producto/editar")
-    public ResponseEntity<?> editarProducto(@RequestParam Integer id_producto,
-                                            @RequestParam String nombre,
-                                            @RequestParam String descripcion,
-                                            @RequestParam Double precio,
-                                            @RequestParam int stock_actual,
-                                            @RequestParam int stock_minimo,
-                                            @RequestParam Integer categoria,
-                                            @RequestParam Integer proveedor,
-                                            @RequestParam(required = false) MultipartFile imagen) {
-
-        Categoria cat = iCategoriaService.getCategoriaById(categoria);
-        Proveedor prov = iProveedorService.getProveedorById(proveedor);
-        LocalDate fecha = LocalDate.now();
-
-        Producto producto = iProductoService.getProductoById(id_producto);
-
-        int cant = producto.getStock_actual();
-
-        String nombreImagen = null;
-        if (imagen != null && !imagen.isEmpty()) {
-            try {
-                String ruta = "src/main/uploads/";
-                nombreImagen = System.currentTimeMillis() + "_" + imagen.getOriginalFilename();
-
-                Path path = Paths.get(ruta + nombreImagen);
-                Files.write(path, imagen.getBytes());
-
-                producto.setImagen(nombreImagen);
-
-            } catch (IOException e) {
-                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                        .body("Error al guardar imagen");
-            }
-        }
-
-
-        producto.setNombre(nombre);
-        producto.setDescripcion(descripcion);
-        producto.setCategoria(cat);
-        producto.setProveedor(prov);
-        producto.setPrecio(precio);
-        producto.setStock_actual(stock_actual);
-        producto.setStock_minimo(stock_minimo);
-        producto.setFecha_registro(fecha);
-
-
-
-        iProductoService.editProducto(producto);
-
-        if (cant > producto.getStock_actual()) {
-            iMovimientoInventarioService.registrarSalida(producto.getId_producto(), (cant - producto.getStock_actual()));
-        }else if (cant < producto.getStock_actual()) {
-            iMovimientoInventarioService.registrarEntrada(producto.getId_producto(), (producto.getStock_actual() -cant));
-        }
-        return ResponseEntity
-                .status(HttpStatus.OK)
-                .body(producto);
-
-    }
-
-    @PreAuthorize("hasAnyRole('ADMIN','EMPLEADO')")
-    @DeleteMapping("/producto/borrar")
-    public String borrarProducto(@RequestParam("id") Integer id) {
+    @DeleteMapping("/borrar/{id}")
+    public ResponseEntity<String> borrarProducto(@PathVariable Integer id) {
         iProductoService.deleteProducto(id);
-        return "Producto eliminado con sucesso";
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Producto borrado");
     }
 
     @PreAuthorize("hasAnyRole('ADMIN','EMPLEADO')")
-    @PostMapping("/producto/crear")
-    public ResponseEntity<?> crearProducto(@RequestParam String nombre,
-                                           @RequestParam String descripcion,
-                                           @RequestParam Double precio,
-                                           @RequestParam int stock_actual,
-                                           @RequestParam int stock_minimo,
-                                           @RequestParam Integer categoria,
-                                           @RequestParam Integer proveedor,
-                                           @RequestParam(required = false) MultipartFile imagen) {
+    @PostMapping("/crear")
+    public ResponseEntity<Map<String, Object>> crearProducto(@RequestBody ProductoDTO producto) {
+        ProductoDTO newProducto = iProductoService.saveProducto(producto);
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        assert authentication != null;
+        UsuarioDTO usuario = (UsuarioDTO) authentication.getPrincipal();
 
-        Categoria cat = iCategoriaService.getCategoriaById(categoria);
-        Proveedor prov = iProveedorService.getProveedorById(proveedor);
-        LocalDate fecha = LocalDate.now();
-
-        String nombreImagen = null;
-        if (imagen != null && !imagen.isEmpty()) {
-            try {
-                String ruta = "src/main/uploads/";
-                nombreImagen = System.currentTimeMillis() + "_" + imagen.getOriginalFilename();
-
-                Path path = Paths.get(ruta + nombreImagen);
-                Files.write(path, imagen.getBytes());
-
-            } catch (IOException e) {
-                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                        .body("Error al guardar imagen");
-            }
-        }
-
-        Producto producto = new Producto();
-        producto.setNombre(nombre);
-        producto.setDescripcion(descripcion);
-        producto.setCategoria(cat);
-        producto.setProveedor(prov);
-        producto.setPrecio(precio);
-        producto.setStock_actual(stock_actual);
-        producto.setStock_minimo(stock_minimo);
-        producto.setFecha_registro(fecha);
-        producto.setImagen(nombreImagen);
-
-        iProductoService.saveProducto(producto);
         MovimientoDTO movimientoDTO = new MovimientoDTO();
-        movimientoDTO.setId_producto(producto.getId_producto());
+        movimientoDTO.setId_producto(newProducto.getId());
         movimientoDTO.setCantidad(producto.getStock_actual());
+        assert usuario != null;
+        movimientoDTO.setId_usuario(usuario.getId());
 
-        iMovimientoInventarioService.registrarRegistroProducto(movimientoDTO);
+        MovimientoDTO movimientoRegistro = iMovimientoInventarioService.registrarRegistroProducto(movimientoDTO);
+
+        HashMap<String, Object> respuesta = new HashMap<>();
+        respuesta.put("Producto", newProducto);
+        respuesta.put("Registro", movimientoRegistro);
+
 
         return ResponseEntity
                 .status(HttpStatus.CREATED)
-                .body(producto);
+                .body(respuesta);
+    }
+
+    @PreAuthorize("hasAnyRole('ADMIN','EMPLEADO')")
+    @PutMapping("/editar/{id}")
+    public ResponseEntity<Map<String, Object>> editarProducto(@PathVariable Integer id_producto,
+                                                              @RequestBody ProductoDTO DTO) {
+        //cantidad de producto previa a la edicion
+        int cantidadOld = iProductoService.getProductoById(id_producto).getStock_actual();
+        ProductoDTO producto = iProductoService.editProducto(id_producto, DTO);
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        assert authentication != null;
+        UsuarioDTO usuario = (UsuarioDTO) authentication.getPrincipal();
+        assert usuario != null;
+
+        //para registrar datos editados del producto
+        MovimientoDTO movimientoDTO = new MovimientoDTO();
+        movimientoDTO.setId_producto(producto.getId());
+        movimientoDTO.setCantidad(producto.getStock_actual());
+        movimientoDTO.setId_usuario(usuario.getId());
+        movimientoDTO = iMovimientoInventarioService.registrarEdicionProducto(movimientoDTO);
+
+        //Para registrar salida o entrada de stock
+        MovimientoDTO movimiento =  new MovimientoDTO();
+        movimiento.setId_producto(producto.getId());
+        movimiento.setCantidad(producto.getStock_actual());
+        movimiento.setId_usuario(usuario.getId());
+
+        if (cantidadOld < producto.getStock_actual()) {
+            movimiento = iMovimientoInventarioService.registrarEntrada(movimiento);
+        } else if (cantidadOld > producto.getStock_actual()) {
+            movimiento = iMovimientoInventarioService.registrarSalida(movimiento);
+        }
+
+        HashMap<String, Object> respuesta = new HashMap<>();
+        respuesta.put("Producto", producto);
+        respuesta.put("Actualización", movimientoDTO);
+        respuesta.put("Movimiento", movimiento);
+
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(respuesta);
     }
 }
-*/

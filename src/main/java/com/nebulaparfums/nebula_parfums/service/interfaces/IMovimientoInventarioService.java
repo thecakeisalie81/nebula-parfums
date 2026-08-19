@@ -15,6 +15,7 @@ public interface IMovimientoInventarioService {
     public MovimientoDTO registrarSalida(MovimientoDTO movimientoInventario);
     public MovimientoDTO registrarEntrada(MovimientoDTO movimientoInventario);
     public MovimientoDTO registrarRegistroProducto(MovimientoDTO movimientoDTO);
+    public MovimientoDTO registrarEdicionProducto(MovimientoDTO movimientoDTO);
     public List<MovimientoDTO> ultimosMovimientos(Integer limite);
     public Page<MovimientoDTO> filtrarMovimientos(
             Pageable pageable,

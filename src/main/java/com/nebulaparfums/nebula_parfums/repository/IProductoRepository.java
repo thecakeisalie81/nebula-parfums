@@ -75,7 +75,7 @@ public interface IProductoRepository extends JpaRepository<Producto, Integer> {
 
     /**
      * Cuenta cuantos productos que tienen 0 en stock
-     * @return
+     * @return número de productos sin stock
      */
     @Query("SELECT COUNT(p) FROM Producto p WHERE p.stock_actual = 0")
     Integer countProductosSinStock();

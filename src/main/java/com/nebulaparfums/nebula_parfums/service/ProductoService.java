@@ -14,6 +14,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 
 /**
  * Servicio para gestionar productos.
@@ -29,8 +31,8 @@ public class ProductoService implements IProductoService {
 
 
     @Override
-    public Page<ProductoDTO> getProductos(Pageable pageable) {
-        return iProductoRepository.findAll(pageable).map(Mapper::toDTO);
+    public List<ProductoDTO> getProductos() {
+        return iProductoRepository.findAll().stream().map(Mapper::toDTO).toList();
     }
 
     @Override
