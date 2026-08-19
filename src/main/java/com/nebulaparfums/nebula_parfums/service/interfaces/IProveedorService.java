@@ -8,11 +8,11 @@ import org.springframework.data.domain.Pageable;
 import java.util.List;
 
 public interface IProveedorService {
-    public Page<ProveedorDTO> getProveedores(Pageable pageable);
-    public List<ProveedorDTO> getAllProveedores();
-    public ProveedorDTO getProveedorById(Integer id);
-    public ProveedorDTO saveProveedor(ProveedorDTO proveedor, String email);
-    public void deleteProveedor(Integer id);
-    public ProveedorDTO editProveedor(ProveedorDTO proveedor, String email, Integer id);
-    public int totalProveedores();
+    Page<ProveedorDTO> getProveedores(Pageable pageable);
+    List<ProveedorDTO> getAllProveedores();
+    ProveedorDTO getProveedorById(Integer id);
+    ProveedorDTO saveProveedor(ProveedorDTO proveedor, String email);
+    void deleteProveedor(Integer id);
+    ProveedorDTO editProveedor(ProveedorDTO proveedor, String email, Integer id);
+    int totalProveedores();
 }

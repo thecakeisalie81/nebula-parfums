@@ -1,6 +1,8 @@
 package com.nebulaparfums.nebula_parfums.controller;
 
 import com.nebulaparfums.nebula_parfums.dto.ProveedorDTO;
+import com.nebulaparfums.nebula_parfums.dto.UsuarioDTO;
+import com.nebulaparfums.nebula_parfums.model.Usuario;
 import com.nebulaparfums.nebula_parfums.service.interfaces.IProveedorService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -8,8 +10,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -45,28 +46,18 @@ public class ProveedorController {
 
     @PreAuthorize("hasAnyRole('ADMINISTRADOR','EMPLEADO')")
     @PutMapping("/proveedor/editar")
-    public ResponseEntity<ProveedorDTO> editarProveedor(@RequestBody ProveedorDTO proveedor, Integer id){
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String email = (authentication != null) ? authentication.getName() : null;
-
-        if (email == null) {
-            throw new IllegalStateException("No se pudo obtener el email del usuario autenticado");
-        }
+    public ResponseEntity<ProveedorDTO> editarProveedor(@RequestBody ProveedorDTO proveedor,
+                                                        Integer id,
+                                                        @AuthenticationPrincipal Usuario usuario){
         return ResponseEntity.status(HttpStatus.OK)
-                .body(iProveedorService.editProveedor(proveedor, email, id));
+                .body(iProveedorService.editProveedor(proveedor, usuario.getEmail(), id));
     }
 
     @PreAuthorize("hasAnyRole('ADMINISTRADOR','EMPLEADO')")
     @PostMapping("/proveedor/crear")
-    public ResponseEntity<ProveedorDTO> crearProveedor(@RequestBody ProveedorDTO proveedor){
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String email = (authentication != null) ? authentication.getName() : null;
-
-        if (email == null) {
-            throw new IllegalStateException("No se pudo obtener el email del usuario autenticado");
-        }
+    public ResponseEntity<ProveedorDTO> crearProveedor(@RequestBody ProveedorDTO proveedor, @AuthenticationPrincipal UsuarioDTO usuario){
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(iProveedorService.saveProveedor(proveedor, email));
+                .body(iProveedorService.saveProveedor(proveedor, usuario.getEmail()));
     }
 
     @PreAuthorize("hasAnyRole('ADMINISTRADOR','EMPLEADO')")

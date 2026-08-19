@@ -1,103 +1,46 @@
-/*
 package com.nebulaparfums.nebula_parfums.controller;
 
 import com.nebulaparfums.nebula_parfums.dto.MovimientoDTO;
-import com.nebulaparfums.nebula_parfums.model.MovimientoInventario;
 import com.nebulaparfums.nebula_parfums.service.interfaces.IMovimientoInventarioService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.http.ContentDisposition;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
+@RequestMapping("/api/movimiento")
 public class MovimientoInventarioController {
     @Autowired
     private IMovimientoInventarioService iMovimientoInventarioService;
 
     @PreAuthorize("hasAnyRole('ADMIN','EMPLEADO')")
-    @GetMapping("/movimiento/traer")
-    public Page<MovimientoInventario> getMovimientoInventario(
+    @GetMapping("/movimientos")
+    public ResponseEntity<Page<MovimientoDTO>> getMovimientoInventario(
             @RequestParam(required = false) String producto,
             @RequestParam(required = false) String tipo,
-            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaInicio,
-            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaFin,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDateTime fechaInicio,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDateTime fechaFin,
             Pageable pageable
     ) {
-        return iMovimientoInventarioService.filtrarMovimientos(
+        return ResponseEntity.status(HttpStatus.OK).body(iMovimientoInventarioService.filtrarMovimientos(
                 pageable,
                 producto,
                 tipo,
                 fechaInicio,
                 fechaFin
-        );
+        ));
     }
 
     @GetMapping("/movimiento/ultimos")
-    public List<MovimientoInventario> getUltimosMovimientoInventario() {
-        return iMovimientoInventarioService.ultimos5Movimientos();
-    }
-
-    @PostMapping("/movimiento/salida")
-    public ResponseEntity<?> movimietoSalida(@RequestBody MovimientoDTO movimientoDTO) {
-        iMovimientoInventarioService.registrarSalida(movimientoDTO.getId_producto(), movimientoDTO.getCantidad());
-        return ResponseEntity.ok().build();
-    }
-
-    @PostMapping("/movimiento/entrada")
-    public ResponseEntity<?> movimietoEntrada(@RequestBody MovimientoDTO movimientoDTO) {
-        iMovimientoInventarioService.registrarEntrada(movimientoDTO.getId_producto(), movimientoDTO.getCantidad());
-        return ResponseEntity.ok().build();
-    }
-
-    @GetMapping("/reportes/movimientos/pdf")
-    public ResponseEntity<byte[]> exportarMovimientosPdf(
-            @RequestParam(required = false) LocalDate fechaInicio,
-            @RequestParam(required = false) LocalDate fechaFin
-    ) {
-        byte[] archivo = iMovimientoInventarioService.exportarMovimientosPdf(fechaInicio, fechaFin);
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_PDF);
-        headers.setContentDisposition(
-                ContentDisposition.attachment()
-                        .filename("reporte_movimientos.pdf")
-                        .build()
-        );
-
-        return ResponseEntity.ok()
-                .headers(headers)
-                .body(archivo);
-    }
-
-    @GetMapping("/reportes/movimientos/excel")
-    public ResponseEntity<byte[]> exportarMovimientosExcel(
-            @RequestParam(required = false) LocalDate fechaInicio,
-            @RequestParam(required = false) LocalDate fechaFin
-    ) {
-        byte[] archivo = iMovimientoInventarioService.exportarMovimientosExcel(fechaInicio, fechaFin);
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.parseMediaType(
-                "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-        ));
-        headers.setContentDisposition(
-                ContentDisposition.attachment()
-                        .filename("reporte_movimientos.xlsx")
-                        .build()
-        );
-
-        return ResponseEntity.ok()
-                .headers(headers)
-                .body(archivo);
+    public ResponseEntity<List<MovimientoDTO>> getUltimosMovimientoInventario(Integer limite) {
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(iMovimientoInventarioService.ultimosMovimientos(limite));
     }
 }
-*/

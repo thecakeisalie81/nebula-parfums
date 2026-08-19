@@ -5,8 +5,8 @@ import com.nebulaparfums.nebula_parfums.model.Carrito;
 
 
 public interface ICarritoService {
-    public Carrito getCarritoById(Integer id);
-    public void deleteCarritoById(Integer id);
-    public CarritoDTO editCarrito(Integer id, CarritoDTO carrito);
-    public CarritoDTO saveCarrito(CarritoDTO carrito);
+    Carrito getCarritoById(Integer id);
+    void deleteCarritoById(Integer id);
+    CarritoDTO editCarrito(Integer id, CarritoDTO carrito);
+    CarritoDTO saveCarrito(CarritoDTO carrito);
 }

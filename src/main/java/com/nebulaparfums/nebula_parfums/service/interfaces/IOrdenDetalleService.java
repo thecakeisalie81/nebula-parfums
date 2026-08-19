@@ -10,11 +10,11 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 public interface IOrdenDetalleService {
-    public OrdenDetalleDTO saveOrdenDetalle(OrdenDetalleDTO ordenDetalle);
-    public void deleteOrdenDetalleById(Integer id);
-    public OrdenDetalleDTO editOrdenDetalle(Integer id, OrdenDetalleDTO ordenDetalle);
-    public OrdenDetalle getOrdenDetalleById(Integer id);
-    public List<ProductoCantidadDTO> getProductoCantidadDTO(@Param("fechaInicio") LocalDateTime fechaInicio,
+    OrdenDetalleDTO saveOrdenDetalle(OrdenDetalleDTO ordenDetalle);
+    void deleteOrdenDetalleById(Integer id);
+    OrdenDetalleDTO editOrdenDetalle(Integer id, OrdenDetalleDTO ordenDetalle);
+    OrdenDetalle getOrdenDetalleById(Integer id);
+    List<ProductoCantidadDTO> getProductoCantidadDTO(@Param("fechaInicio") LocalDateTime fechaInicio,
                                                             @Param("fechaFin") LocalDateTime fechaFin);
 
     byte[] exportarVentasExcel(LocalDateTime fechaInicio, LocalDateTime fechaFin);

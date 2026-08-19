@@ -12,10 +12,10 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 public interface ILogActividadService {
-    public TotalEventosyHoyDTO getTotalEventosyHoyDTO();
-    public LogDTO saveLogActividad(LogDTO logActividad);
-    public List<LogDTO> getLogsActividad();
-    public Page<LogDTO> filtrarLogs(Pageable pageable, String accion, LocalDateTime fechaInicio, LocalDateTime fechaFin);
-    public List<LogDTO> filtrarLogsPdf(LocalDateTime fechaInicio, LocalDateTime fechaFin);
+    TotalEventosyHoyDTO getTotalEventosyHoyDTO();
+    LogDTO saveLogActividad(LogDTO logActividad);
+    List<LogDTO> getLogsActividad();
+    Page<LogDTO> filtrarLogs(Pageable pageable, String accion, LocalDateTime fechaInicio, LocalDateTime fechaFin);
+    List<LogDTO> filtrarLogsPdf(LocalDateTime fechaInicio, LocalDateTime fechaFin);
     byte[] exportarLogsPdf(LocalDateTime fechaInicio, LocalDateTime fechaFin);
 }

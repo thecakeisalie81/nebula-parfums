@@ -4,7 +4,7 @@ import com.nebulaparfums.nebula_parfums.dto.OrdenDTO;
 import com.nebulaparfums.nebula_parfums.dto.ProductosPendientesProceso;
 import com.nebulaparfums.nebula_parfums.mapper.Mapper;
 import com.nebulaparfums.nebula_parfums.service.interfaces.IOrdenService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -16,9 +16,9 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/orden")
+@RequiredArgsConstructor
 public class OrdenController {
-    @Autowired
-    private IOrdenService iOrdenService;
+    private final IOrdenService iOrdenService;
 
     @GetMapping("/ordenes")
     public ResponseEntity<List<OrdenDTO>> traerOrdenes(){

@@ -10,21 +10,20 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 public interface IMovimientoInventarioService {
-    public Page<MovimientoDTO> getMovimientoInventario(Pageable pageable);
-    public MovimientoDTO saveMovimientoInventario(MovimientoDTO movimientoInventario);
-    public MovimientoDTO registrarSalida(MovimientoDTO movimientoInventario);
-    public MovimientoDTO registrarEntrada(MovimientoDTO movimientoInventario);
-    public MovimientoDTO registrarRegistroProducto(MovimientoDTO movimientoDTO);
-    public MovimientoDTO registrarEdicionProducto(MovimientoDTO movimientoDTO);
-    public List<MovimientoDTO> ultimosMovimientos(Integer limite);
-    public Page<MovimientoDTO> filtrarMovimientos(
+    MovimientoDTO saveMovimientoInventario(MovimientoDTO movimientoInventario);
+    MovimientoDTO registrarSalida(MovimientoDTO movimientoInventario);
+    MovimientoDTO registrarEntrada(MovimientoDTO movimientoInventario);
+    MovimientoDTO registrarRegistroProducto(MovimientoDTO movimientoDTO);
+    MovimientoDTO registrarEdicionProducto(MovimientoDTO movimientoDTO);
+    List<MovimientoDTO> ultimosMovimientos(Integer limite);
+    Page<MovimientoDTO> filtrarMovimientos(
             Pageable pageable,
             String producto,
             String tipo,
             LocalDateTime fechaInicio,
             LocalDateTime fechaFin
     );
-    public List<MovimientoDTO> filtrarMovimientosReportes(
+    List<MovimientoDTO> filtrarMovimientosReportes(
             LocalDateTime fechaInicio,
             LocalDateTime fechaFin
     );

@@ -1,6 +1,7 @@
 package com.nebulaparfums.nebula_parfums.controller;
 
 import com.nebulaparfums.nebula_parfums.service.interfaces.ILogActividadService;
+import com.nebulaparfums.nebula_parfums.service.interfaces.IMovimientoInventarioService;
 import com.nebulaparfums.nebula_parfums.service.interfaces.IOrdenDetalleService;
 import com.nebulaparfums.nebula_parfums.service.interfaces.IOrdenService;
 import lombok.RequiredArgsConstructor;
@@ -22,6 +23,7 @@ public class ReportController {
     private final ILogActividadService iLogActividadService;
     private final IOrdenService iOrdenService;
     private final IOrdenDetalleService iOrdenDetalleService;
+    private final IMovimientoInventarioService iMovimientoInventarioService;
 
     @GetMapping("/logs/pdf")
     public ResponseEntity<byte[]> crearLogPDF(
@@ -120,6 +122,48 @@ public class ReportController {
         headers.setContentDisposition(
                 ContentDisposition.attachment()
                         .filename("reporte_ventas.xlsx")
+                        .build()
+        );
+
+        return ResponseEntity.ok()
+                .headers(headers)
+                .body(archivo);
+    }
+
+    @GetMapping("/movimientos/pdf")
+    public ResponseEntity<byte[]> exportarMovimientosPdf(
+            @RequestParam(required = false) LocalDateTime fechaInicio,
+            @RequestParam(required = false) LocalDateTime fechaFin
+    ) {
+        byte[] archivo = iMovimientoInventarioService.exportarMovimientosPdf(fechaInicio, fechaFin);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_PDF);
+        headers.setContentDisposition(
+                ContentDisposition.attachment()
+                        .filename("reporte_movimientos.pdf")
+                        .build()
+        );
+
+        return ResponseEntity.ok()
+                .headers(headers)
+                .body(archivo);
+    }
+
+    @GetMapping("/movimientos/excel")
+    public ResponseEntity<byte[]> exportarMovimientosExcel(
+            @RequestParam(required = false) LocalDateTime fechaInicio,
+            @RequestParam(required = false) LocalDateTime fechaFin
+    ) {
+        byte[] archivo = iMovimientoInventarioService.exportarMovimientosExcel(fechaInicio, fechaFin);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.parseMediaType(
+                "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+        ));
+        headers.setContentDisposition(
+                ContentDisposition.attachment()
+                        .filename("reporte_movimientos.xlsx")
                         .build()
         );
 

@@ -11,8 +11,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -87,16 +86,14 @@ public class ProductoController {
 
     @PreAuthorize("hasAnyRole('ADMIN','EMPLEADO')")
     @PostMapping("/crear")
-    public ResponseEntity<Map<String, Object>> crearProducto(@RequestBody ProductoDTO producto) {
+    public ResponseEntity<Map<String, Object>> crearProducto(@RequestBody ProductoDTO producto,
+                                                             @AuthenticationPrincipal UsuarioDTO usuario) {
+
         ProductoDTO newProducto = iProductoService.saveProducto(producto);
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        assert authentication != null;
-        UsuarioDTO usuario = (UsuarioDTO) authentication.getPrincipal();
 
         MovimientoDTO movimientoDTO = new MovimientoDTO();
         movimientoDTO.setId_producto(newProducto.getId());
         movimientoDTO.setCantidad(producto.getStock_actual());
-        assert usuario != null;
         movimientoDTO.setId_usuario(usuario.getId());
 
         MovimientoDTO movimientoRegistro = iMovimientoInventarioService.registrarRegistroProducto(movimientoDTO);
@@ -114,15 +111,11 @@ public class ProductoController {
     @PreAuthorize("hasAnyRole('ADMIN','EMPLEADO')")
     @PutMapping("/editar/{id}")
     public ResponseEntity<Map<String, Object>> editarProducto(@PathVariable Integer id_producto,
-                                                              @RequestBody ProductoDTO DTO) {
+                                                              @RequestBody ProductoDTO DTO,
+                                                              @AuthenticationPrincipal UsuarioDTO usuario) {
         //cantidad de producto previa a la edicion
         int cantidadOld = iProductoService.getProductoById(id_producto).getStock_actual();
         ProductoDTO producto = iProductoService.editProducto(id_producto, DTO);
-
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        assert authentication != null;
-        UsuarioDTO usuario = (UsuarioDTO) authentication.getPrincipal();
-        assert usuario != null;
 
         //para registrar datos editados del producto
         MovimientoDTO movimientoDTO = new MovimientoDTO();

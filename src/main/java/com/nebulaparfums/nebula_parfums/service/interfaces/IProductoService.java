@@ -7,8 +7,8 @@ import org.springframework.data.domain.Pageable;
 import java.util.List;
 
 public interface IProductoService {
-    public List<ProductoDTO> getProductos();
-    public Page<ProductoDTO> getProductosFiltrados(
+    List<ProductoDTO> getProductos();
+    Page<ProductoDTO> getProductosFiltrados(
             Pageable pageable,
             String nombre,
             Integer idCategoria,
@@ -18,12 +18,12 @@ public interface IProductoService {
             Integer precioMaximo,
             Integer disponible
     );
-    public ProductoDTO getProductoById(Integer id);
-    public ProductoDTO editProducto(Integer id,ProductoDTO producto);
-    public void deleteProducto(Integer id);
-    public ProductoDTO saveProducto(ProductoDTO producto);
-    public Integer getProductosLowStock();
-    public Integer getProductosSinStock();
-    public Integer getTotalStock();
-    public Page<ProductoDTO> getProductosBajoStock(Pageable pageable);
+    ProductoDTO getProductoById(Integer id);
+    ProductoDTO editProducto(Integer id,ProductoDTO producto);
+    void deleteProducto(Integer id);
+    ProductoDTO saveProducto(ProductoDTO producto);
+    Integer getProductosLowStock();
+    Integer getProductosSinStock();
+    Integer getTotalStock();
+    Page<ProductoDTO> getProductosBajoStock(Pageable pageable);
 }

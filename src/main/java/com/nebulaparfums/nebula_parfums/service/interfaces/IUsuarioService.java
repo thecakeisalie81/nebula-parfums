@@ -7,12 +7,12 @@ import org.springframework.data.domain.Pageable;
 
 
 public interface IUsuarioService {
-    public Usuario getUsuarioById(Integer id);
-    public Page<UsuarioDTO> getUsuarios(Pageable pageable, String nombre);
-    public UsuarioDTO saveUsuario(UsuarioDTO usuario);
-    public void deleteUsuarioById(Integer id);
-    public UsuarioDTO editUsuario(Integer id, UsuarioDTO usuario);
-    public Usuario getUsuarioByEmail(String email);
-    public int totalUsuarios();
-    public int totalUsuariosActivos();
+    Usuario getUsuarioById(Integer id);
+    Page<UsuarioDTO> getUsuarios(Pageable pageable, String nombre);
+    UsuarioDTO saveUsuario(UsuarioDTO usuario);
+    void deleteUsuarioById(Integer id);
+    UsuarioDTO editUsuario(Integer id, UsuarioDTO usuario);
+    Usuario getUsuarioByEmail(String email);
+    int totalUsuarios();
+    int totalUsuariosActivos();
 }

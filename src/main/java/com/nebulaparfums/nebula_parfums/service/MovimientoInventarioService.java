@@ -43,12 +43,7 @@ public class MovimientoInventarioService implements IMovimientoInventarioService
     private final IProductoRepository iProductoRepository;
     protected final IUsuarioRepository iUsuarioRepository;
     private final ILogActividadService iLogActividadService;
-
-
-    @Override
-    public Page<MovimientoDTO> getMovimientoInventario(Pageable pageable) {
-        return iMovimientoInventarioRepository.findAll(pageable).map(Mapper::toDTO);
-    }
+    
 
     /**
      * Devuelve una cantidad de movimientos determinada por el parámetro de límite, los movimientos están ordenados
