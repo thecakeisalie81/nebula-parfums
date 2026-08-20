@@ -4,13 +4,9 @@ import com.nebulaparfums.nebula_parfums.dto.DireccionDTO;
 import com.nebulaparfums.nebula_parfums.exception.ResourceNotFoundException;
 import com.nebulaparfums.nebula_parfums.mapper.Mapper;
 import com.nebulaparfums.nebula_parfums.model.DireccionEnvio;
-import com.nebulaparfums.nebula_parfums.model.Usuario;
 import com.nebulaparfums.nebula_parfums.repository.IDireccionEnvioRepository;
-import com.nebulaparfums.nebula_parfums.repository.IUsuarioRepository;
 import com.nebulaparfums.nebula_parfums.service.interfaces.IDireccionEnvioService;
-import com.nebulaparfums.nebula_parfums.service.interfaces.IUsuarioService;
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
@@ -31,22 +27,13 @@ public class DireccionEnvioService implements IDireccionEnvioService {
 
     /**
      * Guarda una direccion en la base de datos
-     * @param direccion DirecciónDTO con los datos de la nueva dirección
-     * @return DirecciónDTO con los datos que fueron guardados
+     * @param direccionEnvio entidad con los datos de la nueva dirección
+     * @return Dirección nueva con los datos que fueron guardados
      */
-    @Override
-    public DireccionDTO saveDireccionEnvio(DireccionDTO direccion) {
-
-        DireccionEnvio address = DireccionEnvio.builder()
-                .direccion(direccion.getDireccion())
-                .ciudad(direccion.getCiudad())
-                .provincia(direccion.getProvincia())
-                .codigo_postal(direccion.getCodigo_postal())
-                .telefono(direccion.getTelefono())
-                .build();
-
-        return Mapper.toDTO(direccionEnvioRepository.save(address));
+    public DireccionEnvio saveDireccion(DireccionEnvio direccionEnvio) {
+        return direccionEnvioRepository.save(direccionEnvio);
     }
+
 
     /**
      * Edita la información guardada de una direccion de envío

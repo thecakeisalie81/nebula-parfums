@@ -1,7 +1,9 @@
 package com.nebulaparfums.nebula_parfums.controller;
 import com.nebulaparfums.nebula_parfums.dto.UsuarioDTO;
 import com.nebulaparfums.nebula_parfums.mapper.Mapper;
+import com.nebulaparfums.nebula_parfums.model.DireccionEnvio;
 import com.nebulaparfums.nebula_parfums.model.Usuario;
+import com.nebulaparfums.nebula_parfums.service.interfaces.IDireccionEnvioService;
 import com.nebulaparfums.nebula_parfums.service.interfaces.IUsuarioService;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -17,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 @AllArgsConstructor
 public class UsuarioController {
     private final IUsuarioService iUsuarioService;
+    private final IDireccionEnvioService iDireccionEnvioService;
 
     @GetMapping("/usuarios")
     public ResponseEntity<Page<UsuarioDTO>> traerUsuarios(Pageable pageable,String nombre) {
@@ -51,6 +54,10 @@ public class UsuarioController {
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PostMapping("/crear")
     public ResponseEntity<UsuarioDTO> crearUsuario(@RequestBody UsuarioDTO usuario) {
+        DireccionEnvio dto = new DireccionEnvio();
+        DireccionEnvio direccion = iDireccionEnvioService.saveDireccion(dto);
+        usuario.setDireccionEnvio(direccion);
+
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(iUsuarioService.saveUsuario(usuario));
     }

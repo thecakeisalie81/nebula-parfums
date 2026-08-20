@@ -1,44 +1,53 @@
-/*
 package com.nebulaparfums.nebula_parfums.controller;
 
-import com.nebulaparfums.nebula_parfums.model.Categoria;
+import com.nebulaparfums.nebula_parfums.dto.CategoriaDTO;
 import com.nebulaparfums.nebula_parfums.service.interfaces.ICategoriaService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
+@RequiredArgsConstructor
+@RequestMapping("/api/categoria")
 public class CategoriaController {
-    @Autowired
-    private ICategoriaService iCategoriaService;
+    private final ICategoriaService iCategoriaService;
 
-    @GetMapping("categoria/traer")
-    public List<Categoria> getCategoria() {
-        return iCategoriaService.getCategorias();
+    @GetMapping("/categorias")
+    public ResponseEntity<List<CategoriaDTO>> getCategoria() {
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(iCategoriaService.getCategorias());
     }
 
-    @GetMapping("/categoria/buscar")
-    public Categoria buscarCategoria(@RequestParam("id") Integer id) {
-        return iCategoriaService.getCategoriaById(id);
+    @GetMapping("/buscar/{id}")
+    public ResponseEntity<CategoriaDTO> buscarCategoria(@PathVariable Integer id) {
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(iCategoriaService.getCategoriaById(id));
     }
 
-    @DeleteMapping("/categoria/borrar")
-    public String borrarCategoria(@RequestParam("id") Integer id) {
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR','EMPLEADO')")
+    @DeleteMapping("/borrar/{id}")
+    public ResponseEntity<String> borrarCategoria(@PathVariable Integer id) {
         iCategoriaService.deleteCategoriaById(id);
-        return "Categoria borrado con sucesso";
+        return ResponseEntity.status(HttpStatus.NO_CONTENT)
+                .body("Categoria eliminada correctamente");
     }
 
-    @PutMapping("/categoria/editar")
-    public String editarCategoria(@RequestBody Categoria categoria) {
-        iCategoriaService.editCategoria(categoria);
-        return "Categoria editado con sucesso";
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR','EMPLEADO')")
+    @PutMapping("/editar/{id}")
+    public ResponseEntity<CategoriaDTO> editarCategoria(@PathVariable Integer id, @RequestBody CategoriaDTO categoria) {
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(iCategoriaService.editCategoria(id, categoria));
     }
 
+
+    @PreAuthorize("hasAnyRole('ADMINISTRADOR','EMPLEADO')")
     @PostMapping("/categoria/crear")
-    public String crearCategoria(@RequestBody Categoria categoria) {
-        iCategoriaService.saveCategoria(categoria);
-        return "Categoria creado con sucesso";
+    public ResponseEntity<CategoriaDTO> crearCategoria(@RequestBody CategoriaDTO categoria) {
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(iCategoriaService.saveCategoria(categoria));
     }
 }
-*/
