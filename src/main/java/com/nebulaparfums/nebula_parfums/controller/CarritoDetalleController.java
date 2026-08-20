@@ -1,72 +1,44 @@
-/*
 package com.nebulaparfums.nebula_parfums.controller;
 
 import com.nebulaparfums.nebula_parfums.dto.CarritoDetalleDTO;
-import com.nebulaparfums.nebula_parfums.exception.ResourceNotFoundException;
-import com.nebulaparfums.nebula_parfums.model.Carrito;
 import com.nebulaparfums.nebula_parfums.model.CarritoDetalle;
-import com.nebulaparfums.nebula_parfums.model.Producto;
 import com.nebulaparfums.nebula_parfums.service.interfaces.ICarritoDetalleService;
-import com.nebulaparfums.nebula_parfums.service.interfaces.ICarritoService;
-import com.nebulaparfums.nebula_parfums.service.interfaces.IProductoService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Objects;
 
 
 @RestController
+@RequiredArgsConstructor
+@RequestMapping("/api/carritodetalle")
 public class CarritoDetalleController {
-    @Autowired
-    private ICarritoDetalleService iCarritoDetalleService;
+    private final ICarritoDetalleService iCarritoDetalleService;
 
-
-    @Autowired
-    private IProductoService iProductoService;
-
-    @Autowired
-    private ICarritoService iCarritoService;
-
-    @GetMapping("/carritodetalle/buscar")
-    public CarritoDetalle getCarrito(@RequestParam("id") Integer id) {
-        return iCarritoDetalleService.getCarritoDetalleById(id);
+    @GetMapping("/buscar/{id}")
+    public ResponseEntity<CarritoDetalle> getCarrito(@PathVariable Integer id) {
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(iCarritoDetalleService.getCarritoDetalleById(id));
     }
 
-    @PostMapping("/carritodetalle/crear")
-    public String createCarritoDetalle(@RequestBody CarritoDetalleDTO request) {
-        Carrito carrito = iCarritoService.getCarritoById(request.getId_carrito());
-        Producto producto = iProductoService.getProductoById(request.getId_producto());
-
-        for (CarritoDetalle detalle: carrito.getListaCarritoDetalles()){
-            if (Objects.equals(detalle.getProducto().getId_producto(), producto.getId_producto())) {
-                detalle.setCantidad(detalle.getCantidad()+1);
-                detalle.setPrecio(detalle.getPrecio()+producto.getPrecio());
-                iCarritoDetalleService.saveCarritoDetalle(detalle);
-                return "Se aumento la cantidad en el carrito";
-            }
-        }
-
-        CarritoDetalle detalle = new CarritoDetalle();
-        detalle.setCantidad(request.getCantidad());
-        detalle.setPrecio(request.getPrecio());
-        detalle.setCarrito(carrito);
-        detalle.setProducto(producto);
-
-        iCarritoDetalleService.saveCarritoDetalle(detalle);
-        return "Carrito detalle creado con sucesso";
+    @PostMapping("/crear")
+    public ResponseEntity<CarritoDetalleDTO> createCarritoDetalle(@RequestBody CarritoDetalleDTO detalle) {
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(iCarritoDetalleService.saveCarritoDetalle(detalle));
     }
 
 
-    @PutMapping("/carritodetalle/editar")
-    public String editCarritoDetalle(@RequestBody CarritoDetalleDTO request) {
-        iCarritoDetalleService.editCarritoDetalle(request);
-        return "Carrito detalle editado con exito";
+    @PutMapping("/editar/{id}")
+    public ResponseEntity<CarritoDetalleDTO> editCarritoDetalle(@PathVariable Integer id,
+                                                                @RequestBody CarritoDetalleDTO detalle) {
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(iCarritoDetalleService.editCarritoDetalle(id, detalle));
     }
 
-    @DeleteMapping("/auth/carritodetalle/borrar")
-    public String borrarCarritoDetalle(@RequestParam  Integer id) {
+    @DeleteMapping("/borrar/{id}")
+    public ResponseEntity<String> borrarCarritoDetalle(@PathVariable Integer id) {
         iCarritoDetalleService.deleteCarritoDetalleById(id);
-        return "Carrito detalle borrado con sucesso";
+        return ResponseEntity.status(HttpStatus.NO_CONTENT)
+                .body("Detalle eliminado del carrito");
     }
 }
-*/
