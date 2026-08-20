@@ -1,46 +1,49 @@
-/*
 package com.nebulaparfums.nebula_parfums.controller;
 
+import com.nebulaparfums.nebula_parfums.dto.CarritoDTO;
+import com.nebulaparfums.nebula_parfums.dto.UsuarioDTO;
 import com.nebulaparfums.nebula_parfums.model.Carrito;
 import com.nebulaparfums.nebula_parfums.service.interfaces.ICarritoService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
+@RequiredArgsConstructor
+@RequestMapping("/api/carrito")
 public class CarritoController {
-    @Autowired
-    private ICarritoService iCarritoService;
+    private final ICarritoService iCarritoService;
 
-    @GetMapping("carrito/buscar")
+    @GetMapping("/buscar/{id}")
     public Carrito getCarrito(@RequestParam("id") Integer id) {
         return iCarritoService.getCarritoById(id);
     }
 
     @PostMapping("carrito/crear")
-    public String createCarrito(@RequestBody Carrito carrito) {
-        iCarritoService.saveCarrito(carrito);
-        return "Carrito creado";
+    public ResponseEntity<CarritoDTO> createCarrito(@RequestBody CarritoDTO carrito) {
+
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(iCarritoService.saveCarrito(carrito));
     }
 
-    @GetMapping("/carrito/mio")
-    public Carrito obtenerMiCarrito(Authentication authentication) {
-        String email = authentication.getName();
-        return iCarritoService.obtenerCarritoPorEmail(email);
+    @GetMapping("/micarrito")
+    public ResponseEntity<Carrito> obtenerMiCarrito(@AuthenticationPrincipal UsuarioDTO usuario) {
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(iCarritoService.getCarritoById(usuario.getCarrito().getId_carrito()));
     }
 
-    @DeleteMapping("carrito/borrar")
-    public String deleteCarrito(@RequestParam("id") Integer id) {
+    @DeleteMapping("/borrar/{id}")
+    public ResponseEntity<String> deleteCarrito(@PathVariable Integer id) {
         iCarritoService.deleteCarritoById(id);
-        return "Carrito borrado";
+        return ResponseEntity.status(HttpStatus.NO_CONTENT)
+                .body("Carrito limpiado exitosamente");
     }
 
-    @PutMapping("carrito/editar")
-    public String updateCarrito(@RequestBody Carrito carrito) {
-        iCarritoService.editCarrito(carrito);
-        return "Carrito editado";
+    @PutMapping("/editar/{id}")
+    public ResponseEntity<CarritoDTO> updateCarrito(@PathVariable Integer id, @RequestBody CarritoDTO carrito) {
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(iCarritoService.editCarrito(id, carrito));
     }
-
-
 }
-*/
