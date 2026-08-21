@@ -11,7 +11,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @RequestMapping("/api/usuario")
@@ -28,9 +28,9 @@ public class UsuarioController {
     }
 
     @GetMapping("/autenticacion")
-    public ResponseEntity<Usuario> usuarioAutenticado(Authentication authentication) {
+    public ResponseEntity<Usuario> usuarioAutenticado(@AuthenticationPrincipal UsuarioDTO usuario) {
         return ResponseEntity.status(HttpStatus.OK)
-                .body(iUsuarioService.getUsuarioByEmail(authentication.getName()));
+                .body(iUsuarioService.getUsuarioByEmail(usuario.getEmail()));
     }
 
     @GetMapping("/contador")
@@ -45,7 +45,7 @@ public class UsuarioController {
                 .body(iUsuarioService.totalUsuariosActivos());
     }
 
-    @GetMapping("/buscar")
+    @GetMapping("/buscar/{id}")
     public ResponseEntity<UsuarioDTO> buscarUsuario(@PathVariable Integer id) {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(Mapper.toDTO(iUsuarioService.getUsuarioById(id)));
@@ -62,8 +62,8 @@ public class UsuarioController {
                 .body(iUsuarioService.saveUsuario(usuario));
     }
 
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
-    @PutMapping("/editar")
+    @PreAuthorize("hasRole('ADMINISTRADOR')")
+    @PutMapping("/editar/{id}")
     public ResponseEntity<UsuarioDTO> editarUsuario(@PathVariable Integer id, @RequestBody UsuarioDTO usuario) {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(iUsuarioService.editUsuario(id, usuario));

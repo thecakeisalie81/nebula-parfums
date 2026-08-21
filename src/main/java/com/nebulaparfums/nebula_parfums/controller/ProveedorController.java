@@ -2,7 +2,6 @@ package com.nebulaparfums.nebula_parfums.controller;
 
 import com.nebulaparfums.nebula_parfums.dto.ProveedorDTO;
 import com.nebulaparfums.nebula_parfums.dto.UsuarioDTO;
-import com.nebulaparfums.nebula_parfums.model.Usuario;
 import com.nebulaparfums.nebula_parfums.service.interfaces.IProveedorService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -48,7 +47,7 @@ public class ProveedorController {
     @PutMapping("/editar/{id}")
     public ResponseEntity<ProveedorDTO> editarProveedor(@RequestBody ProveedorDTO proveedor,
                                                         @PathVariable Integer id,
-                                                        @AuthenticationPrincipal Usuario usuario){
+                                                        @AuthenticationPrincipal UsuarioDTO usuario){
         return ResponseEntity.status(HttpStatus.OK)
                 .body(iProveedorService.editProveedor(proveedor, usuario.getEmail(), id));
     }
