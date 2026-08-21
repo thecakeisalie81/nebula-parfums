@@ -45,7 +45,7 @@ public class CategoriaController {
 
 
     @PreAuthorize("hasAnyRole('ADMINISTRADOR','EMPLEADO')")
-    @PostMapping("/categoria/crear")
+    @PostMapping("/crear")
     public ResponseEntity<CategoriaDTO> crearCategoria(@RequestBody CategoriaDTO categoria) {
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(iCategoriaService.saveCategoria(categoria));
