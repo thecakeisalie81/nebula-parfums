@@ -45,23 +45,23 @@ public class ProveedorController {
     }
 
     @PreAuthorize("hasAnyRole('ADMINISTRADOR','EMPLEADO')")
-    @PutMapping("/proveedor/editar")
+    @PutMapping("/editar/{id}")
     public ResponseEntity<ProveedorDTO> editarProveedor(@RequestBody ProveedorDTO proveedor,
-                                                        Integer id,
+                                                        @PathVariable Integer id,
                                                         @AuthenticationPrincipal Usuario usuario){
         return ResponseEntity.status(HttpStatus.OK)
                 .body(iProveedorService.editProveedor(proveedor, usuario.getEmail(), id));
     }
 
     @PreAuthorize("hasAnyRole('ADMINISTRADOR','EMPLEADO')")
-    @PostMapping("/proveedor/crear")
+    @PostMapping("/crear")
     public ResponseEntity<ProveedorDTO> crearProveedor(@RequestBody ProveedorDTO proveedor, @AuthenticationPrincipal UsuarioDTO usuario){
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(iProveedorService.saveProveedor(proveedor, usuario.getEmail()));
     }
 
     @PreAuthorize("hasAnyRole('ADMINISTRADOR','EMPLEADO')")
-    @DeleteMapping("/proveedor/borrar/{id}")
+    @DeleteMapping("/borrar/{id}")
     public ResponseEntity<String> borrarProveedor(@PathVariable Integer id){
         iProveedorService.deleteProveedor(id);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Proveedor eliminado");

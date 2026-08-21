@@ -31,7 +31,7 @@ public class AuthController {
         return ResponseEntity.ok(authService.register(registerRequest));
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMINISTRADOR')")
     @PostMapping("/empleados")
     public ResponseEntity<?> registrarEmpleado(@RequestBody RegisterRequest request,
                                                @AuthenticationPrincipal UsuarioDTO usuarioLogueado) {

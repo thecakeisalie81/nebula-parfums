@@ -42,11 +42,11 @@ public class SecurityConfig {
                                 ).permitAll()
 
                                 // 🔓 auth
-                                .requestMatchers("/auth/**").permitAll()
+                                .requestMatchers("/api/auth/**").permitAll()
                                 .requestMatchers("/paypal/**").authenticated()
                                 // 🔐 roles
-                                .requestMatchers("/admin/**").hasRole("ADMIN")
-                                .requestMatchers("/empleado/**").hasAnyRole("ADMIN","EMPLEADO")
+                                .requestMatchers("/admin/**").hasRole("ADMINISTRADOR")
+                                .requestMatchers("/empleado/**").hasAnyRole("ADMINISTRADOR","EMPLEADO")
 
                                 // 🔒 todo lo demás protegido
                                 .anyRequest().authenticated()
